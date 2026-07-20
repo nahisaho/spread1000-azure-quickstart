@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "yourName":              { "value": "taro" },
+    "ownerEmail":            { "value": "taro@example.ac.jp" },
+    "assignedUserObjectId":  { "value": "<`az ad signed-in-user show --query id -o tsv` の値>" },
+    "assignedUserTenantId":  { "value": "<`az account show --query tenantId -o tsv` の値>" },
+    "computeSize":           { "value": "Standard_NC8as_T4_v3" }
+  }
+}
+

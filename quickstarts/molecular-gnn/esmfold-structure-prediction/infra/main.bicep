@@ -1,0 +1,169 @@
+// ============================================================
+// ESMFold クイックスタート — Azure ML Workspace + GPU Compute
+//
+// 使い方:
+//   MY_OID=$(az ad signed-in-user show --query id -o tsv)
+//   MY_TID=$(az account show --query tenantId -o tsv)
+//   az group create -n rg-spread1000-esmfold-structure-prediction-<name> -l japaneast
+//   az deployment group create \
+//     -g rg-spread1000-esmfold-structure-prediction-<name> \
+//     -f main.bicep \
+//     -p yourName=<name> ownerEmail=<mail> assignedUserObjectId=$MY_OID assignedUserTenantId=$MY_TID
+//
+// 前提: Azure ML GPU クォータ (NCASv3_T4 8 vCPU 以上 or NCadsA100_v4 24 vCPU 以上)。
+//       CI/CD/service principal からデプロイする場合、researcher の
+//       objectId/tenantId を assignedUser* パラメータに渡すこと。
+// ============================================================
+
+targetScope = 'resourceGroup'
+
+@description('衝突回避用のユーザー識別子（半角小文字英数字、3-8 文字）')
+@minLength(3)
+@maxLength(8)
+param yourName string
+
+@description('課金追跡タグに入れる owner')
+param ownerEmail string
+
+@description('Compute Instance を割り当てる Entra ID ユーザー object ID (`az ad signed-in-user show --query id -o tsv`)')
+param assignedUserObjectId string
+
+@description('Assigned user のテナント ID (`az account show --query tenantId -o tsv`)')
+param assignedUserTenantId string = subscription().tenantId
+
+@description('リージョン')
+param location string = resourceGroup().location
+
+@description('GPU コンピュートの VM サイズ (Azure ML Compute Instance でサポートされる現行 GPU SKU)')
+@allowed([
+  'Standard_NC8as_T4_v3'        // T4 16GB (推奨・低コスト、〜600 aa)
+  'Standard_NC4as_T4_v3'        // T4 16GB (最安)
+  'Standard_NC16as_T4_v3'       // T4 16GB (RAM 大)
+  'Standard_NC24ads_A100_v4'    // A100 80GB (長鎖・バッチ)
+  'Standard_NC40ads_H100_v5'    // H100 80GB (超高速)
+])
+param computeSize string = 'Standard_NC8as_T4_v3'
+
+// ---- タグ ----
+var commonTags = {
+  project: 'spread1000'
+  field: 'life-pharma-science'
+  category: 'molecular-gnn'
+  scenario: 'esmfold-structure-prediction'
+  owner: ownerEmail
+}
+
+// ---- 名前 (決定論的だが RG 単位で一意化) ----
+var suffix        = take(uniqueString(resourceGroup().id, yourName), 5)
+var workspaceName = take('mlw-esmfold-${yourName}', 33)
+var computeName   = take('ci-esmfold-${yourName}-${suffix}', 24)
+var storageName   = take('stesmfold${uniqueString(resourceGroup().id, yourName)}', 24)
+var kvName        = take('kv-esmfold-${suffix}-${uniqueString(resourceGroup().id)}', 24)
+var appiName      = 'appi-esmfold-${yourName}-${suffix}'
+var crName        = take('cresmfold${uniqueString(resourceGroup().id, yourName)}', 50)
+
+// ---- 依存リソース ----
+resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: storageName
+  location: location
+  tags: commonTags
+  sku: { name: 'Standard_LRS' }
+  kind: 'StorageV2'
+  properties: {
+    allowBlobPublicAccess: false
+    minimumTlsVersion: 'TLS1_2'
+    supportsHttpsTrafficOnly: true
+    encryption: {
+      services: {
+        blob: { enabled: true }
+        file: { enabled: true }
+      }
+      keySource: 'Microsoft.Storage'
+    }
+  }
+}
+
+resource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {
+  name: kvName
+  location: location
+  tags: commonTags
+  properties: {
+    tenantId: subscription().tenantId
+    sku: { family: 'A', name: 'standard' }
+    enableRbacAuthorization: true
+    enableSoftDelete: true
+    softDeleteRetentionInDays: 7
+    accessPolicies: []
+  }
+}
+
+resource appi 'Microsoft.Insights/components@2020-02-02' = {
+  name: appiName
+  location: location
+  tags: commonTags
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Enabled'
+  }
+}
+
+resource cr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {
+  name: crName
+  location: location
+  tags: commonTags
+  sku: { name: 'Basic' }
+  properties: {
+    adminUserEnabled: false
+  }
+}
+
+// ---- Azure ML Workspace ----
+resource ws 'Microsoft.MachineLearningServices/workspaces@2024-04-01' = {
+  name: workspaceName
+  location: location
+  tags: commonTags
+  identity: { type: 'SystemAssigned' }
+  properties: {
+    friendlyName: 'ESMFold Quickstart (${yourName})'
+    storageAccount: storage.id
+    keyVault: kv.id
+    applicationInsights: appi.id
+    containerRegistry: cr.id
+    publicNetworkAccess: 'Enabled'
+    hbiWorkspace: false
+  }
+}
+
+// ---- GPU Compute Instance ----
+// NOTE: Compute Instance は「単一ユーザー」に紐づく。CI/CD デプロイでは
+// personalComputeInstanceSettings.assignedUser を明示する必要がある。
+// NOTE: idleTimeBeforeShutdown は 2024-04-01 スキーマに型定義がまだ存在せず、
+// az bicep build が BCP037 警告を出すことがあるが、ARM 側でサポートされ動作する。
+// デプロイ後 `az ml compute show` で idleTimeBeforeShutdown を必ず検証すること。
+resource ci 'Microsoft.MachineLearningServices/workspaces/computes@2024-04-01' = {
+  parent: ws
+  name: computeName
+  location: location
+  tags: commonTags
+  properties: {
+    computeType: 'ComputeInstance'
+    properties: {
+      vmSize: computeSize
+      idleTimeBeforeShutdown: 'PT30M'  // 30 分アイドルで自動停止 (ESMFold は推論が短いため短めに)
+      personalComputeInstanceSettings: {
+        assignedUser: {
+          objectId: assignedUserObjectId
+          tenantId: assignedUserTenantId
+        }
+      }
+    }
+  }
+}
+
+// ---- 出力 ----
+output workspaceName string = ws.name
+output computeName   string = ci.name
+output studioUrl     string = 'https://ml.azure.com/?wsid=/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.MachineLearningServices/workspaces/${ws.name}'
+
