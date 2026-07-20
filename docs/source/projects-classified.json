@@ -1,0 +1,3650 @@
+[
+  {
+    "no": 1,
+    "field": "臨床科学",
+    "title": "医学研究アウトリーチにおける生成AIコンテンツの品質評価と標準化：多次元評価ベンチマークの構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIコンテンツの品質評価・多次元ベンチマーク構築はLLM出力評価タスクのため。"
+  },
+  {
+    "no": 2,
+    "field": "臨床科学",
+    "title": "AIによる術中解剖追従・変形モデリング・切離支援を統合した外科用拡張現実シミュレーション基盤の開発",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 術中解剖画像を用いる外科支援が主題。優先順位上medical-imagingを適用。 (旧: multimodal)"
+  },
+  {
+    "no": 3,
+    "field": "臨床科学",
+    "title": "AIによるキャピラロスコピー自動判定ソフトウェアの開発：全身性強皮症の早期診断・病勢評価の革新",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "爪郭毛細血管キャピラロスコピー画像による強皮症早期診断・病勢評価は医用画像診断AIのため。"
+  },
+  {
+    "no": 4,
+    "field": "臨床科学",
+    "title": "AIベースド・デジタルブレインを活用した次世代治療意思決定支援の創成",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "デジタルブレインは脳MRI等の医用画像を基盤とした治療意思決定支援システムのため。"
+  },
+  {
+    "no": 5,
+    "field": "臨床科学",
+    "title": "生成AIによる精神科初診カルテの根拠文付き構造化抽出ワークフローの概念実証",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "精神科初診カルテから根拠文付き構造化抽出を行う生成AIワークフローはLLM-RAGのため。"
+  },
+  {
+    "no": 6,
+    "field": "臨床科学",
+    "title": "高精度時間周波数解析と深層学習による非定常生体信号の異常検知AIモデル開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "非定常生体信号の時間周波数解析と深層学習による異常検知は時系列信号処理タスクのため。"
+  },
+  {
+    "no": 7,
+    "field": "臨床科学",
+    "title": "AIコミュニケーションロボットによる認知症の人と家族のAdvance Care Planning対話支援の検討",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "認知症患者とのAdvance Care Planning対話支援ロボットはLLMベース対話システムのため。"
+  },
+  {
+    "no": 8,
+    "field": "臨床科学",
+    "title": "立位CTと物理シミュレーションによるdDRR生成とAIを用いた呼吸補正CTR測定法の概念実証",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "立位CTとDRR生成を用いた物理シミュレーションによる呼吸補正CTR測定は医用CT画像処理タスクのため。"
+  },
+  {
+    "no": 9,
+    "field": "臨床科学",
+    "title": "蓄積された腎臓病学に関する基礎実験記録のAIによる読解",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "腎臓病学の蓄積された基礎実験記録テキストをAIが読解・解析するNLP処理タスクのため。"
+  },
+  {
+    "no": 10,
+    "field": "臨床科学",
+    "title": "ウェアラブル端末による持続モニタリングを活用した自己炎症症候群の発作予測モデル作成",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "ウェアラブル持続モニタリングの時系列センサデータを用いた自己炎症症候群の発作予測モデルのため。"
+  },
+  {
+    "no": 11,
+    "field": "臨床科学",
+    "title": "遺伝性間質性肺炎を起点とするAI駆動マルチオミクス統合とセクレトーム解析による線維化ニッチ解明",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "マルチオミクス統合とセクレトーム解析による遺伝性間質性肺炎の分子機構解明のため。"
+  },
+  {
+    "no": 12,
+    "field": "臨床科学",
+    "title": "老年医学知見のAI構造化による高齢者リスク評価・介入提案の探索",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "老年医学知見をAIで構造化しリスク評価・介入提案に活用するLLM支援タスクのため。"
+  },
+  {
+    "no": 13,
+    "field": "臨床科学",
+    "title": "認知予備能低下リスクの予測指標確立に向けたデータ基盤構築と深層学習によるモデル開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "認知予備能低下リスクの予測指標確立とDLモデル開発は統計的臨床予測モデル構築のため。"
+  },
+  {
+    "no": 14,
+    "field": "臨床科学",
+    "title": "脳腫瘍手術支援における深層学習を用いたトラクトグラフィ自動生成ツールの開発",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "脳腫瘍手術支援のためのMRIトラクトグラフィ自動生成は医用画像処理タスクのため。"
+  },
+  {
+    "no": 15,
+    "field": "臨床科学",
+    "title": "吸入後薬物動態の空間マッピング技術開発とその臨床応用",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "吸入後薬物動態の空間マッピングはPET/CTなど医用画像を用いた臨床研究のため。"
+  },
+  {
+    "no": 16,
+    "field": "臨床科学",
+    "title": "リアルワールドデータと因果AIによる糖尿病合併心不全患者の個別化医療戦略の構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "リアルワールドデータと因果AIによる個別化医療戦略構築は因果推論・統計手法が主体のため。"
+  },
+  {
+    "no": 17,
+    "field": "臨床科学",
+    "title": "マルチモーダル深層学習による腎臓病理の自動診断および予後予測アルゴリズムの開発",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "マルチモーダル深層学習による腎臓病理の自動診断・予後予測は病理医用画像解析が核のため。"
+  },
+  {
+    "no": 18,
+    "field": "臨床科学",
+    "title": "AIを活用した臨床症状に基づくパーキンソン病クラスタリングと病態解明",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "臨床症状データに基づくパーキンソン病クラスタリングは統計的クラスタリング手法のため。"
+  },
+  {
+    "no": 19,
+    "field": "臨床科学",
+    "title": "パーキンソン病リハビリテーションにおける専門家の訓練メニューを再現するAIアルゴリズムの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "パーキンソン病リハビリ動作の時系列データからトレーニングメニューを再現するAIのため。"
+  },
+  {
+    "no": 20,
+    "field": "臨床科学",
+    "title": "顎顔面補綴治療における術後QOL予測と補綴設計支援モデルの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "顎顔面補綴の術後QOL予測と補綴設計支援は臨床データを用いた統計的予測モデル構築のため。"
+  },
+  {
+    "no": 21,
+    "field": "臨床科学",
+    "title": "AIを用いた大規模な細胞形態解析による新規サブポピュレーション同定法の開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "大規模細胞形態解析による新規サブポピュレーション同定は顕微鏡画像解析（CV）のため。"
+  },
+  {
+    "no": 22,
+    "field": "臨床科学",
+    "title": "評価者の思考過程を再現する解釈モデルに基づく歯科技能試験のAI自動評価システムの構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "歯科技能試験の画像・動画に基づく評価者思考再現AI自動評価は画像解析タスクのため。"
+  },
+  {
+    "no": 23,
+    "field": "臨床科学",
+    "title": "AIを用いた脊椎内視鏡手術に対する安全性向上支援技術開発",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "脊椎内視鏡手術の安全性向上支援AIの開発は外科内視鏡画像解析の医用画像タスクのため。"
+  },
+  {
+    "no": 24,
+    "field": "臨床科学",
+    "title": "同種造血幹細胞移植における再発・GVHD同時予測AIの開発：最適化に向けた細胞療法運用学的アプローチ",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "造血幹細胞移植における再発・GVHD同時予測は多状態遷移・生存時間統計モデルが核のため。"
+  },
+  {
+    "no": 25,
+    "field": "臨床科学",
+    "title": "医用画像診断AIにおける低コスト継続学習基盤の自動化に関する研究",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "医用画像診断AIの低コスト継続学習基盤の自動化研究は医用画像AIインフラのため。"
+  },
+  {
+    "no": 26,
+    "field": "臨床科学",
+    "title": "実臨床歩行動画のAI ready化と事前学習による神経疾患歩行解析AIの精度向上に関する概念実証",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "臨床歩行動画のAI ready化と歩行解析モデル開発は動画画像解析（CV）タスクのため。"
+  },
+  {
+    "no": 27,
+    "field": "臨床科学",
+    "title": "加齢に伴う歩容変化に対するAI・シミュレーションの統合による個別化介入設計手法の開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "加齢歩容変化へのAI・シミュレーション統合による個別介入設計は歩行動作時系列解析のため。"
+  },
+  {
+    "no": 28,
+    "field": "臨床科学",
+    "title": "RNA相互作用情報を組み込んだインフルエンザウイルス分節組換え予測モデルの構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "RNA相互作用情報を組み込んだインフルエンザウイルス分節組換え予測はRNAオミクスのため。"
+  },
+  {
+    "no": 29,
+    "field": "臨床科学",
+    "title": "蒸汗・生体信号・環境因子の統合による熱中症リスク予測AIモデルの創出",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "蒸汗・生体信号・環境因子の時系列統合による熱中症リスク予測AIモデルの創出のため。"
+  },
+  {
+    "no": 30,
+    "field": "臨床科学",
+    "title": "産後早期の睡眠・助産ケア・メンタルヘルスを統合するAI解析モデルの試作",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "産後睡眠・助産ケア・メンタルヘルスを統合するAI解析モデルは臨床統計的モデルのため。"
+  },
+  {
+    "no": 31,
+    "field": "臨床科学",
+    "title": "完全オフライン型ローカルLLMによる救急音声解析：未知のコミュニケーション摩擦因子の発見",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "完全オフライン型ローカルLLMによる救急現場音声解析は音声認識・会話分析タスクのため。"
+  },
+  {
+    "no": 32,
+    "field": "臨床科学",
+    "title": "難治てんかんに対するヒト脳内電極を用いたAIによる患者個別ネットワーク自動解析パイプラインの基盤開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "難治てんかんに対するヒト脳内電極SEEG時系列データによる患者個別発作起始推定AIのため。"
+  },
+  {
+    "no": 33,
+    "field": "臨床科学",
+    "title": "肥大なき圧負荷適応の細胞地図：V3599K変異心臓のAI駆動シングルセル解析",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "肥大なき圧負荷適応の変異心臓のAI駆動シングルセル解析は単一細胞オミクスが中心技術のため。"
+  },
+  {
+    "no": 34,
+    "field": "臨床科学",
+    "title": "AIによる骨格筋デジタルツインの構築と運動非応答性の機構解明",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "骨格筋デジタルツイン構築と運動非応答性機構解明はデジタルツイン・シミュレーションのため。"
+  },
+  {
+    "no": 35,
+    "field": "臨床科学",
+    "title": "電子カルテ時系列データと説明可能AIによる季節性eGFR変動患者の抽出",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "電子カルテ時系列データと説明可能AIによる季節性eGFR変動患者の系統的抽出のため。"
+  },
+  {
+    "no": 36,
+    "field": "臨床科学",
+    "title": "胸部単純CT画像を用いた形態的な生物学的年齢及び老化の進行速度推定モデルの開発",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "胸部単純CTからの形態的生物学的年齢・老化速度推定は医用CT画像解析タスクのため。"
+  },
+  {
+    "no": 37,
+    "field": "臨床科学",
+    "title": "AI駆動型オミックス・構造解析による骨格筋ミトコンドリア輸送・相互作用因子の予測と検証",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI駆動型オミックス・構造解析による骨格筋ミトコンドリア因子予測はオミクス統合解析のため。"
+  },
+  {
+    "no": 38,
+    "field": "臨床科学",
+    "title": "AI駆動型空間病理解析による脳梗塞後再生阻害ニッチの解明と新規治療標的探索",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "空間トランスクリプトームを用いた脳梗塞後再生阻害ニッチ解明はオミクス空間解析のため。"
+  },
+  {
+    "no": 39,
+    "field": "臨床科学",
+    "title": "大規模な多層データを用いたフレイルリスク予測AIモデルの構築による新規の個別化介入ロジックへの挑戦",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "大規模多層データによるフレイルリスク予測AIは多変量統計的予測モデル構築のため。"
+  },
+  {
+    "no": 40,
+    "field": "臨床科学",
+    "title": "NICU新生児の乾燥ろ紙血から血清スフィンゴ脂質を再構成する検体種間翻訳AIの開発",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "乾燥ろ紙血からスフィンゴ脂質を再構成する検体種間翻訳AIはメタボロミクスのため。"
+  },
+  {
+    "no": 41,
+    "field": "臨床科学",
+    "title": "自己血管内シャント脈波のAI解析による透析中低血圧早期検出および新たな臨床情報抽出手法の開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "自己血管内シャント脈波の時系列AI解析による透析中低血圧早期検出モデル開発のため。"
+  },
+  {
+    "no": 42,
+    "field": "臨床科学",
+    "title": "AI支援型骨髄塗抹・組織統合解析による造血器疾患診断データセット構築と教育応用",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "骨髄塗抹・組織統合解析による造血器疾患診断データセットは病理医用画像解析のため。"
+  },
+  {
+    "no": 43,
+    "field": "臨床科学",
+    "title": "保健医療リアルワールドデータを用いた患者受診行動予測に基づく医療政策評価のための高度モデル分析",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "保健医療リアルワールドデータを用いた患者受診行動予測の医療政策評価モデルのため。"
+  },
+  {
+    "no": 44,
+    "field": "臨床科学",
+    "title": "空間的線条体コンパートメント構造のAI定量化によるジストニア病態分子の抽出とヒト遺伝学的検証",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "空間的線条体コンパートメント構造のAI定量化によるジストニア病態解析は脳医用画像のため。"
+  },
+  {
+    "no": 45,
+    "field": "臨床科学",
+    "title": "婦人科内視鏡手術動画に対するLLM・VLMを用いた言語的評価・フィードバックシステムの構築",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 内視鏡手術動画という医用画像が中心。VLM使用でも上位カテゴリ優先。 (旧: multimodal)"
+  },
+  {
+    "no": 46,
+    "field": "臨床科学",
+    "title": "AIを活用した言語指導と身体動作の対応解析およびフィードバック生成の萌芽的研究",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "言語指導と身体動作の対応解析・フィードバック生成はテキストと動作映像の融合タスクのため。"
+  },
+  {
+    "no": 47,
+    "field": "臨床科学",
+    "title": "乳幼児健診において保健師が記録したテキストデータへのLLM適用：意味特徴量化による方法論的基盤の構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "乳幼児健診の保健師テキストへのLLM適用による意味特徴量化は医療テキストLLM処理のため。"
+  },
+  {
+    "no": 48,
+    "field": "臨床科学",
+    "title": "希少疾患養育者の自由記述を臨床尺度と接続する説明可能AI基盤の構築",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 自由記述の特徴抽出・尺度接続。LLM/RAG明示なし、古典NLP。 (旧: llm-rag)"
+  },
+  {
+    "no": 49,
+    "field": "臨床科学",
+    "title": "病院前高頻度時系列データを用いた重症化・治療介入必要性・搬送優先度の逐次更新型AI予測モデルの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "病院前高頻度時系列データを用いた重症化・搬送優先度の逐次更新型AI予測モデルのため。"
+  },
+  {
+    "no": 50,
+    "field": "臨床科学",
+    "title": "AIによる慢性活動性Epstein-Barrウイルス病における疾患進行時計の構築と治療層別化",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "EBウイルス病の疾患進行時計構築と治療層別化は統計的生存・軌跡モデリングのため。"
+  },
+  {
+    "no": 51,
+    "field": "臨床科学",
+    "title": "ヒト死後検体を用いた腎尿細管脂肪滴の自動定量AIモデル開発と法医診断への応用",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "ヒト死後検体を用いた腎尿細管脂肪滴の自動定量AIモデルは病理組織医用画像解析のため。"
+  },
+  {
+    "no": 52,
+    "field": "臨床科学",
+    "title": "AI駆動型医療デジタルツインによる重篤副作用リスク予測基盤の構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI駆動型医療デジタルツインによる副作用リスク予測基盤はデジタルツイン・シミュレーションのため。"
+  },
+  {
+    "no": 53,
+    "field": "臨床科学",
+    "title": "災害関連死低減を目指した災害支援看護師の暗黙知のAI抽出・体系化と要支援者検出の探索的研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "災害支援看護師の暗黙知のAI抽出・体系化はLLMを用いた知識抽出・構造化のため。"
+  },
+  {
+    "no": 54,
+    "field": "臨床科学",
+    "title": "手Aと手Bの絡まる複雑な運動のAI解析によるリハビリテーションへの応用",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "絡み合う両手の複雑動作のAI解析によるリハビリ応用は動画動作解析（CV）のため。"
+  },
+  {
+    "no": 55,
+    "field": "臨床科学",
+    "title": "摂食障害患者支援に向けた視線追跡ウェアラブルAIシステムの基盤開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "摂食障害支援のための視線追跡ウェアラブルAI基盤開発は視線時系列センサ解析のため。"
+  },
+  {
+    "no": 56,
+    "field": "臨床科学",
+    "title": "AIによる機能回復軌道モデリングを基盤とした転倒の動的メカニズム解明",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "機能回復軌道モデリングを基盤とした転倒動的メカニズム解明は統計的軌跡解析のため。"
+  },
+  {
+    "no": 57,
+    "field": "臨床科学",
+    "title": "LVLMを用いた歯科画像AIを用いた災害犠牲者の身元確認（DVI）",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 歯科画像による法医学的身元確認。LVLM使用でもmedical-imaging優先。 (旧: multimodal)"
+  },
+  {
+    "no": 58,
+    "field": "臨床科学",
+    "title": "肝硬変からサルコペニア・発がんへの多状態遷移のAI学習と反実仮想推定による個別予後予測モデルの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "肝硬変→サルコペニア→発がんの多状態遷移AI学習と反実仮想推定は統計的生存解析のため。"
+  },
+  {
+    "no": 59,
+    "field": "臨床科学",
+    "title": "RFセンシング×AIによる精神科病棟のプライバシー保護型患者安全モニタリングの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "RFセンシング×AIによる患者安全モニタリングはRFセンサ時系列信号解析タスクのため。"
+  },
+  {
+    "no": 60,
+    "field": "臨床科学",
+    "title": "AI支援シミュレーション解析による神経ダイナミクス異常の要因探索",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI支援シミュレーション解析による神経ダイナミクス異常の要因探索はシミュレーション駆動のため。"
+  },
+  {
+    "no": 61,
+    "field": "臨床科学",
+    "title": "循環器予防における介入効果の異質性解析とAI支援型個別化戦略の構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "循環器予防における介入効果の異質性解析とAI支援個別化戦略は因果推論・統計手法のため。"
+  },
+  {
+    "no": 62,
+    "field": "臨床科学",
+    "title": "循環器医用画像研究におけるAI対応統合解析workflow基盤の構築",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "循環器医用画像研究のAI対応統合解析ワークフロー基盤構築は医用画像AIインフラのため。"
+  },
+  {
+    "no": 63,
+    "field": "臨床科学",
+    "title": "特徴トークン化SEEGによるてんかん発作起始推定AIの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "特徴トークン化SEEGによるてんかん発作起始推定AIは脳内電極信号時系列解析のため。"
+  },
+  {
+    "no": 64,
+    "field": "臨床科学",
+    "title": "マーカーレス拡張現実支援手術・実物大立体模型・デジタルツインのAI-ready品質評価基盤",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 手術支援用の臨床画像・三次元解剖モデル中心。AR/DTより医用画像優先。 (旧: multimodal)"
+  },
+  {
+    "no": 65,
+    "field": "臨床科学",
+    "title": "精神科診療録の自由記述を臨床知識へ接続するAI支援型半構造化データ基盤の構築",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 診療録自由記述の構造化。情報抽出でLLM/RAG明示なし。 (旧: llm-rag)"
+  },
+  {
+    "no": 66,
+    "field": "臨床科学",
+    "title": "生成AIを活用した患者観察項目提示プログラムの構築とモデル間性能比較に関する研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIを活用した患者観察項目提示プログラムはLLMによる臨床支援システムのため。"
+  },
+  {
+    "no": 67,
+    "field": "臨床科学",
+    "title": "口腔潜在性悪性疾患の三次元形態情報による定量的評価",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "口腔潜在性悪性疾患の三次元形態情報による定量的評価は口腔部位の医用画像解析のため。"
+  },
+  {
+    "no": 68,
+    "field": "臨床科学",
+    "title": "自己教師あり学習による動物生体音響基盤モデルの構築と疾病予兆AIの汎用化への挑戦",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "動物生体音響の自己教師あり学習基盤モデル構築は音響信号処理・疾病予兆AIのため。"
+  },
+  {
+    "no": 69,
+    "field": "臨床科学",
+    "title": "AI Virtual Gene Perturbation as a Pre-Screening Step before Wet-Lab Validation, Demonstrated in OPLL",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI仮想遺伝子摂動によるOPLL前スクリーニングはゲノム・転写オミクス解析タスクのため。"
+  },
+  {
+    "no": 70,
+    "field": "臨床科学",
+    "title": "不明熱における患者の言葉の科学化",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "不明熱における患者自身の言葉の科学化は患者自由記述テキストのNLP解析タスクのため。"
+  },
+  {
+    "no": 71,
+    "field": "生命科学・薬学",
+    "title": "線虫10万個体のストレス応答動画のライブラリ化と活用基盤の形成",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "線虫10万個体のストレス応答動画ライブラリ化は動画・顕微鏡画像解析（CV）のため。"
+  },
+  {
+    "no": 72,
+    "field": "生命科学・薬学",
+    "title": "AI・ウェット連携で加速するゲノム複製開始位置決定タンパクORCの機能切替スイッチの探索",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ゲノム複製開始タンパクORCの機能切替スイッチ探索はゲノム機能解析（オミクス）のため。"
+  },
+  {
+    "no": 73,
+    "field": "生命科学・薬学",
+    "title": "ゲノム情報からの天然物潜在空間投影法の開発",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ゲノム情報から天然物潜在空間投影法を開発するのはゲノム情報を基盤とするためのため。"
+  },
+  {
+    "no": 74,
+    "field": "生命科学・薬学",
+    "title": "オルガネラ局在RNAの解明に向けたラベル化RNA-SeqデータのAI統合解析",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "オルガネラ局在RNAの解明はRNA-Seqデータを用いたオミクス統合解析タスクのため。"
+  },
+  {
+    "no": 75,
+    "field": "生命科学・薬学",
+    "title": "AIが解く神経発達転写コードによる環境化学物質の毒性リスクマップ構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "神経発達転写コードによる毒性リスクマップ構築はトランスクリプトーム解析が核のため。"
+  },
+  {
+    "no": 76,
+    "field": "生命科学・薬学",
+    "title": "AI駆動型空間解析によるペルオキシソーム恒常性破綻の予兆検知：オルガネラ動態の多階層解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI駆動型空間解析によるペルオキシソーム恒常性の予兆検知はオルガネラ顕微鏡画像解析のため。"
+  },
+  {
+    "no": 77,
+    "field": "生命科学・薬学",
+    "title": "マウスの行動・脳波・心電・超音波発声の同時計測とAI統合解析による精神疾患バイオマーカー探索",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "マウスの行動・脳波・心電・超音波発声の同時計測AI統合解析はマルチモーダル生体信号融合のため。"
+  },
+  {
+    "no": 78,
+    "field": "生命科学・薬学",
+    "title": "A-HUMによるレット症候群の急性悪化前兆の可視化:多モードAI解析による破綻時間構造の種横断マップ",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "レット症候群の急性悪化前兆可視化は多モードAI解析による時系列生体信号解析のため。"
+  },
+  {
+    "no": 79,
+    "field": "生命科学・薬学",
+    "title": "肺癌病理画像からの核酸収量対応データセットの構築―核酸収量予測AI導入基盤の創出―",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "肺癌病理画像からの核酸収量対応データセット構築は病理スライド画像を基盤とするため。"
+  },
+  {
+    "no": 80,
+    "field": "生命科学・薬学",
+    "title": "AIによる相分離タンパク質標的protein binder設計原理の確立と遺伝子治療基盤の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "相分離タンパク質を標的とするprotein binder設計原理確立はタンパク質分子設計GNNのため。"
+  },
+  {
+    "no": 81,
+    "field": "生命科学・薬学",
+    "title": "実験フィードバックを組み込んだ生成AIによる新規血管新生阻害剤の分子設計",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "実験フィードバックを組み込んだ生成AIによる新規血管新生阻害剤の分子設計タスクのため。"
+  },
+  {
+    "no": 82,
+    "field": "生命科学・薬学",
+    "title": "AIを活用した動物ウイルス感染症に対する抗ウイルス候補探索と迅速ウイルス分離基盤の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "抗ウイルス候補探索と迅速ウイルス分離基盤構築は抗ウイルス分子設計・スクリーニングのため。"
+  },
+  {
+    "no": 83,
+    "field": "生命科学・薬学",
+    "title": "Graph Neural Network統合型Score-based MCMCの萌芽的開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] Score-based MCMCの一般ML手法研究。分子・材料対象の記載なし。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 84,
+    "field": "生命科学・薬学",
+    "title": "AIによる生物のシグナル伝達系数理モデルの自動構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "生物シグナル伝達系の数理モデル自動構築はシステムバイオロジーの統計・数理モデルのため。"
+  },
+  {
+    "no": 85,
+    "field": "生命科学・薬学",
+    "title": "日本人集団におけるRNA editingとedQTLの解明および深層学習による解析基盤の構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "日本人集団のRNA editingとedQTL解明はRNA-seqベースのゲノミクス・オミクス解析のため。"
+  },
+  {
+    "no": 86,
+    "field": "生命科学・薬学",
+    "title": "栄養環境に応答する分裂酵母細胞周期のAI駆動型デジタルツイン構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "栄養応答する分裂酵母細胞周期のAI駆動型デジタルツイン構築はシミュレーション主体のため。"
+  },
+  {
+    "no": 87,
+    "field": "生命科学・薬学",
+    "title": "AI設計binderによる局所翻訳操作技術の創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI設計binderによる局所翻訳操作技術創出はde novoタンパク質バインダー設計のため。"
+  },
+  {
+    "no": 88,
+    "field": "生命科学・薬学",
+    "title": "マルチモーダルAIによる「自然免疫の記憶」の生存ダイナミクスの解析と制御ネットワークの解明",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "自然免疫の記憶の生存ダイナミクス解析はマルチモーダルでもオミクスデータが核のため。"
+  },
+  {
+    "no": 89,
+    "field": "生命科学・薬学",
+    "title": "AI活用型顕微鏡画像解析およびAI支援型数理モデル構築による分裂酵母細胞周期ネットワークの解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "顕微鏡画像解析と数理モデルによる分裂酵母細胞周期ネットワーク解析は顕微鏡CV活用のため。"
+  },
+  {
+    "no": 90,
+    "field": "生命科学・薬学",
+    "title": "高速細菌ドリル運動のAI時空間解析と運動戦略の解明",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "高速細菌ドリル運動のAI時空間解析と運動戦略解明は顕微鏡動画の画像解析（CV）のため。"
+  },
+  {
+    "no": 91,
+    "field": "生命科学・薬学",
+    "title": "構造生物学者の暗黙知を取り入れたRNA言語モデル・VLM統合型の、RNA立体構造評価AIの開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "RNA言語モデル・VLM統合型のRNA立体構造評価AIはRNA分子の構造予測・評価MLのため。"
+  },
+  {
+    "no": 92,
+    "field": "生命科学・薬学",
+    "title": "不死化正常肺細胞モデルを用いた画像AIによる肺発がん過程の悪性化早期予測法の開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "不死化細胞の顕微鏡画像AIによる肺発がん過程悪性化予測は体外顕微鏡画像解析（CV）のため。"
+  },
+  {
+    "no": 93,
+    "field": "生命科学・薬学",
+    "title": "非天然ペプチドからなる超巨大ライブラリーを用いた生体分子結合ファーマコフォアのAI予測と検証",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "非天然ペプチドライブラリーを用いた生体分子結合ファーマコフォアのAI予測はペプチド設計のため。"
+  },
+  {
+    "no": 94,
+    "field": "生命科学・薬学",
+    "title": "先回り創薬：受容体遺伝的多様性×分子レパートリー SNPバリアント対応の網羅的AI設計",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "TamGen",
+    "reasoning": "[rubber-duck修正] 受容体SNPごとの分子レパートリー設計。標的タンパク質依存創薬。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 95,
+    "field": "生命科学・薬学",
+    "title": "「熟練職人芸」による電気生理実験技術を、AIにより再現・代替する",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "電気生理実験の熟練職人芸による操作技術をAIにより再現・代替する技術模倣MLタスクのため。"
+  },
+  {
+    "no": 96,
+    "field": "生命科学・薬学",
+    "title": "機械学習による新規イントロン様配列の探索と機能解析",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "機械学習による新規イントロン様配列の探索と機能解析はゲノム配列解析（オミクス）のため。"
+  },
+  {
+    "no": 97,
+    "field": "生命科学・薬学",
+    "title": "生成AIによるde novoタンパク質設計を用いたBMP脂質に対する結合バインダーの創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "生成AIによるde novoタンパク質設計でBMP脂質結合バインダーを創出するためのため。"
+  },
+  {
+    "no": 98,
+    "field": "生命科学・薬学",
+    "title": "ショウジョウバエ攻撃性の高スループットAIスクリーニング基盤の構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "ショウジョウバエ攻撃性の高スループットAIスクリーニングは動虫行動動画解析（CV）のため。"
+  },
+  {
+    "no": 99,
+    "field": "生命科学・薬学",
+    "title": "AIロボットと患者由来小細胞肺がんオルガノイドを用いたシスプラチン耐性獲得機構の解明",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "患者由来肺がんオルガノイドを用いた耐性獲得機構解明は細胞・オルガノイド画像解析のため。"
+  },
+  {
+    "no": 100,
+    "field": "生命科学・薬学",
+    "title": "Using AI models to identify pharmacological methods of disrupting male mosquito hearing behaviors",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "オスモスキトの聴覚行動を阻害する薬理的手法特定AIは音響信号・聴覚行動解析のため。"
+  },
+  {
+    "no": 101,
+    "field": "生命科学・薬学",
+    "title": "医薬品リード化合物創出のための「有機合成化学者が開発する化合物生成・評価AI」",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "医薬品リード化合物創出のための化合物生成・評価AIは分子生成GNN・設計MLのため。"
+  },
+  {
+    "no": 102,
+    "field": "生命科学・薬学",
+    "title": "公共オミクスデータとAIの統合による細胞膜透過ペプチドのDDS予測モデルの構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "公共オミクスデータとAIの統合による細胞膜透過ペプチドDDS予測はオミクスデータ活用のため。"
+  },
+  {
+    "no": 103,
+    "field": "生命科学・薬学",
+    "title": "網羅的AIインシリコ解析によるヒト嗅覚受容体高親和性リガンドの同定と分子基盤型嗅覚治療への応用",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "TamGen",
+    "reasoning": "ヒト嗅覚受容体（標的タンパク質）への高親和性リガンド同定はTamGenの創薬リード探索に相当。"
+  },
+  {
+    "no": 104,
+    "field": "生命科学・薬学",
+    "title": "センサー計測データを用いたAI駆動型ミトコンドリア単離最適化の概念実証",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "センサー計測データによるミトコンドリア単離プロセス最適化は実験プロセス最適化MLのため。"
+  },
+  {
+    "no": 105,
+    "field": "生命科学・薬学",
+    "title": "霊長類脳型の視覚基盤モデルのための大規模脳活動データセットの構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "霊長類脳型視覚基盤モデルのための大規模脳活動（fMRI・神経記録）データセット構築のため。"
+  },
+  {
+    "no": 106,
+    "field": "生命科学・薬学",
+    "title": "既設機器から小さく始める実験自動化に向けたAI支援モジュールの開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "既設機器から始める実験自動化のAI支援モジュール開発は汎用MLによる実験制御のため。"
+  },
+  {
+    "no": 107,
+    "field": "生命科学・薬学",
+    "title": "脳神経筋骨格AIによるヒト感覚運動発達制御の再構成と実世界検証型疾患病態解析基盤の構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "脳神経筋骨格AIによるヒト感覚運動発達制御の再構成は大規模シミュレーションが核のため。"
+  },
+  {
+    "no": 108,
+    "field": "生命科学・薬学",
+    "title": "AI画像解析技術を用いた細胞老化様状態の定量評価と若返り候補化合物の探索",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI画像解析による細胞老化様状態の定量評価と若返り候補探索は顕微鏡画像CVのため。"
+  },
+  {
+    "no": 109,
+    "field": "生命科学・薬学",
+    "title": "評価駆動型AI探索によるpH応答性ペプチド設計法の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "評価駆動型AI探索によるpH応答性ペプチド設計法構築は分子設計（GNN/ML）のため。"
+  },
+  {
+    "no": 110,
+    "field": "生命科学・薬学",
+    "title": "高感度かつ高精度に希少現象を捉える、蛍光偏光解析に基づく次世代イベント駆動型自律顕微鏡システムの構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "蛍光偏光解析に基づく次世代自律顕微鏡システム開発は顕微鏡画像解析（CV）技術のため。"
+  },
+  {
+    "no": 111,
+    "field": "生命科学・薬学",
+    "title": "AIで50年来の受精の謎に挑むー卵子による同種・異種精子認識機構の解明",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIで受精の謎に挑む卵子・精子認識機構解明は顕微鏡の細胞画像解析（CV）のため。"
+  },
+  {
+    "no": 112,
+    "field": "生命科学・薬学",
+    "title": "最新AIを用いたGRPR選択的NAMの中分子設計による、慢性掻痒・がんに対する新規治療基盤の確立",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] TamGenは低分子創薬。中分子設計は対象外のため過剰付与。 (旧: foundation-model-science/TamGen)"
+  },
+  {
+    "no": 113,
+    "field": "生命科学・薬学",
+    "title": "AIによるタンパク質設計を活用した転写因子STAT3/5を標的とするbioPROTACの開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "STAT3/5を標的とするbioPROTACのタンパク質設計は独自のタンパク質設計・分子GNNのため。"
+  },
+  {
+    "no": 114,
+    "field": "生命科学・薬学",
+    "title": "タンパク質言語モデルを用いたCaMKII結合モチーフの網羅的同定と液-液相分離予測基盤の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "タンパク質言語モデルによるCaMKII結合モチーフ同定と液-液相分離予測基盤構築のため。"
+  },
+  {
+    "no": 115,
+    "field": "生命科学・薬学",
+    "title": "アイソフォーム解像度で俯瞰する細胞内局所翻訳の全貌",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "アイソフォーム解像度での細胞内局所翻訳解明はRNA-seqオミクス解析が核のため。"
+  },
+  {
+    "no": 116,
+    "field": "生命科学・薬学",
+    "title": "空間トランスクリプトームとAIによるアミロイドβ病理形成過程の予測と再構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "空間トランスクリプトームとAIによるアミロイドβ病理形成予測は空間オミクス解析のため。"
+  },
+  {
+    "no": 117,
+    "field": "生命科学・薬学",
+    "title": "未知の細胞タイプにおける転写因子結合を予測する",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "未知の細胞タイプにおける転写因子結合を予測するのはゲノム・エピゲノムオミクス解析のため。"
+  },
+  {
+    "no": 118,
+    "field": "生命科学・薬学",
+    "title": "レドックスコードから細胞恒常性を読み解く：AIによる構造ダイナミクスと細胞状態遷移の予測",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "レドックスコードから細胞状態遷移を予測するのはオミクスデータの細胞状態解析のため。"
+  },
+  {
+    "no": 119,
+    "field": "生命科学・薬学",
+    "title": "自己反応性B細胞はなぜ病原性B細胞になるのか：AIによるBCRクローン運命予測",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "自己反応性BCRクローン運命予測はシングルセルBCRレパートリー解析（オミクス）のため。"
+  },
+  {
+    "no": 120,
+    "field": "生命科学・薬学",
+    "title": "正二十面体対称粒子形成を規定する構造原理のグラフニューラルネットワーク解析",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "正二十面体対称粒子形成の構造原理のGNN解析はタンパク質・分子構造へのGNN応用のため。"
+  },
+  {
+    "no": 121,
+    "field": "生命科学・薬学",
+    "title": "希少疾患原因遺伝子に由来する困難配列に対するAI駆動型mRNA創薬設計基盤の構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "希少疾患原因遺伝子の困難配列に対するAI駆動mRNA創薬設計はゲノム・RNA設計のため。"
+  },
+  {
+    "no": 122,
+    "field": "生命科学・薬学",
+    "title": "周術期におけるヘルスケアアプリを用いた心拍変動解析による術後合併症予測に関する前向き探索研究",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "心拍変動（HRV）時系列解析による術後合併症予測はウェアラブル時系列生体信号解析のため。"
+  },
+  {
+    "no": 123,
+    "field": "生命科学・薬学",
+    "title": "ヒト中脳との細胞状態相同性に基づく脳オルガノイド評価AI基盤の開発",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ヒト中脳との細胞状態相同性に基づく脳オルガノイド評価AIはシングルセルRNA解析のため。"
+  },
+  {
+    "no": 124,
+    "field": "生命科学・薬学",
+    "title": "AI駆動型ライブイメージングによる単離細胞動態データの創出と未知運動モード探索",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI駆動型ライブイメージングによる単離細胞動態データ創出は顕微鏡ライブ画像解析のため。"
+  },
+  {
+    "no": 125,
+    "field": "生命科学・薬学",
+    "title": "自律型AIエージェントを活用したテルペン環化酵素のドッキングシミュレーションの完全自動化",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "自律型AIエージェントによるテルペン環化酵素ドッキングシミュレーション完全自動化のため。"
+  },
+  {
+    "no": 126,
+    "field": "生命科学・薬学",
+    "title": "AIと人間の協働による定義更新型ゲノム編集要素探索：発見確率最大化原理の創出",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AIと人間の協働による定義更新型ゲノム編集要素探索はゲノムオミクス解析が核のため。"
+  },
+  {
+    "no": 127,
+    "field": "生命科学・薬学",
+    "title": "子宮頸部における異型細胞判定の適正化",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "子宮頸部における異型細胞判定の適正化は頸部細胞診画像の医用画像AI診断タスクのため。"
+  },
+  {
+    "no": 128,
+    "field": "生命科学・薬学",
+    "title": "無バイアス条件下における細胞遊走の方向決定機構の解明に向けたAI解析手法の開発および実験的検証",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "無バイアス条件下における細胞遊走の方向決定機構解明のAI解析は顕微鏡画像CVのため。"
+  },
+  {
+    "no": 129,
+    "field": "生命科学・薬学",
+    "title": "市場原理の届かない放射線疫学・臨床分野における統計解析環境の整備：AI技術による開発加速",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "放射線疫学・臨床分野のAI技術による統計解析環境整備は統計・疫学モデリングのため。"
+  },
+  {
+    "no": 130,
+    "field": "生命科学・薬学",
+    "title": "トランスポソン-フリーのデジタルツイン・ヒトゲノム構築による未知の機能性DNAエレメントの探索",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "トランスポソンフリーのデジタルツインヒトゲノム構築による機能性DNA探索はゲノムオミクスのため。"
+  },
+  {
+    "no": 131,
+    "field": "生命科学・薬学",
+    "title": "AI駆動Dry-Wet共創で迫るケトン体代謝の存在意義",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI駆動Dry-Wet共創によるケトン体代謝解明はメタボロミクス・オミクス統合解析のため。"
+  },
+  {
+    "no": 132,
+    "field": "生命科学・薬学",
+    "title": "AIによるシャペロン凝集状態空間の再構成とウイルス感染ダイナミクスの定量化",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "シャペロン凝集状態空間の再構成は分子の構造・動的状態解析で分子GNN/MLのため。"
+  },
+  {
+    "no": 133,
+    "field": "生命科学・薬学",
+    "title": "AI支援型設計・評価による光遺伝学ツール開発基盤の創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI支援型設計・評価による光遺伝学ツール開発は光タンパク質の分子設計・最適化のため。"
+  },
+  {
+    "no": 134,
+    "field": "生命科学・薬学",
+    "title": "深層学習による基質予測を活用したオーファントランスポーターの機能解明",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "深層学習基質予測を活用したオーファントランスポーター機能解明は分子-タンパク質相互作用MLのため。"
+  },
+  {
+    "no": 135,
+    "field": "生命科学・薬学",
+    "title": "AI設計人工分子による標的細胞操作技術の開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI設計人工分子による標的細胞操作技術開発はde novo分子設計GNNのため。"
+  },
+  {
+    "no": 136,
+    "field": "生命科学・薬学",
+    "title": "AIによる光操作性CaMKII融合タンパク質の合理的設計：動的構造変化シミュレーションに基づく最適化",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "BioEmu",
+    "reasoning": "[rubber-duck修正] CaMKII融合タンパク質の動的構造変化。構造アンサンブル用途。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 137,
+    "field": "生命科学・薬学",
+    "title": "ヒト胎児肩甲骨コレクションに基づく標準化画像のハイブリッドAI解析による肩甲切痕形成過程の解明",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "ヒト胎児肩甲骨の標準化画像ハイブリッドAI解析による形成過程解明は解剖医用画像解析のため。"
+  },
+  {
+    "no": 138,
+    "field": "生命科学・薬学",
+    "title": "大規模AI構造予測による、機能化ヒト特異的重複遺伝子のハイスループット選定",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "大規模AI構造予測によるヒト特異的重複遺伝子ハイスループット選定はタンパク質構造予測MLのため。"
+  },
+  {
+    "no": 139,
+    "field": "生命科学・薬学",
+    "title": "マウスの経験依存的な視聴覚統合を実現する深層生成世界モデルの実装",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "マウスの視聴覚統合を実現する深層生成世界モデルは視覚＋聴覚マルチモーダルのため。"
+  },
+  {
+    "no": 140,
+    "field": "生命科学・薬学",
+    "title": "AIを用いた脳移行性構造解析と血液脳関門トランスポーター認識性評価による創薬基盤の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "脳移行性構造解析と血液脳関門トランスポーター認識評価による創薬基盤は分子設計MLのため。"
+  },
+  {
+    "no": 141,
+    "field": "生命科学・薬学",
+    "title": "AIによる細胞状態空間の再構成を通じた胞子発芽機構の解明",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AIによる細胞状態空間再構成を通じた胞子発芽機構解明はシングルセル細胞状態解析のため。"
+  },
+  {
+    "no": 142,
+    "field": "生命科学・薬学",
+    "title": "行動から回路演算へ：自発活動から病的因果を予測するAI-ready基盤構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "自発活動から病的因果を予測するAI-ready基盤構築は神経活動時系列データ解析のため。"
+  },
+  {
+    "no": 143,
+    "field": "生命科学・薬学",
+    "title": "化膿レンサ球菌が産生するMタンパクの構造的保存エピトープの解読",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "化膿レンサ球菌Mタンパクの構造的保存エピトープ解読はタンパク質構造解析・設計のため。"
+  },
+  {
+    "no": 144,
+    "field": "生命科学・薬学",
+    "title": "ウイルス変異株に有効な新規抗体を迅速に開発できるAI駆動型設計手法の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "ウイルス変異株に有効な新規抗体のAI駆動型設計手法構築は抗体分子設計MLのため。"
+  },
+  {
+    "no": 145,
+    "field": "生命科学・薬学",
+    "title": "AIで解く加齢脳の機能維持を支える脳状態遷移の再編成",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "加齢脳の機能維持を支える脳状態遷移の再編成はfMRI・神経活動時系列解析のため。"
+  },
+  {
+    "no": 146,
+    "field": "生命科学・薬学",
+    "title": "ReLEM: Development of Trustworthy Generative EEG AI through Explainability and Knowledge Integration",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "Trustworthy Generative EEG AIの開発はEEG時系列生体信号の生成・解析のため。"
+  },
+  {
+    "no": 147,
+    "field": "生命科学・薬学",
+    "title": "化学修飾による非線形構造歪みを考慮したsiRNA構造予測と機能相関モデルの構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "化学修飾による非線形構造歪みを考慮したsiRNA構造予測と機能相関モデルはRNA分子設計のため。"
+  },
+  {
+    "no": 148,
+    "field": "生命科学・薬学",
+    "title": "高次元多重イメージングのためのAI駆動型蛍光寿命バーコーディング技術",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI駆動型蛍光寿命バーコーディングによる高次元多重イメージングは顕微鏡画像技術CVのため。"
+  },
+  {
+    "no": 149,
+    "field": "生命科学・薬学",
+    "title": "深層学習によるバキュロウイルス核内コンデンセートの4D動態解析と相分離制御機構の解明",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "深層学習によるバキュロウイルス核内コンデンセートの4D動態解析は顕微鏡4D画像解析のため。"
+  },
+  {
+    "no": 150,
+    "field": "生命科学・薬学",
+    "title": "自然言語で操作できる協働ロボット制御アプリ開発による分子生物学実験自動化の民主化",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "自然言語で操作する協働ロボット制御アプリによる実験自動化の民主化はLLMエージェントのため。"
+  },
+  {
+    "no": 151,
+    "field": "生命科学・薬学",
+    "title": "VR環境下におけるニホンザルの行動・生理指標のマルチモーダルAI解析による自己身体認識過程の推定",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "VR環境下のニホンザルの行動・生理指標のマルチモーダルAI解析は複数モダリティ融合のため。"
+  },
+  {
+    "no": 152,
+    "field": "生命科学・薬学",
+    "title": "構造予測と機械学習を用いた後生動物NP–GPCR結合ネットワークの網羅的推定と進化的再配線の解明",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "構造予測とMLを用いた後生動物NP-GPCR結合ネットワーク推定は分子-受容体相互作用MLのため。"
+  },
+  {
+    "no": 153,
+    "field": "生命科学・薬学",
+    "title": "自律的cryo-EM試料作成装置の開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "自律的cryo-EM試料作成装置の開発は実験自動化・制御のための機械学習応用のため。"
+  },
+  {
+    "no": 154,
+    "field": "生命科学・薬学",
+    "title": "AI主導型タンパク質設計によるSAM特異的Dnmt1変異体の創出と基質選択性制御機構の解明",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI主導型タンパク質設計によるSAM特異的Dnmt1変異体創出はde novoタンパク質設計のため。"
+  },
+  {
+    "no": 155,
+    "field": "生命科学・薬学",
+    "title": "AIによる巨大単細胞内概日時計の時空間構造解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIによる巨大単細胞内概日時計の時空間構造解析は顕微鏡画像の空間解析（CV）のため。"
+  },
+  {
+    "no": 156,
+    "field": "生命科学・薬学",
+    "title": "新規同定したSOX2結合配列のDNA shape情報より新たな結合領域をAIにより解析予測・実証する",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "SOX2結合配列のDNA shape情報から新たな結合領域をAI解析するゲノムオミクス研究のため。"
+  },
+  {
+    "no": 157,
+    "field": "生命科学・薬学",
+    "title": "ラベルフリー顕微鏡画像から得られる細胞の形態的特徴とその時間変化に基づく幹細胞分化評価手法の構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "ラベルフリー顕微鏡画像の細胞形態特徴と時間変化による幹細胞分化評価は顕微鏡画像CVのため。"
+  },
+  {
+    "no": 158,
+    "field": "生命科学・薬学",
+    "title": "AI多目的最適化を用いたNMT標的PETトレーサー探索基盤の構築",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "TamGen",
+    "reasoning": "[rubber-duck修正] NMT標的PETトレーサー探索。標的タンパク質ベース低分子創薬。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 159,
+    "field": "生命科学・薬学",
+    "title": "タンパク質構造情報と生成AIの融合による天然志向型分子設計基盤の開発",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "TamGen",
+    "reasoning": "[rubber-duck修正] タンパク質構造を条件に低分子生成。target-aware molecule generation。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 160,
+    "field": "生命科学・薬学",
+    "title": "大規模ペプチドライブラリーを基盤としたAI解析融合型創薬シーズ探索技術の開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "大規模ペプチドライブラリーを基盤としたAI解析融合型創薬シーズ探索はペプチド設計MLのため。"
+  },
+  {
+    "no": 161,
+    "field": "生命科学・薬学",
+    "title": "AI活用による患者自身のナラティブを基盤とした稀少疾患のデータベース構築と基礎研究との連携提案・治療戦略創出",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "患者ナラティブを基盤とした稀少疾患データベース構築はLLMによるテキスト抽出・RAGのため。"
+  },
+  {
+    "no": 162,
+    "field": "生命科学・薬学",
+    "title": "深層強化学習と量子化学計算を統合したAI創薬：耐性変異を克服する次世代EGFR阻害薬の設計基盤",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "TamGen",
+    "reasoning": "[rubber-duck修正] EGFR標的阻害薬設計。標的タンパク質ベース創薬。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 163,
+    "field": "生命科学・薬学",
+    "title": "AIによる自己抗体関連T細胞のエピトープ予測",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AIによる自己抗体関連T細胞のエピトープ予測は分子レベルのエピトープ予測MLのため。"
+  },
+  {
+    "no": 164,
+    "field": "生命科学・薬学",
+    "title": "AI解析に向けた炎症関連超硫黄オミックスデータセットの構築",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI解析に向けた炎症関連超硫黄オミックスデータセット構築はオミクスデータ基盤整備のため。"
+  },
+  {
+    "no": 165,
+    "field": "生命科学・薬学",
+    "title": "AI画像再構成を用いた低磁場DNP-MRI画像の高精度化",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "AI画像再構成を用いた低磁場DNP-MRIの高精度化は医用MRI画像再構成のため。"
+  },
+  {
+    "no": 166,
+    "field": "生命科学・薬学",
+    "title": "AI統合解析による後天的獲得形質遺伝機構の解明",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI統合解析による後天的獲得形質遺伝機構の解明はエピゲノム・オミクス解析が核のため。"
+  },
+  {
+    "no": 167,
+    "field": "生命科学・薬学",
+    "title": "AI統合解析を用いた脂肪毒性に伴うリソソーム機能破綻機構の解明",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "AI統合解析を用いた脂肪毒性に伴うリソソーム機能破綻機構解明はセルオミクス解析のため。"
+  },
+  {
+    "no": 168,
+    "field": "生命科学・薬学",
+    "title": "ゲノムAIを活用したTgマーモセットの組織別発現制御サイトと安全な遺伝子挿入領域の特定",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ゲノムAIによるTgマーモセットの組織別発現制御サイト特定はゲノムオミクス解析のため。"
+  },
+  {
+    "no": 169,
+    "field": "化学",
+    "title": "データ駆動型昆虫体内反応場設計によるナノカーボン分子の生物変換の予測と制御",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "データ駆動型昆虫体内反応場設計によるナノカーボン分子の生物変換予測は分子反応MLのため。"
+  },
+  {
+    "no": 170,
+    "field": "化学",
+    "title": "AI駆動非平衡分子動力学によるタンパク質凝集経路の予測・誘導手法の開発",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "BioEmu",
+    "reasoning": "[rubber-duck修正] タンパク質凝集の非平衡コンフォメーション経路予測。動的アンサンブル。 (旧: molecular-gnn)"
+  },
+  {
+    "no": 171,
+    "field": "化学",
+    "title": "機械学習によるダークデータの活用に基づく触媒設計指針の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "機械学習によるダークデータ活用に基づく触媒設計指針の構築は触媒分子特性MLのため。"
+  },
+  {
+    "no": 172,
+    "field": "化学",
+    "title": "視覚言語AI融合による化学図表からの高精度データ抽出ツールの開発と新反応開拓",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "視覚言語AI融合による化学図表からの高精度データ抽出はVLMのマルチモーダル応用のため。"
+  },
+  {
+    "no": 173,
+    "field": "化学",
+    "title": "革新的光触媒創出に向けたOperational SHAP法の開発と分析化学データ駆動型AI材料探索",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "革新的光触媒創出へのOperational SHAP法と分析化学データ駆動AI材料探索のため。"
+  },
+  {
+    "no": 174,
+    "field": "化学",
+    "title": "巨大探索空間のAI縮約に基づく1ラウンドアプタマー選抜の実証",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "巨大探索空間のAI縮約に基づく1ラウンドアプタマー選抜は核酸分子設計（GNN/ML）のため。"
+  },
+  {
+    "no": 175,
+    "field": "化学",
+    "title": "高スループットで高性能有機りん光分子探索を可能とする強線形相関データセットの構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "高スループット有機りん光分子探索の強線形相関データセット構築は分子特性予測MLのため。"
+  },
+  {
+    "no": 176,
+    "field": "化学",
+    "title": "AI駆動近接相マップによるLi/Naイオン伝導マルチアニオン化合物群探索",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterGen",
+    "reasoning": "Li/Naイオン伝導マルチアニオン無機化合物群の探索はMatterGenの新規結晶構造・無機材料生成に相当。"
+  },
+  {
+    "no": 177,
+    "field": "化学",
+    "title": "有機化学的反応展開を酵素利用型バイオ生産へ接続するAI支援型酵素選択",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "有機化学反応を酵素利用バイオ生産へ接続するAI支援型酵素選択は酵素-基質分子MLのため。"
+  },
+  {
+    "no": 178,
+    "field": "化学",
+    "title": "AI駆動型軟X線吸収分光によるマイクロプラスチックの定量解析基盤の構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "AI駆動型軟X線吸収分光によるマイクロプラスチック定量解析はスペクトル信号解析のため。"
+  },
+  {
+    "no": 179,
+    "field": "化学",
+    "title": "配位多面体記述子に基づくアクティブラーニングによる多元系層状ペロブスカイトの設計原理の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "配位多面体記述子に基づくアクティブラーニングによる多元系層状ペロブスカイト設計のため。"
+  },
+  {
+    "no": 180,
+    "field": "化学",
+    "title": "溶媒の量子化学効果を取り込んだデータ生成による効率的な機械学習ポテンシャルの構築",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterSim",
+    "reasoning": "溶媒量子化学効果を取り込んだMLポテンシャル構築はMatterSimの原子間相互作用・DFT代替に相当。"
+  },
+  {
+    "no": 181,
+    "field": "化学",
+    "title": "AIサロゲートモデルとベイズ最適化による高効率溶液混合器の幾何学的形状の自動設計と実証",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIサロゲートモデルとベイズ最適化による溶液混合器幾何形状設計は流体シミュレーション最適化のため。"
+  },
+  {
+    "no": 182,
+    "field": "化学",
+    "title": "AIを用いた不完全文献の関係構造化による放電反応の順逆推定モデル構築",
+    "primary_category": "graph-rag",
+    "foundry_model": null,
+    "reasoning": "不完全文献の関係構造化による放電反応の順逆推定はナレッジグラフ構築・関係抽出RAGのため。"
+  },
+  {
+    "no": 183,
+    "field": "化学",
+    "title": "チオフラビン型有機光触媒の合理設計を実現するAI予測プラットフォームの構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "チオフラビン型有機光触媒の合理設計AI予測プラットフォームは光触媒分子設計GNNのため。"
+  },
+  {
+    "no": 184,
+    "field": "化学",
+    "title": "反応経路探索と立体電子状態解析の融合による反応選択性予測AIの開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "反応経路探索と立体電子状態解析を融合した反応選択性予測AIは化学反応予測MLのため。"
+  },
+  {
+    "no": 185,
+    "field": "化学",
+    "title": "自然言語情報と化学構造情報の潜在空間内での統合に基づく分子設計手法の開発",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "自然言語と化学構造情報の潜在空間統合による分子設計はテキスト+化学構造マルチモーダルのため。"
+  },
+  {
+    "no": 186,
+    "field": "化学",
+    "title": "ヘリウムフリー卓上型NMRのバーチャル高磁場化：物理情報AIによる食品含有成分分析のための基盤構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "物理情報AIによる卓上型NMRのバーチャル高磁場化はNMRスペクトル信号処理のため。"
+  },
+  {
+    "no": 187,
+    "field": "化学",
+    "title": "少数高信頼データとAIによる量子相関光-分子相互作用の支配原理探索",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "少数高信頼データとAIによる量子相関光-分子相互作用の支配原理探索は量子化学・MLのため。"
+  },
+  {
+    "no": 188,
+    "field": "化学",
+    "title": "AIを利用したSQ・COFナノハイブリッド材料の合成と二酸化炭素吸着と自己修復の両立",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AIを利用したSQ・COFナノハイブリッド材料の合成とCO2吸着は多孔性有機材料設計MLのため。"
+  },
+  {
+    "no": 189,
+    "field": "化学",
+    "title": "量子コヒーレント反応座標の解明:5fs光実験とAI解析で拓く量子非平衡化学",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "量子コヒーレント反応座標の解明は5fs光実験とAI解析で拓く量子化学分子動力学のため。"
+  },
+  {
+    "no": 190,
+    "field": "化学",
+    "title": "AI駆動型反応機構解析によるハロゲンラジカル酸化反応の予測・設計基盤の創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI駆動型反応機構解析によるハロゲンラジカル酸化反応の予測・設計基盤創出のため。"
+  },
+  {
+    "no": 191,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "物理制約型深層学習（PINNs）による都市域地盤液状化リスクの高精度予測と解釈可能AIの構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "物理制約型PINNsによる都市域地盤液状化リスク予測は物理制約付き数値シミュレーションのため。"
+  },
+  {
+    "no": 192,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "粗面乱流における低次元支配構造の解明とマクロ壁モデルの構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "粗面乱流の低次元支配構造解明とマクロ壁モデル構築は流体力学シミュレーション・MLのため。"
+  },
+  {
+    "no": 193,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "AI補正による傾斜機能TPMSラティス熱交換器マクロモデルの高精度化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI補正による傾斜機能TPMSラティス熱交換器マクロモデルの高精度化はシミュレーションのため。"
+  },
+  {
+    "no": 194,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "放射光X線CTによる変形・破壊挙動の4Dデータベース構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "放射光X線CTによる変形・破壊挙動の4Dデータベース構築はCT体積画像解析（CV）のため。"
+  },
+  {
+    "no": 195,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "大規模地震後の多様な土砂移動現象を統一的に扱う機械学習用データベース構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "大規模地震後の土砂移動現象を扱う機械学習用データベース構築は統計的データ駆動解析のため。"
+  },
+  {
+    "no": 196,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "非晶質ポリカーボネートにおけるボイド形成前駆構造のAI同定",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "非晶質ポリカーボネートにおけるボイド形成前駆構造のAI同定は分子レベル構造解析MLのため。"
+  },
+  {
+    "no": 197,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "微細気泡発生装置の統一性能記述に向けたAI駆動型気泡径分布解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "微細気泡発生装置の統一性能記述に向けたAI駆動型気泡径分布解析は気泡画像CVのため。"
+  },
+  {
+    "no": 198,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "モーションブラー補償画像の物理特性を考慮したAI基盤モデルの移動体間ドメイン汎化研究",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "モーションブラー補償画像を用いたAI基盤モデルのドメイン汎化研究はCV基盤研究のため。"
+  },
+  {
+    "no": 199,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "強震動データベースと地盤センシングデータによる地震動AIモデルの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "強震動データベースと地盤センシングデータによる地震動AIモデルは地震波形時系列解析のため。"
+  },
+  {
+    "no": 200,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "三次元都市モデルの広域生成に向けた構造妥当性指標を報酬とする生成AIの強化学習枠組み",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "三次元都市モデルの広域生成に向けた生成AI強化学習枠組みは3D都市モデル生成（CV）のため。"
+  },
+  {
+    "no": 201,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "姿勢・自律神経・心理状態の複合解析に基づく個別健康行動変容AIエージェントの基盤技術開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "姿勢・自律神経・心理状態の複合センサ時系列解析に基づく健康行動変容AIエージェントのため。"
+  },
+  {
+    "no": 202,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "AIによる資源処理分野（浮遊選別、湿式製錬）プロセス最適化モデルの構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIによる浮遊選別・湿式製錬の資源処理プロセス最適化モデルはプロセスシミュレーションのため。"
+  },
+  {
+    "no": 203,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "海氷喫水計測に基づく信頼度付き教師データ構築とSAR海氷AI解析への適用可能性検証",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "海氷喫水計測に基づくSAR海氷AI解析はリモートセンシング画像解析（CV）のため。"
+  },
+  {
+    "no": 204,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "物理モデル融合AIによる未決定物性のマルチ情報逆解析",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "物理モデル融合AIによる未決定物性のマルチ情報逆解析は物理シミュレーション+AI逆問題のため。"
+  },
+  {
+    "no": 205,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "技術者思考模倣型AIによる形成過程が複雑な沖積地盤のN値・土質構造推定",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "技術者思考模倣型AIによる沖積地盤のN値・土質構造推定は地盤工学の統計MLのため。"
+  },
+  {
+    "no": 206,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "物理制約付き学習によるスペクトル逆問題の自動解析：核融合炉壁トリチウム計測ERDAを先行事例として",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "物理制約付き学習によるスペクトル逆問題自動解析（ERDA）はスペクトル時系列信号解析のため。"
+  },
+  {
+    "no": 207,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "三次元物理モデルと機械学習を融合した燃料電池・水電解システムのデータ駆動型高速シミュレーション",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "三次元物理モデルとMLを融合した燃料電池・水電解システムの高速シミュレーションのため。"
+  },
+  {
+    "no": 208,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "時空間AI-SRを用いた洪水氾濫解析の高速化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "時空間AI-SRを用いた洪水氾濫解析の高速化は数値シミュレーションのAI加速のため。"
+  },
+  {
+    "no": 209,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "データ駆動科学による空気潤滑メカニズムの解明と性能最大化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "データ駆動科学による空気潤滑メカニズム解明と性能最大化は流体力学シミュレーションのため。"
+  },
+  {
+    "no": 210,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "公開情報を活用した公共施設建物の寿命推計",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "公開情報を活用した公共施設建物の寿命推計は統計的回帰・生存時間予測モデルのため。"
+  },
+  {
+    "no": 211,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "精度保証されたデータ自動取得を可能とするUAV自律制御プラットフォームの構築と実証",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "精度保証されたUAV自律制御プラットフォームの構築と実証はUAV視覚制御・画像取得のため。"
+  },
+  {
+    "no": 212,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "生成AIによる日本全域海草藻場の時空間補完型データセット構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "生成AIによる日本全域海草藻場の時空間補完型データセット構築はリモートセンシング画像のため。"
+  },
+  {
+    "no": 213,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "地震動記録駆動型の液状化予測に向けたAI Ready地盤実験データベースの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "地震動記録駆動型液状化予測のAI Ready地盤データベース構築は地盤工学統計解析のため。"
+  },
+  {
+    "no": 214,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "画像・言語AIを用いた災害時SNS情報からの浸水状況把握技術の高度化",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "画像・言語AIを用いた災害時SNS情報からの浸水状況把握は画像+テキスト融合のため。"
+  },
+  {
+    "no": 215,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "生成AIを用いた弱視者の空間認知シミュレーションによる設計検証手法の構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "生成AIを用いた弱視者の空間認知シミュレーションによる設計検証はシミュレーション主体のため。"
+  },
+  {
+    "no": 216,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "公的支援を主軸に生活再建を加速する被災者伴走型「災害支援LLM」システムの開発",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "公的支援を活用した被災者伴走型「災害支援LLM」システムはLLMを核とした対話支援のため。"
+  },
+  {
+    "no": 217,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "高温太陽集熱の熱化学サイクルによる持続可能な航空燃料製造の反応媒体探索加速化に関する研究",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "太陽熱化学サイクルによる持続可能航空燃料製造の反応媒体探索は化学反応・分子MLのため。"
+  },
+  {
+    "no": 218,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "土質試験のばらつき構造の分解と物理的不確実性評価のためのAI手法",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "土質試験のばらつき構造分解と物理的不確実性評価のためのAI手法はベイズ統計的手法のため。"
+  },
+  {
+    "no": 219,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "多点時系列データに基づく床衝撃音・振動応答のAI支援型特徴抽出と測定値変動要因の説明",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "多点時系列データに基づく床衝撃音・振動応答のAI支援型特徴抽出は振動時系列解析のため。"
+  },
+  {
+    "no": 220,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "複雑な運動方程式を自動生成するAIの構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "複雑な運動方程式を自動生成するAIはLLM・シンボリックAIによる方程式生成タスクのため。"
+  },
+  {
+    "no": 221,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "AIモデルを活用した指輪型センサによる指先力推定",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "AIモデルを活用した指輪型センサによる指先力推定はウェアラブル力センサ時系列データ解析のため。"
+  },
+  {
+    "no": 222,
+    "field": "機械・社会基盤・エネルギー工学",
+    "title": "音響特徴量に基づく水素噴流火炎構造のPOD空間生成AIの開発",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "音響特徴量に基づく水素噴流火炎構造のPOD空間生成AIは音響信号処理・環境音解析のため。"
+  },
+  {
+    "no": 223,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AI駆動型分子間相互作用設計によるペロブスカイト三重項増感界面の最適化と高効率光機能創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "AI駆動型分子間相互作用設計によるペロブスカイト三重項増感界面最適化は界面分子設計MLのため。"
+  },
+  {
+    "no": 224,
+    "field": "材料・プロセス・応用医工学",
+    "title": "深層学習による超高速パラメータ推論を用いた動的kMC法の開発とプラズマ対向壁の水素・ヘリウム挙動解析",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] kMCパラメータ推論であり、MLポテンシャル/DFT代替ではない。 (旧: foundation-model-science/MatterSim)"
+  },
+  {
+    "no": 225,
+    "field": "材料・プロセス・応用医工学",
+    "title": "分子構造を共通基盤とする分野横断型有機マテリアル創製戦略の構築と実践",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "分子構造を共通基盤とする分野横断型有機マテリアル創製戦略は有機分子設計・材料MLのため。"
+  },
+  {
+    "no": 226,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AIで解き明かす超短パルスレーザー誘起界面ダイナミクス",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "超短パルスレーザー誘起界面ダイナミクスのAI解明は原子・分子スケールの動力学解析のため。"
+  },
+  {
+    "no": 227,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AI×Weissenberg RHEEDによる超高速・直接的表面構造解析手法の創出",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI×Weissenberg RHEEDによる超高速・直接的表面構造解析は回折パターン画像解析（CV）のため。"
+  },
+  {
+    "no": 228,
+    "field": "材料・プロセス・応用医工学",
+    "title": "デジタルマテリアル生成メソッドの開発",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "デジタルマテリアル生成メソッドの開発は材料構造の生成モデル開発（分子/材料設計）のため。"
+  },
+  {
+    "no": 229,
+    "field": "材料・プロセス・応用医工学",
+    "title": "放射光・AI統合解析によるFe-Si電磁鋼板の磁歪予測と低騒音材料設計",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 放射光実験データからの物性回帰。原子間ポテンシャルではない。 (旧: foundation-model-science/MatterSim)"
+  },
+  {
+    "no": 230,
+    "field": "材料・プロセス・応用医工学",
+    "title": "層状ペロブスカイト化合物における逐次相転移の有限温度予測に向けたAI計算フレームワークの開発",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterSim",
+    "reasoning": "層状ペロブスカイトの有限温度相転移予測AIフレームワークはMatterSimの材料物性シミュレーションに相当。"
+  },
+  {
+    "no": 231,
+    "field": "材料・プロセス・応用医工学",
+    "title": "Building a Japanese-Inclusive Multilingual Benchmark for Grounded Chest X-ray Report Generation: Cross-lingual Clinical Equivalence and Systematic Evaluation of State-of-the-Art Systems",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 胸部X線が対象の臨床画像研究。優先順位上medical-imaging。 (旧: multimodal)"
+  },
+  {
+    "no": 232,
+    "field": "材料・プロセス・応用医工学",
+    "title": "走査プローブ顕微鏡の状態改善軌跡を学び自ら進化する画像知覚型小規模言語モデル",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "走査プローブ顕微鏡の画像知覚型小規模言語モデルは顕微鏡画像+言語のマルチモーダルMLのため。"
+  },
+  {
+    "no": 233,
+    "field": "材料・プロセス・応用医工学",
+    "title": "多元素ナノ合金探索のための第一原理計算データの蓄積とAIモデルの精度検証",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterSim",
+    "reasoning": "多元素ナノ合金探索のための第一原理計算データ蓄積はMatterSimのDFT代替・材料物性シミュレーションに相当。"
+  },
+  {
+    "no": 234,
+    "field": "材料・プロセス・応用医工学",
+    "title": "非平衡ランダム多孔構造のAI逆設計によるエアロゲル設計基盤の構築",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "非平衡ランダム多孔構造のAI逆設計によるエアロゲル設計は多孔質材料構造設計MLのため。"
+  },
+  {
+    "no": 235,
+    "field": "材料・プロセス・応用医工学",
+    "title": "ナノ原子スパッタ積層の自律探索手法による高エントロピーバリア磁気抵抗素子の開拓",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] スパッタ成膜条件とデバイス性能探索。結晶構造生成ではない。 (旧: foundation-model-science/MatterGen)"
+  },
+  {
+    "no": 236,
+    "field": "材料・プロセス・応用医工学",
+    "title": "局所電子構造同時生成に基づく物質逆設計基盤モデルの開発とベンチマークトップの実現",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterGen",
+    "reasoning": "局所電子構造同時生成に基づく物質逆設計基盤モデルはMatterGenの新規結晶構造・材料生成に相当。"
+  },
+  {
+    "no": 237,
+    "field": "材料・プロセス・応用医工学",
+    "title": "マルチAIエージェントによる物理指標生成型プラズマ材料モデルの自動構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "マルチAIエージェントによる物理指標生成型プラズマ材料モデルの自動構築はシミュレーション駆動のため。"
+  },
+  {
+    "no": 238,
+    "field": "材料・プロセス・応用医工学",
+    "title": "実験自動化による二次電池正極塗工電極作製・評価効率化とＡＩによる電気化学性能との相関解析",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "実験自動化による二次電池正極電極作製とAIによる電気化学性能相関解析は統計的相関分析のため。"
+  },
+  {
+    "no": 239,
+    "field": "材料・プロセス・応用医工学",
+    "title": "機械学習を用いたNKNセラミックスの廃棄物リサイクルプロセスの最適化",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "機械学習によるNKNセラミックスの廃棄物リサイクルプロセス最適化は統計的プロセスMLのため。"
+  },
+  {
+    "no": 240,
+    "field": "材料・プロセス・応用医工学",
+    "title": "ニューラルネットワーク分子動力学で拓く原子スケールからの高活性PEM形水電解アノード触媒層の設計",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterSim",
+    "reasoning": "ニューラルネットワーク分子動力学によるPEM電解アノード触媒設計はMatterSimの原子間相互作用・DFT代替に相当。"
+  },
+  {
+    "no": 241,
+    "field": "材料・プロセス・応用医工学",
+    "title": "深層学習による集積化面発光レーザー用マイクロレンズアレイの構造最適化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "深層学習による集積化VCSELマイクロレンズアレイの構造最適化は光学シミュレーション最適化のため。"
+  },
+  {
+    "no": 242,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AI駆動型スケーリング則による感染制御医療機器の電気化学安全有効域予測",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI駆動型スケーリング則による感染制御医療機器の電気化学安全有効域予測は統計スケーリングMLのため。"
+  },
+  {
+    "no": 243,
+    "field": "材料・プロセス・応用医工学",
+    "title": "生成AIを活用したTi合金ネットワーク組織の三次元再構築・定量化と力学特性の機械学習解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "生成AIを活用したTi合金ネットワーク組織の三次元再構築・定量化は材料組織画像3D解析のため。"
+  },
+  {
+    "no": 244,
+    "field": "材料・プロセス・応用医工学",
+    "title": "ランタノイド錯体と銀担持の複合化による次世代抗菌性ジルコニアの自律探索と実装加速",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "ランタノイド錯体と銀担持の複合化による次世代抗菌性ジルコニアの自律探索は材料分子設計MLのため。"
+  },
+  {
+    "no": 245,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AIサロゲートを用いた強光学力と低発熱を両立する誘電体ナノ構造の逆設計",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIサロゲートを用いた強光学力と低発熱を両立する誘電体ナノ構造の逆設計は光学シミュレーションのため。"
+  },
+  {
+    "no": 246,
+    "field": "材料・プロセス・応用医工学",
+    "title": "物質材料探索のための自律実験に向けたハーネスの開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "物質材料探索のための自律実験に向けたハーネス開発は実験自動化・制御MLインフラのため。"
+  },
+  {
+    "no": 247,
+    "field": "材料・プロセス・応用医工学",
+    "title": "機械学習ポテンシャルと遷移状態理論による安定サイトネットワーク構築とイオン拡散係数の高速推定",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterSim",
+    "reasoning": "MLポテンシャルと遷移状態理論によるイオン拡散係数高速推定はMatterSimの原子間相互作用に相当。"
+  },
+  {
+    "no": 248,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AI生成構造探索によるFe中Bの占有サイトと準安定状態の解明",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterGen",
+    "reasoning": "AI生成構造探索によるFe中Bの占有サイトと準安定状態の解明はMatterGenの結晶構造生成・探索に相当。"
+  },
+  {
+    "no": 249,
+    "field": "材料・プロセス・応用医工学",
+    "title": "高スループット実験とAIによるセルロース繊維寿命設計",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "高スループット実験とAIによるセルロース繊維寿命設計は分子・材料特性予測MLのため。"
+  },
+  {
+    "no": 250,
+    "field": "材料・プロセス・応用医工学",
+    "title": "細線放電法とAI逆問題制御の統合による金属積層造形部材の4D組織制御",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "細線放電法とAI逆問題制御の統合による金属AM部材の4D組織制御は製造プロセスシミュレーションのため。"
+  },
+  {
+    "no": 251,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AIと有限要素法の連携による炭素繊維強化熱可塑性樹脂の微細構造―力学特性連関の解明",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIと有限要素法の連携によるCFRTPの微細構造-力学特性連関解明はFEMシミュレーション+MLのため。"
+  },
+  {
+    "no": 252,
+    "field": "材料・プロセス・応用医工学",
+    "title": "AIで解き明かす材料特性－微生物応答相関の解明と材料設計基盤の創出",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIで解き明かす材料特性-微生物応答相関は材料と生物応答の統計的相関MLのため。"
+  },
+  {
+    "no": 253,
+    "field": "材料・プロセス・応用医工学",
+    "title": "分子動力学計算とAIによるピッカリングエマルションの非平衡力学応答予測",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "分子動力学計算とAIによるピッカリングエマルションの非平衡力学応答予測は分子MDシミュレーションのため。"
+  },
+  {
+    "no": 254,
+    "field": "材料・プロセス・応用医工学",
+    "title": "分子機能を支配する軌道分布の実験的復元に向けたAI支援光電子軌道トモグラフィー",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI支援光電子軌道トモグラフィーによる分子軌道分布の復元は軌道トモグラフィー画像解析（CV）のため。"
+  },
+  {
+    "no": 255,
+    "field": "材料・プロセス・応用医工学",
+    "title": "プラズマ発光強度を用いた強誘電体薄膜内酸素空孔分布のAI駆動最適化にけた学習データセットの構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "プラズマ発光強度を用いた強誘電体薄膜内酸素空孔分布の学習データセット構築は光学スペクトル解析のため。"
+  },
+  {
+    "no": 256,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "新興ニューラルアーキテクチャの理論的安定性解析を加速する敵対的LLM協調基盤の構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "敵対的LLM協調基盤によるニューラルアーキテクチャ安定性解析加速はLLMエージェント活用研究のため。"
+  },
+  {
+    "no": 257,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "高密度筋電図に基づく神経筋ダイナミクスの学習とTMS刺激最適化",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "高密度筋電図に基づく神経筋ダイナミクス学習とTMS刺激最適化はEMG時系列信号解析のため。"
+  },
+  {
+    "no": 258,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "遺伝アルゴリズムによる創造系AIに関する研究",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "遺伝アルゴリズムによる創造系AIに関する研究は古典的進化計算手法の応用研究のため。"
+  },
+  {
+    "no": 259,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "時系列描画データに基づくドローイング技能習得プロセスのAIモデル化",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "時系列描画データに基づくドローイング技能習得プロセスのAIモデル化は動作時系列解析のため。"
+  },
+  {
+    "no": 260,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "モデル／RTL混在シミュレーションを用いたAI駆動型計算機アーキテクチャ探索の萌芽実証",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "モデル/RTL混在シミュレーションを用いたAI駆動型計算機アーキテクチャ探索はシミュレーションのため。"
+  },
+  {
+    "no": 261,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "ウェアラブルIMU時系列AIによる精密手作業スキルの可視化と生物実験再現性向上",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "ウェアラブルIMU時系列AIによる精密手作業スキル可視化は慣性センサ時系列解析のため。"
+  },
+  {
+    "no": 262,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "仮想人間とロボットとの対話実験の高速自動化による社会的ロボットの振る舞い生成原理の解明",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "仮想人間とロボットの対話実験高速自動化による社会的ロボット振る舞い生成はLLMエージェントのため。"
+  },
+  {
+    "no": 263,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AI支援を用いた日本手話対話の半自動アノテーション基盤構築",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "AI支援による日本手話対話の半自動アノテーション基盤は映像+言語のマルチモーダル処理のため。"
+  },
+  {
+    "no": 264,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "意味情報アウェアな教材のAI自動作成とその分析を通じたメタ認知知識の発見方法論",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "意味情報アウェアな教材のAI自動作成とメタ認知知識発見はLLMによるコンテンツ生成・分析のため。"
+  },
+  {
+    "no": 265,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "極限磁気記録の不連続現象を解明・補償するAIベース確率的モデルと次世代HDD精密制御基盤の構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "極限磁気記録の不連続現象を解明・補償するAI確率的モデルはHDD精密制御の統計MLのため。"
+  },
+  {
+    "no": 266,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "誤差学習と解釈に基づくAI補正RNAサロゲートモデルによるモータ設計支援と設計知抽出",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI補正RNAサロゲートモデルによるモータ設計支援はモータ設計シミュレーション+MLサロゲートのため。"
+  },
+  {
+    "no": 267,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AI音声処理における時間周波数構造の解析",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "AI音声処理における時間周波数構造の解析は音声信号の時間周波数解析タスクのため。"
+  },
+  {
+    "no": 268,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIエージェントによる反実仮想実験：情動伝染の理解と介入に向けた次世代計算社会科学基盤の確立",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIエージェントによる反実仮想実験で情動伝染の理解と介入を図るLLMエージェント活用のため。"
+  },
+  {
+    "no": 269,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "物理制約付き深層展開による低情報量医用超音波像の再構成",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "物理制約付き深層展開による低情報量医用超音波像の再構成は医用超音波画像処理のため。"
+  },
+  {
+    "no": 270,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "物理構造モデルを超越する脳刺激制御：言語モデルのアナロジーによる非線形神経応答の学習と逆推定",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "言語モデルアナロジーによる非線形神経応答の学習と逆推定は脳神経刺激時系列解析のため。"
+  },
+  {
+    "no": 271,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "高電力効率なAIハードウェア創出：エージェント主導のProcessing-in-Memory自律設計",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "エージェント主導のProcessing-in-Memory自律設計は電子回路設計の最適化MLのため。"
+  },
+  {
+    "no": 272,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "画像および遺伝子発現のマルチモーダルデータによるデータ駆動による画像分類体系の導出",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "画像および遺伝子発現のマルチモーダルデータによる画像分類体系の導出は画像+遺伝子融合のため。"
+  },
+  {
+    "no": 273,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "先端計測と物体検出の融合による高温超伝導長尺線材の空間不均一性の可視化・解析手法の開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "先端計測と物体検出の融合による高温超伝導長尺線材の空間不均一性の可視化は画像解析CVのため。"
+  },
+  {
+    "no": 274,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "爪郭部毛細血管異常に対する自動アノテーションモデルの構築",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "爪郭部毛細血管異常に対する自動アノテーションモデルの構築は医用毛細血管画像解析のため。"
+  },
+  {
+    "no": 275,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "個人差の大きい神経科学データに対する適応型AI基盤の創出― 脳波感情推定の汎化性能向上―",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "個人差の大きい神経科学データへの適応型AI基盤として脳波感情推定の汎化性能向上を図るのため。"
+  },
+  {
+    "no": 276,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "複数の関係データによる自己整合的な教師なし距離学習手法の開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "複数の関係データによる自己整合的な教師なし距離学習手法の開発はML手法論研究のため。"
+  },
+  {
+    "no": 277,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "日本語医療画像データセットと知識グラフを活用したマルチモーダル医療画像質問応答データセット構築",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 医療画像QAが中心。知識グラフは利用側にすぎない。 (旧: multimodal)"
+  },
+  {
+    "no": 278,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "Reasoningタスクを用いたLLM識別手法の検討",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "Reasoningタスクを用いたLLM識別手法の検討はLLMの評価・識別に関する研究のため。"
+  },
+  {
+    "no": 279,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "強誘電性ネマティック液晶界面流動のデジタルツインとベイズ最適化による低電圧電気流体力学ポンプ創成",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "強誘電性液晶界面流動のデジタルツインとベイズ最適化による低電圧ポンプ創成はシミュレーションのため。"
+  },
+  {
+    "no": 280,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "大規模集積化に向けた半導体量子ビット二次元アレイの制御可能性解析と制御条件生成",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "半導体量子ビット二次元アレイの制御可能性解析と制御条件生成は量子シミュレーション研究のため。"
+  },
+  {
+    "no": 281,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIとHPCIを橋渡しする科学ワークフロー検証・設計支援基盤の開発",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIとHPCIを橋渡しする科学ワークフロー検証・設計支援基盤の開発はHPC科学計算インフラのため。"
+  },
+  {
+    "no": 282,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "水産養殖の完全自律化を実現する「複雑系マルチエージェント・ワールドモデル」の基盤構築",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "水産養殖完全自律化のためのマルチエージェント・ワールドモデル基盤はシミュレーション主体のため。"
+  },
+  {
+    "no": 283,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIロボット鳥による鳴禽類発声コミュニケーションの双方向制御と解析",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "AIロボット鳥による鳴禽類発声コミュニケーションの双方向制御と解析は動物音声解析のため。"
+  },
+  {
+    "no": 284,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "基盤モデルの事前学習および推論における分散アルゴリズムの理論解析の深化とその応用",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "基盤モデルの事前学習・推論における分散アルゴリズムの理論解析はML理論研究のため。"
+  },
+  {
+    "no": 285,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "エラー関連電位のオンライン学習による適応的非視覚型ブレイン・コンピュータ・インターフェースの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "エラー関連電位のオンライン学習による適応的非視覚型BCIの開発はEEG信号時系列解析のため。"
+  },
+  {
+    "no": 286,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "マルチモーダル生体信号を用いた社会的相互作用における個体間情報統合構造の解明",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "マルチモーダル生体信号を用いた社会的相互作用における個体間情報統合構造の解明のため。"
+  },
+  {
+    "no": 287,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "低品質画像から高品質画像に復元する低演算量画像復元ネットワークの開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "低品質から高品質画像に復元する低演算量画像復元ネットワークの開発は画像処理（CV）のため。"
+  },
+  {
+    "no": 288,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIによるRAW画像の潜在構造発見と情報表現原理の解明",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIによるRAW画像の潜在構造発見と情報表現原理の解明は画像解析の基盤研究（CV）のため。"
+  },
+  {
+    "no": 289,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "ローカルLLMによるパーソナライズドコミュニケーション支援基盤の構築とシステム評価手法の検討",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "ローカルLLMによるパーソナライズドコミュニケーション支援基盤構築はLLM活用のため。"
+  },
+  {
+    "no": 290,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "大規模言語モデルの意味的推論に基づく教師なしスキル発見：自律型エージェントの合目的的な行動獲得",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMの意味的推論に基づく教師なしスキル発見と自律型エージェント行動獲得はLLMエージェントのため。"
+  },
+  {
+    "no": 291,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "社会不安下における善意型誤情報拡散のAI分析",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "社会不安下における善意型誤情報拡散のAI分析はSNSテキストのNLP解析タスクのため。"
+  },
+  {
+    "no": 292,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "DefendNonNL: Defending LLMs Against Non-Natural Language Obfuscated Attacks",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "DefendNonNL: LLMを非自然言語難読化攻撃から防御する研究はLLMセキュリティのため。"
+  },
+  {
+    "no": 293,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "人生グラフを活用したLLMへの価値観・性格付与手法の検討",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "人生グラフを活用したLLMへの価値観・性格付与手法の検討はLLMカスタマイズ研究のため。"
+  },
+  {
+    "no": 294,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "大型言語モデル推論の高速化に向けたドラフター不要の多位置投機的デコーディング",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "大型言語モデル推論の高速化に向けたドラフター不要の多位置投機的デコーディングはLLM最適化のため。"
+  },
+  {
+    "no": 295,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "暗号化通信の自律的教師データ創出基盤の構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "暗号化通信の自律的教師データ創出基盤構築はネットワーク通信の統計的ML解析のため。"
+  },
+  {
+    "no": 296,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "マルチモーダル試験運用ログのAI解析に基づく実行可能なロボット導入改善フレームワーク",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "マルチモーダル試験運用ログのAI解析に基づくロボット導入改善フレームワークのため。"
+  },
+  {
+    "no": 297,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIによる室内音場推定のための測定密度条件の解明と高密度3次元音響データセットの構築",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "AIによる室内音場推定のための測定密度条件の解明と高密度3次元音響データセット構築のため。"
+  },
+  {
+    "no": 298,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "対面CG対話による自動知識獲得と自動評価の自己加速ループ：分野横断AI研究パートナーの萌芽実証",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "対面CG対話による自動知識獲得と自動評価の自己加速ループはLLMエージェント駆動研究のため。"
+  },
+  {
+    "no": 299,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "視覚言語モデルの音声対話モデルへの拡張とマルチモーダル研究対話データセットの構築",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "視覚言語モデルの音声対話モデルへの拡張とマルチモーダル研究対話データセット構築のため。"
+  },
+  {
+    "no": 300,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIを用いた身体動作時における衣服型摩擦発電デバイスの多点時系列解析と可視化",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "身体動作時における衣服型摩擦発電デバイスの多点時系列解析は摩擦発電センサ時系列解析のため。"
+  },
+  {
+    "no": 301,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "研究者と共に育つAgentic Research Copilot：仮説生成とGAP発見による研究加速",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "研究者と共に育つAgentic Research Copilotは仮説生成・GAP発見のLLMエージェントのため。"
+  },
+  {
+    "no": 302,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "機械学習による計算材料設計の再定式化：安定性考慮型バイレベル最適化の実証",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "機械学習による計算材料設計の再定式化は安定性考慮型バイレベル最適化の材料MLのため。"
+  },
+  {
+    "no": 303,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "Low-Cost and Robust 3D Reconstruction of Architectural Environments via Structure-Aware Multi-View Generation from Sparse Inputs",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "スパース入力からの建築環境の低コスト堅牢な3D再構成はCV・3Dビジョン研究のため。"
+  },
+  {
+    "no": 304,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "Investigating Batch-Induced Numerical Nondeterminism in Large Language Model Inference",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLM推論におけるバッチ誘起の数値非決定論の調査はLLM内部動作・再現性研究のため。"
+  },
+  {
+    "no": 305,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "人工知能における逸脱行動の発生メカニズムの解明と抑止策に関する研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIにおける逸脱行動の発生メカニズム解明と抑止策に関する研究はLLM安全性研究のため。"
+  },
+  {
+    "no": 306,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIによる磁気光学画像の定量磁場データ化と非接触計測基盤の構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIによる磁気光学画像の定量磁場データ化と非接触計測基盤構築は磁気光学画像解析（CV）のため。"
+  },
+  {
+    "no": 307,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "不確か環境下における自律適応型デジタルツイン基盤の研究",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "不確か環境下における自律適応型デジタルツイン基盤の研究はデジタルツイン・シミュレーションのため。"
+  },
+  {
+    "no": 308,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AI駆動型数理融合によるリスク適応型分散協調学習制御理論の創成",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI駆動型数理融合によるリスク適応型分散協調学習制御理論の創成は制御理論・数理MLのため。"
+  },
+  {
+    "no": 309,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "ソフトウェア進化履歴を用いたリファクタリング意思決定支援",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "ソフトウェア進化履歴を用いたリファクタリング意思決定支援はソフトウェア工学MLのため。"
+  },
+  {
+    "no": 310,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "反応場形成型グルコースセンサのAI支援応答解析による設計法の概念実証",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "反応場形成型グルコースセンサのAI支援応答解析による設計法の概念実証は統計的センサMLのため。"
+  },
+  {
+    "no": 311,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "生成AIを活用した量子計算の理論研究支援",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIを活用した量子計算の理論研究支援はLLMによる科学研究支援（RAG）のため。"
+  },
+  {
+    "no": 312,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "ZEH水準住宅群の設計・運用探索を高速化するAI支援型多目的最適化手法の開発",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "ZEH水準住宅群の設計・運用探索を高速化するAI支援型多目的最適化はシミュレーション最適化のため。"
+  },
+  {
+    "no": 313,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "VLM・RAGとSAT/ILP形式検証による人とロボットの安全移動を支える実世界情報表現の創出",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "VLM・RAGとSAT/ILP形式検証によるロボット安全移動支援はVLM+RAGのマルチモーダル応用のため。"
+  },
+  {
+    "no": 314,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "自己調整学習を支援するAIエージェントのためのメモリー設計",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "自己調整学習を支援するAIエージェントのためのメモリー設計はLLMエージェント設計のため。"
+  },
+  {
+    "no": 315,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "Robust Tensor Representation Learning for High-Dimensional Scientific Data in AI for Science: Toward Data-Efficient, Noise-Resilient, and Structure-Preserving Modeling with Transferable Know-How for Scientific Discovery",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "高次元科学データのロバストテンソル表現学習はML手法論・テンソル統計学習研究のため。"
+  },
+  {
+    "no": 316,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "Sim2Realによる形態変化型脚ロボットの歩容獲得",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "Sim2Realによる形態変化型脚ロボットの歩容獲得はロボットシミュレーション-実機移転のため。"
+  },
+  {
+    "no": 317,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "LLMを「測質器」として用いた意味的・質的空間上での進化解析と進化計算の開発",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMを「測質器」として用いた意味的空間上での進化解析と進化計算はLLMエージェント活用のため。"
+  },
+  {
+    "no": 318,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "プロセスモデルと深層学習の融合による低遅延かつ高精度なリアルタイム業務プロセス予測手法の開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "プロセスモデルと深層学習の融合によるリアルタイム業務プロセス予測はイベントログ時系列解析のため。"
+  },
+  {
+    "no": 319,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIを用いた曳山組立における協働技能プロセスの解析",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIを用いた曳山組立における協働技能プロセスの解析は動作・映像解析（CV）タスクのため。"
+  },
+  {
+    "no": 320,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "ロボット身体性に応じた3次元点群疑似ラベル生成とトポロジカルクラスタリング設計支援",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "ロボット身体性に応じた3次元点群疑似ラベル生成とトポロジカルクラスタリングは3D点群CVのため。"
+  },
+  {
+    "no": 321,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "役割特化型多体LLMエージェントによる意思決定の臨界点を捉える初学者リフレクション",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "役割特化型多体LLMエージェントによる初学者リフレクション支援はLLMマルチエージェントのため。"
+  },
+  {
+    "no": 322,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "AIエージェントによるLCOS-SLM位相歪補償ネットワークの自動最適化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AIエージェントによるLCOS-SLM位相歪補償ネットワークの自動最適化は光学シミュレーションのため。"
+  },
+  {
+    "no": 323,
+    "field": "電気工学・電子工学・情報科学・コンピューターサイエンス",
+    "title": "生成AIによるWeb上での学術情報参照の文脈解析と信頼性評価",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIによるWeb上での学術情報参照の文脈解析と信頼性評価はLLM-RAGによる情報評価のため。"
+  },
+  {
+    "no": 324,
+    "field": "数学・物理学・地球科学",
+    "title": "拡散性がゆらぐ拡散モデルによる画像生成: 理論と数値的検証",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "拡散性がゆらぐ拡散モデルによる画像生成の理論と数値的検証はML理論・生成モデル研究のため。"
+  },
+  {
+    "no": 325,
+    "field": "数学・物理学・地球科学",
+    "title": "AI支援による、量子電磁力学における厳密くりこみ群のゲージ不変かつ非摂動論的な流れの解明",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI支援による量子電磁力学の厳密くりこみ群解明は物理理論計算（シミュレーション）のため。"
+  },
+  {
+    "no": 326,
+    "field": "数学・物理学・地球科学",
+    "title": "低金属星形成シミュレーションのためのAIを用いた熱・化学進化計算の高速化",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "低金属星形成シミュレーションのためのAIを用いた熱・化学進化計算の高速化は天体物理シミュレーションのため。"
+  },
+  {
+    "no": 327,
+    "field": "数学・物理学・地球科学",
+    "title": "物理法則対応AI開発に資する磁気圏MHD大規模データセットの構築と公開",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "物理法則対応AI開発に資する磁気圏MHD大規模データセット構築はMHDシミュレーション研究のため。"
+  },
+  {
+    "no": 328,
+    "field": "数学・物理学・地球科学",
+    "title": "人間操作の模倣学習に基づくタンデム加速器の自律運転システムの開発",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "人間操作の模倣学習に基づくタンデム加速器の自律運転システム開発は加速器制御シミュレーションのため。"
+  },
+  {
+    "no": 329,
+    "field": "数学・物理学・地球科学",
+    "title": "マグニチュードウェイティングの学習による距離空間の幾何構造抽出",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "マグニチュードウェイティングの学習による距離空間の幾何構造抽出は数学的統計ML手法論のため。"
+  },
+  {
+    "no": 330,
+    "field": "数学・物理学・地球科学",
+    "title": "メタマテリアルにおける形状効果の画像認識手法を用いた可視化",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "メタマテリアルにおける形状効果の画像認識手法を用いた可視化は材料構造画像解析（CV）のため。"
+  },
+  {
+    "no": 331,
+    "field": "数学・物理学・地球科学",
+    "title": "計算機援用証明に資するRAG型AIによる精度保証数値計算の解探索支援",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "計算機援用証明に資するRAG型AIによる精度保証数値計算の解探索支援はRAG活用のため。"
+  },
+  {
+    "no": 332,
+    "field": "数学・物理学・地球科学",
+    "title": "物理制約AIが導く「共鳴回折チェレンコフ放射」の極限集光による非侵襲シングルショット診断の創出",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 放射場集光の物理制約計算。患者画像・臨床画像診断ではない。 (旧: medical-imaging)"
+  },
+  {
+    "no": 333,
+    "field": "数学・物理学・地球科学",
+    "title": "AI-assisted inverse resource theory",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI-assisted inverse resource theoryは量子情報理論の統計・数理ML支援研究のため。"
+  },
+  {
+    "no": 334,
+    "field": "数学・物理学・地球科学",
+    "title": "AI支援可視化による多変数函数論の幾何学的直観形成",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI支援可視化による多変数函数論の幾何学的直観形成は数学的可視化・ML支援研究のため。"
+  },
+  {
+    "no": 335,
+    "field": "数学・物理学・地球科学",
+    "title": "中性子散乱による液体構造解析の革新：微分可能最適化で中・長距離構造を一意に決める",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "中性子散乱による液体構造解析は微分可能最適化を使った物理逆問題シミュレーションのため。"
+  },
+  {
+    "no": 336,
+    "field": "数学・物理学・地球科学",
+    "title": "ビックデータ時代の低周波天文観測データ内の人工信号除去システムの開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "低周波天文観測データ内の人工信号除去システムの開発は電波信号時系列のクリーニングのため。"
+  },
+  {
+    "no": 337,
+    "field": "数学・物理学・地球科学",
+    "title": "科学者エージェントによる時空間カオスデータからの物理法則の自動発見と定式化",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "科学者エージェントによる時空間カオスデータからの物理法則自動発見はLLMエージェント活用のため。"
+  },
+  {
+    "no": 338,
+    "field": "数学・物理学・地球科学",
+    "title": "AI支援型マルチカノニカル探索によるOVモデル共存相の希少初期状態と境界構造の高速発見",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "AI支援型マルチカノニカル探索によるOVモデル共存相の希少初期状態・境界構造の高速発見のため。"
+  },
+  {
+    "no": 339,
+    "field": "数学・物理学・地球科学",
+    "title": "アテンションベースモデルによるロバストな重力波源パラメーター解析手法の提案とその評価",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "アテンションベースモデルによるロバストな重力波源パラメーター解析は重力波時系列信号解析のため。"
+  },
+  {
+    "no": 340,
+    "field": "数学・物理学・地球科学",
+    "title": "貝殻の顕微ラマン分光法を用いた時系列解析による多階層海洋環境変動復元",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "貝殻の顕微ラマン分光法を用いた時系列解析による海洋環境変動復元はスペクトル時系列解析のため。"
+  },
+  {
+    "no": 341,
+    "field": "数学・物理学・地球科学",
+    "title": "FRB即時高精度位置決定に向けた低周波VLBI電離層補正・遅延探索AIと品質管理AIの構築",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "低周波VLBI電離層補正・遅延探索AIと品質管理AIはVLBI電波信号の時系列処理のため。"
+  },
+  {
+    "no": 342,
+    "field": "数学・物理学・地球科学",
+    "title": "AI支援型準安定薄膜物質探索基盤の構築と鉄カルコゲナイド超伝導体への応用",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "MatterGen",
+    "reasoning": "AI支援型準安定薄膜物質探索基盤と鉄カルコゲナイド超伝導体への応用はMatterGenの新規無機材料生成に相当。"
+  },
+  {
+    "no": 343,
+    "field": "数学・物理学・地球科学",
+    "title": "AIを用いた太陽表面高速撮像動画からの流れ場推定",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIを用いた太陽表面高速撮像動画からの流れ場推定は太陽画像・動画解析（CV）のため。"
+  },
+  {
+    "no": 344,
+    "field": "数学・物理学・地球科学",
+    "title": "MCPによるAIエージェント駆動の量子センシング物性実験自動化・共同利用環境の構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "MCPによるAIエージェント駆動の量子センシング物性実験自動化はLLMエージェント活用のため。"
+  },
+  {
+    "no": 345,
+    "field": "数学・物理学・地球科学",
+    "title": "AIを用いた組合せゲームのルール拡張と新規ゲームの探索",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIを用いた組合せゲームのルール拡張と新規ゲームの探索は探索・最適化の古典的ML手法のため。"
+  },
+  {
+    "no": 346,
+    "field": "数学・物理学・地球科学",
+    "title": "地殻流体の広域的流動特性解明のためのデータセット構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "地殻流体の広域的流動特性解明のためのデータセット構築は地球物理学の統計解析のため。"
+  },
+  {
+    "no": 347,
+    "field": "数学・物理学・地球科学",
+    "title": "ヒスイおよび礫種の同定に関するAIの活用と社会実装",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "ヒスイおよび礫種の同定に関するAIの活用と社会実装は岩石・鉱物の画像分類（CV）のため。"
+  },
+  {
+    "no": 348,
+    "field": "数学・物理学・地球科学",
+    "title": "量子論を中心とする現代物理学における推論過程の抽出とローカルLLMによる評価および学習・研究支援",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "量子論を中心とする現代物理学の推論過程の抽出とローカルLLMによる学習・研究支援のため。"
+  },
+  {
+    "no": 349,
+    "field": "数学・物理学・地球科学",
+    "title": "AI支援階層ベイズ解析による精密物理諸量のtension構造とメタ不確かさの分野横断的汎用評価",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI支援階層ベイズ解析による精密物理量のtension構造とメタ不確かさ評価は階層ベイズ統計のため。"
+  },
+  {
+    "no": 350,
+    "field": "数学・物理学・地球科学",
+    "title": "AI逆問題解法によるTHz-STM定量トンネル分光の確立と光励起超高速電子ダイナミクスの解析",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "AI逆問題解法によるTHz-STM定量トンネル分光の確立と超高速電子ダイナミクス解析のため。"
+  },
+  {
+    "no": 351,
+    "field": "数学・物理学・地球科学",
+    "title": "AIを活用したランダム行列理論・自由確率論の難問解決：強収束定理証明の改良、アダマール行列探索とAI応用",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIを活用したランダム行列理論・自由確率論の難問解決はAI支援数学理論研究のため。"
+  },
+  {
+    "no": 352,
+    "field": "数学・物理学・地球科学",
+    "title": "物理・数学構造を保持するAI援用型運動論計算加速スキームの開発",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "物理・数学構造を保持するAI援用型運動論計算加速スキームの開発は数値シミュレーション加速のため。"
+  },
+  {
+    "no": 353,
+    "field": "数学・物理学・地球科学",
+    "title": "AI/機械学習が拓くα線・β線飛跡の自動測定 －素粒子物理学・地球科学・放射線医療における新展開ー",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI/機械学習によるα線・β線飛跡の自動測定は粒子飛跡の画像解析（CV）タスクのため。"
+  },
+  {
+    "no": 354,
+    "field": "農学・環境学・生態学",
+    "title": "AI支援型デジタル・ソーティングによる未整理昆虫標本コレクションの合理的管理運用手法の提案",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AI支援型デジタルソーティングによる未整理昆虫標本コレクション管理は標本画像分類（CV）のため。"
+  },
+  {
+    "no": 355,
+    "field": "農学・環境学・生態学",
+    "title": "少数データ環境下におけるAI駆動型探索設計―日本新産シアノバクテリアを対象とした概念実証（PoC）―",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "少数データ環境下のAI駆動型探索設計（シアノバクテリア対象）は少数データML手法のため。"
+  },
+  {
+    "no": 356,
+    "field": "農学・環境学・生態学",
+    "title": "文献データに基づくプラスミドベクター設計の自動化・確実化",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "文献データに基づくプラスミドベクター設計の自動化はLLM・RAGによる知識抽出・設計のため。"
+  },
+  {
+    "no": 357,
+    "field": "農学・環境学・生態学",
+    "title": "時空間マルチモーダルAIによる極端気象と大電荷量雷の予兆抽出と予測技術の革新",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "Aurora",
+    "reasoning": "時空間マルチモーダルAIによる極端気象と大電荷量雷の予兆抽出・予測はAuroraの気象予測に相当。"
+  },
+  {
+    "no": 358,
+    "field": "農学・環境学・生態学",
+    "title": "海洋性動物プランクトン研究のビックデータ化とAIによる生態系動態解析",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "海洋性動物プランクトン研究のビッグデータ化とAIによる生態系動態解析は生態系時系列データのため。"
+  },
+  {
+    "no": 359,
+    "field": "農学・環境学・生態学",
+    "title": "物理過程制約と観測融合に基づくAIを用いた陸域炭素・水循環の日内動態解析と生態系変動検知",
+    "primary_category": "simulation-hpc",
+    "foundry_model": null,
+    "reasoning": "物理過程制約と観測融合に基づくAIを用いた陸域炭素・水循環の日内動態解析は物理シミュレーションのため。"
+  },
+  {
+    "no": 360,
+    "field": "農学・環境学・生態学",
+    "title": "物性条件付き生成AIによる海洋溶存有機物の構造空間の創出",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "物性条件付き生成AIによる海洋溶存有機物の構造空間創出は分子構造生成MLのため。"
+  },
+  {
+    "no": 361,
+    "field": "農学・環境学・生態学",
+    "title": "AIによる位置情報・動画統合解析を用いた霊長類の潜在的社会相互作用の解明",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "AIによる位置情報・動画統合解析を用いた霊長類の社会相互作用解明はGPS+映像融合のため。"
+  },
+  {
+    "no": 362,
+    "field": "農学・環境学・生態学",
+    "title": "哺乳類の進化系統を横断する乳脂肪球膜タンパク質ブチロフィリンの構造進化学的解明",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "哺乳類乳脂肪球膜タンパク質ブチロフィリンの構造進化学的解明はタンパク質構造解析MLのため。"
+  },
+  {
+    "no": 363,
+    "field": "農学・環境学・生態学",
+    "title": "BVOCによるO₃・SOA生成とイネ生長影響評価を加速するAI不確実性診断基盤の構築",
+    "primary_category": "foundation-model-science",
+    "foundry_model": "Aurora",
+    "reasoning": "BVOCによるO₃・SOA生成とイネ生長影響評価を加速するAI不確実性診断はAuroraの大気汚染予測に相当。"
+  },
+  {
+    "no": 364,
+    "field": "農学・環境学・生態学",
+    "title": "「遺伝子発現データから深層学習で特徴を抽出するDeepFeature法」の植物分野への適用拡大",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "遺伝子発現データからDeepFeatureで特徴抽出する手法の植物分野への適用拡大はオミクスMLのため。"
+  },
+  {
+    "no": 365,
+    "field": "農学・環境学・生態学",
+    "title": "土壌メタゲノムと理化学性の統合による養分制限要因の解明と地域資源利用戦略への応用",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "土壌メタゲノムと理化学性の統合による養分制限要因の解明はメタゲノムオミクス解析のため。"
+  },
+  {
+    "no": 366,
+    "field": "農学・環境学・生態学",
+    "title": "単細胞生物ラッパムシを用いた気象予測モデルの開発と検証 ～ラッパムシコンピューターを創る～",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "ラッパムシを用いた気象予測モデルの開発と検証は生物コンピューティングの検証研究のため。"
+  },
+  {
+    "no": 367,
+    "field": "農学・環境学・生態学",
+    "title": "マルチモーダルAIによる近赤外ハイパースペクトル画像の自動アノテーション手法の構築と基盤データの創出",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "マルチモーダルAIによる近赤外ハイパースペクトル画像の自動アノテーション手法構築はCV技術のため。"
+  },
+  {
+    "no": 368,
+    "field": "農学・環境学・生態学",
+    "title": "非破壊断面推定と加工シミュレーションに基づくブロッコリー加工の高歩留まり化AI技術の開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "非破壊断面推定と加工シミュレーションに基づくブロッコリー加工の高歩留まり化AI技術は食品画像CVのため。"
+  },
+  {
+    "no": 369,
+    "field": "農学・環境学・生態学",
+    "title": "多様な植物根圏シグナル分子に対する共生細菌受容体の体系化および選好性分化機構の解析",
+    "primary_category": "molecular-gnn",
+    "foundry_model": null,
+    "reasoning": "多様な植物根圏シグナル分子に対する共生細菌受容体の体系化は分子-受容体相互作用解析MLのため。"
+  },
+  {
+    "no": 370,
+    "field": "農学・環境学・生態学",
+    "title": "全球時空間AIによる気候変動に伴う人口移動ホットスポットの解析",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "全球時空間AIによる気候変動に伴う人口移動ホットスポット解析は地理統計・気候変動MLのため。"
+  },
+  {
+    "no": 371,
+    "field": "農学・環境学・生態学",
+    "title": "アルボウイルス進化を読み解くAIの開発 人・動物感染性ウイルスはどのように生まれるか？",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "アルボウイルス進化を読み解くAIの開発はウイルスゲノム進化解析（オミクス）のため。"
+  },
+  {
+    "no": 372,
+    "field": "農学・環境学・生態学",
+    "title": "水田雑草管理のデジタルツイン化に向けたドローン画像解析AIの構築",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "水田雑草管理のデジタルツイン化に向けたドローン画像解析AIの構築はドローン農業CVのため。"
+  },
+  {
+    "no": 373,
+    "field": "農学・環境学・生態学",
+    "title": "農業用パイプラインの漏水予兆検出に向けた深層学習モデルの開発と衛星・センサデータへの適用",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "農業用パイプラインの漏水予兆検出に向けた衛星・センサデータへのDL適用は時系列センサ解析のため。"
+  },
+  {
+    "no": 374,
+    "field": "農学・環境学・生態学",
+    "title": "兵庫県の生活改良普及員の実践知と知識創造の歴史的評価ーライフストーリー法による接近ー",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "兵庫県の生活改良普及員の実践知と知識創造の歴史的評価はライフストーリーテキストのNLP解析のため。"
+  },
+  {
+    "no": 375,
+    "field": "農学・環境学・生態学",
+    "title": "ウシの微生物や飼料摂取が微生物叢に与える変動予測機構の開発研究",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ウシの微生物・飼料摂取が微生物叢に与える変動予測は腸内マイクロバイオームオミクスのため。"
+  },
+  {
+    "no": 376,
+    "field": "農学・環境学・生態学",
+    "title": "ゲノム言語モデルを活用したイネおよびウメの栽培化・品種分化関連遺伝要因の推定",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "ゲノム言語モデルによるイネ・ウメの栽培化・品種分化遺伝要因推定はゲノムオミクスのため。"
+  },
+  {
+    "no": 377,
+    "field": "農学・環境学・生態学",
+    "title": "塩基修飾パターンの深層学習解析による植物セントロメア構造の種間比較と6mA谷構造の検証",
+    "primary_category": "omics-bioinfo",
+    "foundry_model": null,
+    "reasoning": "塩基修飾パターンの深層学習解析による植物セントロメア構造の種間比較はエピゲノムオミクスのため。"
+  },
+  {
+    "no": 378,
+    "field": "農学・環境学・生態学",
+    "title": "分光スペクトル情報を用いた植物栄養動態のAI推定技術の開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 分光スペクトル信号入力。画像/HSIとは明記されていない。 (旧: computer-vision)"
+  },
+  {
+    "no": 379,
+    "field": "社会科学",
+    "title": "病院統合の成否を財務指標と無形資産から説明するAI解析基盤の構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "病院統合の成否を財務指標と無形資産から説明するAI解析は経営・財務データの統計MLのため。"
+  },
+  {
+    "no": 380,
+    "field": "社会科学",
+    "title": "AI普及と少子化：複数LLMの予測バイアス解析による労働市場変容と人間の厚生への影響シミュレーション",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "複数LLMの予測バイアス解析による労働市場変容シミュレーションはLLMエージェント活用のため。"
+  },
+  {
+    "no": 381,
+    "field": "社会科学",
+    "title": "生成AIによる臨床倫理コンサルテーション支援：情報整理・論点抽出の探索的検討",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIによる臨床倫理コンサルテーション支援の情報整理・論点抽出はLLM-RAGのため。"
+  },
+  {
+    "no": 382,
+    "field": "社会科学",
+    "title": "同調圧力を突破するAI駆動型・社会起業家育成モデルの実証：ゼブラ創出でのハルシネーションの教育的反転",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AI駆動型社会起業家育成モデルにおけるハルシネーション教育的活用はLLM研究のため。"
+  },
+  {
+    "no": 383,
+    "field": "社会科学",
+    "title": "AIの持つ社会的望ましさバイアスの理解と制御：ヒトを対象とした大規模アンケート調査のAI代替に向けて",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIの社会的望ましさバイアスの理解と制御・ヒト大規模調査のAI代替に向けた研究はLLMのため。"
+  },
+  {
+    "no": 384,
+    "field": "社会科学",
+    "title": "WTO紛争処理の虚像と実像：AIを用いた利用実態の解明",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "WTO紛争処理の利用実態をAIで解明するのは法律文書テキストのNLP解析タスクのため。"
+  },
+  {
+    "no": 385,
+    "field": "社会科学",
+    "title": "特許情報のAI解析による広域経済圏の技術蓄積と新奇技術受容可能性の解明",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "特許情報のAI解析による技術蓄積と新奇技術受容可能性の解明は特許テキストNLP解析のため。"
+  },
+  {
+    "no": 386,
+    "field": "社会科学",
+    "title": "生成AIペルソナによるピア評価フィードバックの網羅的シミュレーション：医学教育を起点とする高等教育研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIペルソナによるピア評価フィードバックの網羅的シミュレーションはLLM活用教育研究のため。"
+  },
+  {
+    "no": 387,
+    "field": "社会科学",
+    "title": "多様なペルソナを持つLLMエージェント社会による情報伝播シミュレーション基盤の構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "多様なペルソナを持つLLMエージェント社会による情報伝播シミュレーション基盤構築のため。"
+  },
+  {
+    "no": 388,
+    "field": "社会科学",
+    "title": "LLMを用いた年金化・退職後所得不足リスク指標の構築とロボット密度の国際比較分析",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMを用いた年金化・退職後所得不足リスク指標構築とロボット密度国際比較分析はLLMのため。"
+  },
+  {
+    "no": 389,
+    "field": "社会科学",
+    "title": "生成AIコメントコーチングによる協働的フィードバック力形成とアップテイク予測",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIコメントコーチングによる協働的フィードバック力形成とアップテイク予測はLLMのため。"
+  },
+  {
+    "no": 390,
+    "field": "社会科学",
+    "title": "AIによるWebテストの不正回答者検知モデル開発とその評価",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIによるWebテストの不正回答者検知モデル開発は行動ログの異常検知統計MLのため。"
+  },
+  {
+    "no": 391,
+    "field": "社会科学",
+    "title": "生成AIを用いた金融テキストの意味的可読性指標の構築と情報過多メカニズムの解明",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIを用いた金融テキストの意味的可読性指標構築と情報過多メカニズム解明はLLMのため。"
+  },
+  {
+    "no": 392,
+    "field": "社会科学",
+    "title": "日本独占禁止法75年間の談合・カルテル違反行為認定手法のAIによる体系的解明",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "日本独占禁止法75年間の談合・カルテル違反認定手法のAI体系的解明は法律文書NLP解析のため。"
+  },
+  {
+    "no": 393,
+    "field": "社会科学",
+    "title": "視覚障害生徒の公正な社会参加の機会保障へ向けたLLMの活用：試験問題の点訳作業を支える暗黙知の体系化",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "視覚障害生徒の試験問題点訳を支える暗黙知体系化へのLLM活用はLLMエージェント研究のため。"
+  },
+  {
+    "no": 394,
+    "field": "社会科学",
+    "title": "地域特性に対応した自然災害教育の副読本教材の作成モデルの構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "地域特性に対応した自然災害教育の副読本教材作成モデル構築はLLM教育コンテンツ生成のため。"
+  },
+  {
+    "no": 395,
+    "field": "社会科学",
+    "title": "AIとルーブリックを用いた体育学習支援システムの開発と学生の自律的活動の促進",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] ルーブリック評価と教育介入モデル中心。映像・姿勢推定の記載なし。 (旧: computer-vision)"
+  },
+  {
+    "no": 396,
+    "field": "社会科学",
+    "title": "AI支援によるファインバブル計測データの標準化・品質判定モデルの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AI支援によるファインバブル計測データの標準化・品質判定モデル構築は統計的品質管理MLのため。"
+  },
+  {
+    "no": 397,
+    "field": "社会科学",
+    "title": "胸部X線推定年齢の縦断解析による個人別老化指標の構築と生活習慣改善に向けた活用検討",
+    "primary_category": "medical-imaging",
+    "foundry_model": null,
+    "reasoning": "胸部X線推定年齢の縦断解析による個人別老化指標構築と活用検討は胸部X線医用画像解析のため。"
+  },
+  {
+    "no": 398,
+    "field": "社会科学",
+    "title": "PBL事例データを用いた既存基盤モデルの事後学習による理科授業指導案の生成モデル開発と検証",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "PBL事例データを用いた既存基盤モデルの事後学習による理科授業指導案生成はLLMファインチューンのため。"
+  },
+  {
+    "no": 399,
+    "field": "社会科学",
+    "title": "偽情報検出を事例とした社会科学データ分析におけるAI支援型検証手法の開発",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "偽情報検出を事例とした社会科学データ分析のAI支援型検証手法の開発はNLP偽情報検出のため。"
+  },
+  {
+    "no": 400,
+    "field": "社会科学",
+    "title": "「瓜生イワに学ぶ官民連携組織の立ち上げ方」～当時の事業構築方法をAIを活用し現代に再現する～",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "瓜生イワの官民連携組織立ち上げ方法をAIを活用して現代に再現するのはLLM歴史知識活用のため。"
+  },
+  {
+    "no": 401,
+    "field": "社会科学",
+    "title": "動画生成AIを用いた「未来の自己」映像による学生の自己効力感向上に関する研究",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 動画生成モデルが使用技術。LLM/RAG/対話ではない。 (旧: llm-rag)"
+  },
+  {
+    "no": 402,
+    "field": "社会科学",
+    "title": "初年次自律学修プラットフォームにおける生成AIを用いた目標質評価・つまずき診断・適応的介入の研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "初年次自律学修プラットフォームの生成AIによる目標質評価・つまずき診断はLLM教育支援のため。"
+  },
+  {
+    "no": 403,
+    "field": "社会科学",
+    "title": "大規模多言語レビュー解析による国内広域観光都市の宿泊体験変容の解明：期待値基準線シフトとDX受容格差",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "大規模多言語レビュー解析による国内観光都市の宿泊体験変容解明は多言語NLP解析のため。"
+  },
+  {
+    "no": 404,
+    "field": "社会科学",
+    "title": "子ども理解支援ツール『ほっと』を用いた、コミュニケーションスキルの発達軌道予測と適応支援AIの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "子どものコミュニケーションスキル発達軌道予測と適応支援AIは統計的発達軌跡MLのため。"
+  },
+  {
+    "no": 405,
+    "field": "社会科学",
+    "title": "生成AIによる組織認知の補完と依存：LLMシミュレーションによる認知プロセスの分析",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIによる組織認知の補完と依存のLLMシミュレーションによる認知プロセス分析のため。"
+  },
+  {
+    "no": 406,
+    "field": "社会科学",
+    "title": "生成AIを用いた普遍的記号接地の大規模マルチモーダル・データセット構築と行動実験による検証",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "生成AIを用いた普遍的記号接地の大規模マルチモーダルデータセット構築と検証のため。"
+  },
+  {
+    "no": 407,
+    "field": "社会科学",
+    "title": "多言語・異文化相互行為における意味のズレの生成性を捉えるAI支援分析基盤の構築",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "多言語・異文化相互行為における意味のズレを捉えるAI支援分析基盤は多言語NLP解析のため。"
+  },
+  {
+    "no": 408,
+    "field": "社会科学",
+    "title": "AI支援型デルファイ法による特別支援教育の人事異動条件の同定─質的研究プロセスにおけるAI役割の検証",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AI支援型デルファイ法による特別支援教育の人事異動条件同定はLLM支援質的研究のため。"
+  },
+  {
+    "no": 409,
+    "field": "社会科学",
+    "title": "思春期の気質発達に基づくAI相互作用の実験的検討 ―関係的利用から道具的利用へ―",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "思春期の気質発達に基づくAI相互作用の実験的検討は社会科学・心理統計の実証研究のため。"
+  },
+  {
+    "no": 410,
+    "field": "社会科学",
+    "title": "近代日本における地域産業転換の経済史的研究：AIによる工場名簿の構造化と「都市」時空間分析に向けて",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "近代日本における地域産業転換の工場名簿のAI構造化と時空間分析は歴史文書OCR・NLPのため。"
+  },
+  {
+    "no": 411,
+    "field": "社会科学",
+    "title": "青少年インターネット保護政策の国際比較AI教師データ構築―構造リスク審査基準の可視化と活用",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "青少年インターネット保護政策の国際比較AI教師データ構築は政策文書NLP解析のため。"
+  },
+  {
+    "no": 412,
+    "field": "社会科学",
+    "title": "AIを活用したマルチモーダル行動解析による行動変容支援モデルの研究",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "AIを活用したマルチモーダル行動解析による行動変容支援モデルは複数センサ・映像融合のため。"
+  },
+  {
+    "no": 413,
+    "field": "社会科学",
+    "title": "生成AIを用いた半自動英文評価システムの開発―人的負担軽減と評価精度維持を目指して―",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIを用いた半自動英文評価システムの開発はLLMによるテキスト評価タスクのため。"
+  },
+  {
+    "no": 414,
+    "field": "社会科学",
+    "title": "AIによる長期全国データへの仮説非依存型分析を通じた視覚障害の教育的類型の分岐点と将来配置の可視化",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIによる長期全国データへの仮説非依存型分析を通じた視覚障害の教育的類型可視化は統計MLのため。"
+  },
+  {
+    "no": 415,
+    "field": "社会科学",
+    "title": "Historical GeoAIを用いた海外移民送出地域の発展経路に関する反実仮想シミュレーション",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "Historical GeoAIを用いた海外移民送出地域の発展経路の反実仮想シミュレーションは地理統計のため。"
+  },
+  {
+    "no": 416,
+    "field": "社会科学",
+    "title": "AIを活用した公民協働型都市開発における開発利益の公共還元制度の国際比較と適用シミュレーション",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "AIを活用した公民協働型都市開発の開発利益公共還元制度の国際比較と適用シミュレーションのため。"
+  },
+  {
+    "no": 417,
+    "field": "社会科学",
+    "title": "生成AIによる非認知能力評価の妥当性検証：学生成果物分析を通じたコンピテンシー評価支援手法の開発",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "生成AIによる非認知能力評価の妥当性検証と学生成果物分析はLLMを活用した評価支援のため。"
+  },
+  {
+    "no": 418,
+    "field": "社会科学",
+    "title": "SNSのAI解析による生命進化基盤2ミーム（平和／権力）からの社会分断・二極化の解明",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "SNSのAI解析による生命進化基盤ミームからの社会分断・二極化解明はSNSテキストNLP解析のため。"
+  },
+  {
+    "no": 419,
+    "field": "社会科学",
+    "title": "保育における事故及びヒヤリ・ハット事例と園内環境画像の統合AI解析による安全性評価モデルの創出",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "保育事故・ヒヤリハット事例と園内環境画像の統合AI解析による安全性評価は画像+テキスト融合のため。"
+  },
+  {
+    "no": 420,
+    "field": "社会科学",
+    "title": "データ同化的着想に基づくAI駆動型国際規範意識観測手法の萌芽的探索",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "データ同化的着想に基づくAI駆動型国際規範意識観測手法の萌芽的探索は社会統計データ解析のため。"
+  },
+  {
+    "no": 421,
+    "field": "社会科学",
+    "title": "AI活用による研究支援高度化の実証研究：ローカルLLMの利活用による研究計画書の質的評価と改善提案",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "ローカルLLMの利活用による研究計画書の質的評価と改善提案はLLMを用いた研究支援のため。"
+  },
+  {
+    "no": 422,
+    "field": "社会科学",
+    "title": "計算言語人類学の基盤構築──LLMエージェントによる指標秩序の実験的探究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMエージェントによる指標秩序の実験的探究という計算言語人類学の基盤構築のため。"
+  },
+  {
+    "no": 423,
+    "field": "社会科学",
+    "title": "Can an AI agent elicit genuine social presence? Developing behaviorally adequate artificial partners for the perceptual crossing experiment",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIエージェントが真の社会的存在感を引き出せるかを検証するLLMエージェント研究のため。"
+  },
+  {
+    "no": 424,
+    "field": "社会科学",
+    "title": "学童保育における生成・助言型AI活用：支援者の意思決定プロセスと心理的負担に関する予備的研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "学童保育における生成・助言型AI活用と支援者の意思決定プロセス分析はLLM支援研究のため。"
+  },
+  {
+    "no": 425,
+    "field": "社会科学",
+    "title": "スウェーデン刑事訴訟法研究の基盤構築：AIを活用した判例データセット整備と日本語アクセス支援",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "スウェーデン刑事訴訟法のAIを活用した判例データセット整備と日本語アクセス支援はNLP法律のため。"
+  },
+  {
+    "no": 426,
+    "field": "社会科学",
+    "title": "地理空間人工知能（GeoAI）を用いた日本の都市圏における外国人の居住分化パターンと形成要因の解明",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "GeoAIを用いた日本の都市圏における外国人の居住分化パターン解明は地理統計・空間MLのため。"
+  },
+  {
+    "no": 427,
+    "field": "社会科学",
+    "title": "AIによる実験オークションの完全自動化とその有効性に関する実証的研究：方法論の高度化に向けて",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIによる実験オークションの完全自動化はLLMエージェントによる自動化研究のため。"
+  },
+  {
+    "no": 428,
+    "field": "社会科学",
+    "title": "工学倫理・DE&I教育の国際共同研究に向けたアプリ連動型カードゲーム教材とAI学習ログ解析アプリ開発",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "工学倫理・DE&I教育のカードゲーム教材とAI学習ログ解析アプリ開発は学習ログ統計解析のため。"
+  },
+  {
+    "no": 429,
+    "field": "社会科学",
+    "title": "公立高校入試要項のAI構造化による受検上の配慮・支援記述データセット構築と比較研究",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "公立高校入試要項のAI構造化による配慮・支援記述データセット構築は行政文書NLP解析のため。"
+  },
+  {
+    "no": 430,
+    "field": "社会科学",
+    "title": "救急現場会話のAI解析による音声認識・トリアージ支援の概念実証",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "救急現場会話のAI解析による音声認識・トリアージ支援の概念実証は医療音声認識のため。"
+  },
+  {
+    "no": 431,
+    "field": "社会科学",
+    "title": "LLMは主観的知覚をどこまで再現するか：ロールシャッハ反応の言語間シミュレーション",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMによるロールシャッハ反応の言語間シミュレーションはLLMの知覚再現能力研究のため。"
+  },
+  {
+    "no": 432,
+    "field": "社会科学",
+    "title": "合理的配慮の認知・理解に関する多言語横断的研究",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "合理的配慮の認知・理解に関する多言語横断的研究は多言語テキスト解析（NLP）のため。"
+  },
+  {
+    "no": 433,
+    "field": "社会科学",
+    "title": "限られた実測電力データに基づく生成AI支援型標準電力負荷プロファイル生成手法の開発",
+    "primary_category": "timeseries-signal",
+    "foundry_model": null,
+    "reasoning": "限られた実測電力データに基づく生成AI支援型標準電力負荷プロファイル生成は電力時系列のため。"
+  },
+  {
+    "no": 434,
+    "field": "芸術・人文科学",
+    "title": "AIエージェントによる文化遺産生成AIの忠実度・失敗モード評価基盤の構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AIエージェントによる文化遺産生成AIの忠実度・失敗モード評価基盤構築はLLMエージェント活用のため。"
+  },
+  {
+    "no": 435,
+    "field": "芸術・人文科学",
+    "title": "AI ready化を目的とした手書き答案データセット構築に関する研究",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AI ready化を目的とした手書き答案データセット構築はOCR・手書き認識NLPのため。"
+  },
+  {
+    "no": 436,
+    "field": "芸術・人文科学",
+    "title": "AIを活用した多読材のIU抽出と多言語再生法分析：日本語学習者のためのセルフモニタリング基盤の構築",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AIを活用した多読材IU抽出と多言語再生法分析は日本語学習者向けNLP解析のため。"
+  },
+  {
+    "no": 437,
+    "field": "芸術・人文科学",
+    "title": "伝統芸能における舞踊動作のAIによる映像解析：衣裳着用時の身体動作の検証",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "伝統芸能における舞踊動作のAIによる映像解析は動作映像の画像解析（CV）タスクのため。"
+  },
+  {
+    "no": 438,
+    "field": "芸術・人文科学",
+    "title": "AI学習者モデルによる第二言語習得介入の事前評価基盤",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "[rubber-duck修正] 学習者状態モデル化と介入評価。LLM/RAG明示なし。 (旧: llm-rag)"
+  },
+  {
+    "no": 439,
+    "field": "芸術・人文科学",
+    "title": "視覚言語モデルが拓くスポーツ史研究の新視座：グラフィックメディアにおける「動き」の言語化による探索",
+    "primary_category": "multimodal",
+    "foundry_model": null,
+    "reasoning": "VLMが拓くスポーツ史研究の新視座としてグラフィックメディアの動きを言語化するVLM活用のため。"
+  },
+  {
+    "no": 440,
+    "field": "芸術・人文科学",
+    "title": "戦後日本の手書き社会運動資料の研究データ化と横断比較に向けた複数方式AI比較型翻刻支援法の萌芽的実証",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "戦後日本の手書き社会運動資料のAI比較型翻刻支援法はOCR・手書き文字認識NLPのため。"
+  },
+  {
+    "no": 441,
+    "field": "芸術・人文科学",
+    "title": "AIを利活用したフィールド言語学データ公開手法の探索",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AIを利活用したフィールド言語学データ公開手法の探索は言語学コーパス・NLPのため。"
+  },
+  {
+    "no": 442,
+    "field": "芸術・人文科学",
+    "title": "仏教寺院文書のVision AI解析基盤構築：日蓮宗法号命名慣行の解明に向けた萌芽的挑戦",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "仏教寺院文書のVision AI解析基盤構築は歴史文書OCR・文字認識NLPのため。"
+  },
+  {
+    "no": 443,
+    "field": "芸術・人文科学",
+    "title": "フランスの哲学者ジャック・デリダの講義録（1986-2002年）の音声アーカイブの整備・解析・公開",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "デリダ講義録の音声アーカイブ整備・解析・公開は音声認識と音声アーカイブ処理のため。"
+  },
+  {
+    "no": 444,
+    "field": "芸術・人文科学",
+    "title": "AIによる英文構造図の自動データ構造化と思考プロセスの客観的検証を可能にする学習基盤の構築",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AIによる英文構造図の自動データ構造化と思考プロセス客観的検証を可能にする学習基盤はNLPのため。"
+  },
+  {
+    "no": 445,
+    "field": "芸術・人文科学",
+    "title": "AI生成人工文法による人間言語能力の限界探索：LLMシミュレーションと脳活動予測による統合研究",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "AI生成人工文法による人間言語能力の限界探索とLLMシミュレーション・脳活動予測は言語LLM研究のため。"
+  },
+  {
+    "no": 446,
+    "field": "芸術・人文科学",
+    "title": "AIによる皮革文化財の動物種識別と社会実装：保存現場の迅速なスクリーニングを支援するアプリ開発",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "AIによる皮革文化財の動物種識別と社会実装は文化財画像の種識別（CV）タスクのため。"
+  },
+  {
+    "no": 447,
+    "field": "芸術・人文科学",
+    "title": "Integrating AI-based speech recognition, phoneme alignment, and human judgments of intelligibility to develop a machine learning model that maps L2 English pronunciation features onto CEFR-aligned proficiency descriptors.",
+    "primary_category": "speech-audio",
+    "foundry_model": null,
+    "reasoning": "L2英語発音特徴をCEFRプロフィシエンシー記述子にマッピングするMLモデル開発は音声認識・評価のため。"
+  },
+  {
+    "no": 448,
+    "field": "芸術・人文科学",
+    "title": "AI支援型言語学的分析プロセスの概念実証",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AI支援型言語学的分析プロセスの概念実証は言語学的テキスト分析のNLPタスクのため。"
+  },
+  {
+    "no": 449,
+    "field": "芸術・人文科学",
+    "title": "LLM-as-a-Judgeを用いた歴史的文書由来RDF知識グラフの品質検証フレームワーク開発",
+    "primary_category": "graph-rag",
+    "foundry_model": null,
+    "reasoning": "LLM-as-a-Judgeを用いた歴史的文書由来RDF知識グラフの品質検証はナレッジグラフ+LLM評価のため。"
+  },
+  {
+    "no": 450,
+    "field": "芸術・人文科学",
+    "title": "協働経験を学習成果とする教室協働の安全設計：演劇活動とAI暫定案",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "演劇活動とAI暫定案を用いた教室協働の安全設計研究は教育協働データの統計解析のため。"
+  },
+  {
+    "no": 451,
+    "field": "芸術・人文科学",
+    "title": "AIを用いた理系研究室における暗黙的行動規範の可視化",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "AIを用いた理系研究室における暗黙的行動規範の可視化は研究室テキストのNLP解析のため。"
+  },
+  {
+    "no": 452,
+    "field": "芸術・人文科学",
+    "title": "進路多様校の高校生の作文にみる文章執筆課題の実証的研究",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "進路多様校の高校生の作文にみる文章執筆課題の実証的研究はテキスト分析NLPのため。"
+  },
+  {
+    "no": 453,
+    "field": "芸術・人文科学",
+    "title": "『国訳一切経』を活用した仏教漢文の高精度パラレルコーパス構築とAI解析基盤の確立",
+    "primary_category": "nlp-text",
+    "foundry_model": null,
+    "reasoning": "仏教漢文の高精度パラレルコーパス構築とAI解析基盤の確立は多言語コーパス構築NLPのため。"
+  },
+  {
+    "no": 454,
+    "field": "芸術・人文科学",
+    "title": "学術調査写真を対象とした画像公開判定支援システムの研究",
+    "primary_category": "computer-vision",
+    "foundry_model": null,
+    "reasoning": "学術調査写真を対象とした画像公開判定支援システムの研究は画像内容判定（CV）タスクのため。"
+  },
+  {
+    "no": 455,
+    "field": "芸術・人文科学",
+    "title": "地域農産物を活用したAI個別化排塩支援モデルの構築",
+    "primary_category": "classical-ml-stats",
+    "foundry_model": null,
+    "reasoning": "地域農産物を活用したAI個別化排塩支援モデル構築は栄養・健康データの統計予測モデルのため。"
+  },
+  {
+    "no": 456,
+    "field": "芸術・人文科学",
+    "title": "LLMエージェント・深層学習を用いたコミュニティ参加型郷土芸能デジタルアーカイブシステムの構築",
+    "primary_category": "llm-rag",
+    "foundry_model": null,
+    "reasoning": "LLMエージェント・深層学習を用いたコミュニティ参加型郷土芸能デジタルアーカイブはLLMエージェント活用のため。"
+  }
+]
