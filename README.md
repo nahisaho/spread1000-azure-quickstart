@@ -36,7 +36,13 @@ research-fields/
 | 02 | [電子カルテ NLP (RAG)](research-fields/clinical-science/02-ehr-nlp-rag/) | 合成 SOAP ノート × Azure OpenAI + AI Search (**合成データ専用**) | — (LLM API) |
 | 03 | [生体信号 (ECG) 分類](research-fields/clinical-science/03-biosignal-ecg-classification/) | MIT-BIH × 1D CNN AAMI 5-class (AML v2) | T4 (CPU fallback 可) |
 
-その他の分野（化学 / 電気工学・情報科学 / 社会科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### ⚗️ [化学](research-fields/chemistry/)（採択 22 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [REINVENT4 分子生成](research-fields/chemistry/01-molecular-generation-reinvent4/) | LibInvent scaffold decoration (AML v2) | — (CPU) |
+
+その他の分野（電気工学・情報科学 / 社会科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 

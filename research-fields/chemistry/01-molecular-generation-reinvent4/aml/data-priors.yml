@@ -1,0 +1,14 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+# REINVENT4 v4.8 priors (Apache-2.0, Zenodo record 20701824)
+# workspaceblobstore の reinvent4-priors/v4.8/ に事前アップロード済み前提
+name: reinvent4-priors
+version: 1
+type: uri_folder
+description: >
+  REINVENT4 v4.8 pretrained priors (libinvent.prior, reinvent_pubchem.prior).
+  License: Apache-2.0. Source: https://zenodo.org/records/20701824
+path: azureml://datastores/workspaceblobstore/paths/reinvent4-priors/v4.8/
+tags:
+  scenario: chem-molgen
+  project: spread1000
+  license: Apache-2.0

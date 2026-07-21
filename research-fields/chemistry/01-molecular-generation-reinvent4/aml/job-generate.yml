@@ -1,0 +1,42 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+# REINVENT4 LibInvent scaffold decoration + RDKit scoring job
+#
+# 実行:
+#   az ml job create -f aml/job-generate.yml \
+#     -g $AZURE_RESOURCE_GROUP -w $AZURE_WORKSPACE_NAME --web
+display_name: reinvent4-libinvent-sampling
+experiment_name: chem-molgen
+description: >
+  Sample 100 SMILES from REINVENT4 v4.8 LibInvent prior on a small scaffold,
+  then score with RDKit (validity/uniqueness/MW/LogP/QED/TPSA) and render top-20.
+code: ../src
+command: >-
+  python run_libinvent.py
+    --prior ${{inputs.priors}}/libinvent.prior
+    --scaffold "Cc1ccc([*:1])cc1[*:2]"
+    --num-smiles 100
+    --output ${{outputs.molecules}}/sampled.csv &&
+  python score_molecules.py
+    --input ${{outputs.molecules}}/sampled.csv
+    --output ${{outputs.molecules}}/scored.csv &&
+  python render_topk.py
+    --input ${{outputs.molecules}}/scored.csv
+    --output ${{outputs.molecules}}/top20.png
+    --top-k 20
+environment: azureml:reinvent4-cpu@latest
+compute: azureml:molgen-cpu
+# credentialless workspaceblobstore を submitter の Azure AD 認証で読むため user_identity を使用
+# (Bicep で deployer に Storage Blob Data Contributor を付与済み)
+identity:
+  type: user_identity
+inputs:
+  priors:
+    type: uri_folder
+    path: azureml:reinvent4-priors@latest
+    mode: ro_mount
+outputs:
+  molecules:
+    type: uri_folder
+tags:
+  scenario: chem-molgen
+  project: spread1000
