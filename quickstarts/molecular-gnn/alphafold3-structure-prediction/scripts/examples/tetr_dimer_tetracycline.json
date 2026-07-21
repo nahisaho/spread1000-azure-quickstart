@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "This is a PLACEHOLDER. The official TetR/tetracycline example is maintained in the AlphaFold 3 repository.",
+    "Fetch the up-to-date, biology-verified file from:",
+    "  https://github.com/google-deepmind/alphafold3/blob/main/examples/tetr_dimer_tetracycline.json",
+    "",
+    "Or on your Compute Instance after setup-af3.sh:",
+    "  cp ~/alphafold3/examples/tetr_dimer_tetracycline.json /mnt/af3/inputs/",
+    "",
+    "Schema summary (do NOT use this placeholder directly for inference):",
+    "- protein: TetR homodimer (UniProt P04483, 208 aa each), chains A and B",
+    "- ligand: tetracycline, CCD code TAC",
+    "- modelSeeds: [42]",
+    "- dialect: alphafold3, version: 4"
+  ],
+  "name": "tetr_dimer_tetracycline_PLACEHOLDER",
+  "sequences": [],
+  "modelSeeds": [42],
+  "dialect": "alphafold3",
+  "version": 4
+}
