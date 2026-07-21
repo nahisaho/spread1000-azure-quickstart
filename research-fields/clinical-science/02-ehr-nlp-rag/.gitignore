@@ -1,0 +1,6 @@
+.env
+.venv/
+.last-deployment-name
+__pycache__/
+*.pyc
+.pytest_cache/

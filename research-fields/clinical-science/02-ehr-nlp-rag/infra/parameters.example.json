@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "uniqueSuffix": { "value": "REPLACE_ME_6HEX" },
+    "projectTag": { "value": "spread1000" },
+    "scenarioTag": { "value": "ehr-nlp" },
+    "piTag": { "value": "REPLACE_ME_yamada-taro" },
+    "searchSku": { "value": "basic" },
+    "gpt4oTpmCapacityK": { "value": 30 },
+    "embeddingTpmCapacityK": { "value": 350 }
+  }
+}
