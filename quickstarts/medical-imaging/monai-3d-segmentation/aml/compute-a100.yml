@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+name: monai-a100
+type: amlcompute
+size: Standard_NC24ads_A100_v4
+tier: dedicated
+min_instances: 0
+max_instances: 1
+idle_time_before_scale_down: 120
+tags:
+  scenario: monai-3d-seg
+  project: spread1000
+  tier: dedicated

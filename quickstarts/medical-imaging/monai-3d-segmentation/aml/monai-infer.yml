@@ -1,0 +1,52 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: monai-spleen-inference
+experiment_name: monai-spleen
+description: >
+  Pretrained inference with MONAI spleen_ct_segmentation bundle v0.6.1
+  on MSD Task09 Spleen (imagesTs).
+
+# Job で共有するファイルの root。inference は追加ファイル不要のため aml/ のみ。
+code: ./
+
+compute: azureml:monai-t4
+environment: azureml:monai-spleen-1-4@latest
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:task09-spleen@latest
+    mode: ro_mount
+
+outputs:
+  predictions:
+    type: uri_folder
+    mode: upload
+
+command: >-
+  set -eux;
+  python -c "import monai, torch; print('MONAI', monai.__version__, 'PyTorch', torch.__version__, 'CUDA', torch.cuda.is_available())";
+  python -m monai.bundle download
+  "spleen_ct_segmentation"
+  --version "0.6.1"
+  --source "huggingface_hub"
+  --repo "MONAI/spleen_ct_segmentation"
+  --bundle_dir bundles;
+  cd bundles/spleen_ct_segmentation;
+  python -m monai.bundle run
+  --config_file configs/inference.json
+  --dataset_dir="${{inputs.data}}"
+  --output_dir="${{outputs.predictions}}"
+  "--inferer#sw_batch_size=1";
+
+resources:
+  instance_count: 1
+
+limits:
+  timeout: 3600
+
+tags:
+  scenario: monai-3d-seg
+  project: spread1000
+  job_type: inference

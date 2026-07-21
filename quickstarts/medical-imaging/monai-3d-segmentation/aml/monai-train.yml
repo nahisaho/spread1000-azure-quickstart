@@ -1,0 +1,64 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: monai-spleen-finetune
+experiment_name: monai-spleen
+description: >
+  Fine-tune MONAI spleen_ct_segmentation bundle v0.6.1 on MSD Task09 Spleen
+  starting from the pretrained checkpoint (100 epochs).
+
+# コード資産は aml/ のみ (finetune.json をアップロードするため)。
+# 親ディレクトリ全体を上げないことで、msd-data/ や results/ の
+# 意図しないアップロードを避ける。
+code: ./
+
+compute: azureml:monai-a100
+environment: azureml:monai-spleen-1-4@latest
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:task09-spleen@latest
+    mode: ro_mount
+  finetune_cfg:
+    type: uri_file
+    path: ./finetune.json
+    mode: ro_mount
+
+outputs:
+  artifacts:
+    type: uri_folder
+    mode: upload
+
+# finetune.json は Bundle ディレクトリにコピーしてから、Bundle root を作業ディレクトリにする。
+# --config_file に絶対 mount path を混ぜると Bundle root の相対解決 (models/model.pt) が壊れる。
+command: >-
+  set -eux;
+  python -c "import monai, torch; print('MONAI', monai.__version__, 'PyTorch', torch.__version__, 'CUDA', torch.cuda.is_available(), 'GPU', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'none')";
+  python -m monai.bundle download
+  "spleen_ct_segmentation"
+  --version "0.6.1"
+  --source "huggingface_hub"
+  --repo "MONAI/spleen_ct_segmentation"
+  --bundle_dir bundles;
+  cp "${{inputs.finetune_cfg}}" bundles/spleen_ct_segmentation/configs/finetune.json;
+  cd bundles/spleen_ct_segmentation;
+  python -m monai.bundle run
+  --config_file "['configs/train.json','configs/finetune.json']"
+  --dataset_dir="${{inputs.data}}"
+  --output_dir="${{outputs.artifacts}}/eval"
+  --ckpt_dir="${{outputs.artifacts}}/models"
+  --epochs=100
+  "--train#dataloader#batch_size=2"
+  "--train#dataset#cache_rate=1.0";
+
+resources:
+  instance_count: 1
+
+limits:
+  timeout: 21600
+
+tags:
+  scenario: monai-3d-seg
+  project: spread1000
+  job_type: fine-tuning

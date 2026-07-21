@@ -1,0 +1,22 @@
+name: monai-spleen
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      # PyTorch 2.4.0 (CUDA 12.4 wheels — matches AML base image)
+      - --extra-index-url https://download.pytorch.org/whl/cu124
+      - torch==2.4.0
+      - torchvision==0.19.0
+      # MONAI Core (Bundle v0.6.1 metadata pins 1.4.0)
+      # fire: CLI backend for `python -m monai.bundle`
+      # huggingface_hub: 現行の Bundle 配布元 (Model Zoo 側の monaihosting v0.6.1 は 404 になっているため)
+      - monai[fire,huggingface_hub]==1.4.0
+      - numpy==1.24.4
+      - nibabel==5.2.1
+      - pytorch-ignite==0.4.11
+      - tensorboard==2.17.0
+      # MLflow / AzureML tracking
+      - mlflow
+      - azureml-mlflow

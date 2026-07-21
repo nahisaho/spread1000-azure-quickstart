@@ -1,0 +1,14 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+name: task09-spleen
+version: "1"
+type: uri_folder
+description: >
+  Medical Segmentation Decathlon Task09 Spleen (CT, 41 training + 20 test volumes).
+  License: CC BY-SA 4.0. Source: http://medicaldecathlon.com/
+path: azureml://datastores/workspaceblobstore/paths/datasets/Task09_Spleen/
+tags:
+  license: CC-BY-SA-4.0
+  modality: CT
+  task: spleen-segmentation
+  scenario: monai-3d-seg
+  project: spread1000

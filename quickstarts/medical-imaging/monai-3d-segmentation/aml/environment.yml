@@ -1,0 +1,13 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: monai-spleen-1-4
+version: 1
+description: >
+  MONAI 1.4.0 + PyTorch 2.4.0 + CUDA 12.4 environment for
+  spleen_ct_segmentation bundle v0.6.1 (SPReAD-1000 medical-imaging quickstart).
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:latest
+conda_file: conda.yml
+tags:
+  scenario: monai-3d-seg
+  project: spread1000
+  monai_version: "1.4.0"
+  pytorch_version: "2.4.0"

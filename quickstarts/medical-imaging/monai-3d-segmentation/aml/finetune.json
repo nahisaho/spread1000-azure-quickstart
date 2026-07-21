@@ -1,0 +1,13 @@
+{
+  "pretrained_loader": {
+    "_target_": "CheckpointLoader",
+    "load_path": "$@bundle_root + '/models/model.pt'",
+    "load_dict": {
+      "model": "@network"
+    }
+  },
+  "initialize": [
+    "$monai.utils.set_determinism(seed=123)",
+    "$@pretrained_loader(@train#trainer)"
+  ]
+}
