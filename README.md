@@ -42,6 +42,7 @@ research-fields/
 |---:|---|---|---|
 | 01 | [REINVENT4 分子生成](research-fields/chemistry/01-molecular-generation-reinvent4/) | LibInvent scaffold decoration (AML v2) | — (CPU) |
 | 02 | [ReactionT5v2 反応予測](research-fields/chemistry/02-reaction-prediction-reactiont5/) | 反応物 SMILES → 生成物 SMILES (HF Transformers, 推論のみ) | T4 |
+| 03 | [PyG GINE 分子物性予測](research-fields/chemistry/03-property-prediction-gnn/) | MoleculeNet ESOL 溶解度回帰 (train + evaluate) | T4 |
 
 その他の分野（電気工学・情報科学 / 社会科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
