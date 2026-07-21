@@ -1,0 +1,14 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: bioemu-1-4-1-cuda
+version: 1
+description: |
+  BioEmu 1.4.1 with CUDA/JAX support
+  - base: openmpi5.0-cuda12.4-ubuntu22.04
+  - bioemu[cuda]==1.4.1 (PyTorch 2.6+, JAX cuda12, TensorFlow-CPU)
+  - Analysis extras: scikit-learn, matplotlib
+build:
+  path: .
+  dockerfile_path: Dockerfile
+tags:
+  scenario: bioemu
+  project: spread1000

@@ -1,0 +1,15 @@
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+name: gpu-a100
+type: amlcompute
+location: japaneast
+size: Standard_NC24ads_A100_v4
+# tier: dedicated  (PAYG, ~$5.326/h)
+# tier: low_priority (Spot, ~$0.984/h — 中断される可能性あり)
+tier: low_priority
+min_instances: 0
+max_instances: 1
+idle_time_before_scale_down: 120  # 秒 (2 分アイドルで縮小)
+ssh_public_access_enabled: false
+tags:
+  scenario: bioemu
+  project: spread1000

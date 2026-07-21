@@ -1,0 +1,26 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: bioemu-gpu-smoke-test
+experiment_name: bioemu-quickstart
+
+# GPU 確保 + PyTorch/JAX 起動確認のみ (数秒で終わる)
+command: >-
+  set -eux;
+  nvidia-smi;
+  python -c "import torch, jax; print('GPU:', torch.cuda.get_device_name(0)); print('JAX devices:', jax.devices())";
+  python -c "import bioemu; print('bioemu', bioemu.__version__)"
+
+environment: azureml:bioemu-1-4-1-cuda:1
+compute: azureml:gpu-a100
+
+resources:
+  instance_count: 1
+
+limits:
+  timeout: 1800  # 30 分 (Spot 待ち含む)
+
+tags:
+  scenario: bioemu
+  project: spread1000
+  job_type: smoke-test
