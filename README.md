@@ -26,6 +26,7 @@ research-fields/
 | 02 | [ESMFold タンパク質構造予測](research-fields/life-pharma-science/02-protein-structure-esmfold/) | Single-sequence protein folding | A100 |
 | 03 | [AlphaFold 3 構造予測](research-fields/life-pharma-science/03-protein-structure-alphafold3/) | Multimer / ligand complex | A100 |
 | 04 | [RNA-Seq (nf-core)](research-fields/life-pharma-science/04-transcriptomics-rnaseq/) | Bulk transcriptomics | Azure Batch |
+| 05 | [BioEmu タンパク質アンサンブル](research-fields/life-pharma-science/05-conformational-ensemble-bioemu/) | Conformational ensemble sampling | A100 |
 
 ### 🩺 [臨床科学](research-fields/clinical-science/)（採択 70 課題）
 
@@ -41,11 +42,11 @@ research-fields/
 - 構造化データ: [`docs/source/spread1000-adopted.json`](docs/source/spread1000-adopted.json)
 - 出典: https://www.mext.go.jp/content/20260629-mxt_jyohoka01-000050750_5.pdf
 
-## 共通事項
+## 共通事項（すべてのシナリオ着手前に読む）
 
-- **Azure アカウント準備**: `docs/00-azure-account-setup.md`（作成予定）
-- **コスト管理**: `docs/01-cost-management.md`（作成予定）
-- **GPU クォータ申請**: `docs/02-gpu-quota.md`（作成予定）
+- 📘 **[Azure アカウント準備](docs/00-azure-account-setup.md)** — サブスクリプション調達・権限・az login・RP 登録
+- 💰 **[コスト管理](docs/01-cost-management.md)** — 予算アラート・タグ戦略・Spot / GPU 節約
+- 🎮 **[GPU クォータ申請](docs/02-gpu-quota.md)** — SKU 選定・quota 確認・増加申請
 
 ## ライセンス
 
