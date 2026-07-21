@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: reaction-t5
+version: 1
+description: ReactionT5v2 forward reaction prediction (Transformers + Torch CUDA 12.4 + RDKit)
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:latest
+conda_file: conda.yml

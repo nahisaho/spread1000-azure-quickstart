@@ -1,0 +1,28 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+display_name: reaction-t5-predict
+description: Predict products for reaction SMILES using ReactionT5v2 forward model.
+
+code: ../src
+command: >-
+  python predict.py
+  --reactions ${{inputs.reactions}}
+  --output-dir ${{outputs.predictions}}
+  --num-beams 5
+  --model-revision 933114058cb2604dc1bf536dbebdfcefbe83d4fc
+
+environment: azureml:reaction-t5:1
+compute: azureml:gpu-cluster
+
+inputs:
+  reactions:
+    type: uri_file
+    path: azureml:reactions-demo:1
+
+outputs:
+  predictions:
+    type: uri_folder
+    mode: rw_mount
+
+identity:
+  type: user_identity

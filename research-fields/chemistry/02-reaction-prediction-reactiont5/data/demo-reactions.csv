@@ -1,0 +1,6 @@
+reactants,reagents,reference_product
+COC(=O)C1=CCCN(C)C1.O.[Al+3].[H-].[Li+].[Na+].[OH-],C1CCOC1,CN1CCC=C(CO)C1
+COC(=O)[C@@H]1CCCN1C[C@@H](CO)NC(=O)OCc1ccccc1.[H][H],[Pd].CO.CO,O=C1N[C@H](CO)CN2CCC[C@@H]12
+Cc1nc2ccccc2[nH]1.ClCCCCBr.[Na+].[OH-],CCCC[N+](CCCC)(CCCC)CCCC.[Br-],Cc1nc2ccccc2n1CCCCCl
+COC(=O)c1cc2c(cc1[N+](=O)[O-])OCCO2.NN.O,[Pd].CO.CO,COC(=O)c1cc2c(cc1N)OCCO2
+CCOC(=O)C1CCN(Cc2ccccc2)CC1=O.Cl,[Pd].CCO,CCOC(=O)C1CCNCC1=O.Cl

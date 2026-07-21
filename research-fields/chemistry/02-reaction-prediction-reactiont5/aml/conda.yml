@@ -1,0 +1,17 @@
+name: reaction-t5
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip=24.0
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu124
+      - torch==2.6.0
+      - transformers==4.40.2
+      - tokenizers==0.19.1
+      - sentencepiece==0.2.0
+      - rdkit==2024.3.6
+      - numpy==1.26.4
+      - pandas==2.2.2
+      - huggingface-hub==0.24.7
+      - azureml-mlflow==1.62.0
