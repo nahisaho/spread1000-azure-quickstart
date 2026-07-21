@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "accountName":        { "value": "aoai-spread-social-01" },
+    "location":           { "value": "japaneast" },
+    "deploymentName":     { "value": "survey-gpt41mini" },
+    "modelName":          { "value": "gpt-4.1-mini" },
+    "modelVersion":       { "value": "2025-04-14" },
+    "deploymentCapacity": { "value": 10 }
+  }
+}

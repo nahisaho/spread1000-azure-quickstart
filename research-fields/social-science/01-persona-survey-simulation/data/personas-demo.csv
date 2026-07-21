@@ -1,0 +1,6 @@
+persona_id,age_group,gender,region,urbanicity,education,employment_status,occupation,income_bracket,political_leaning,values,additional_context
+p001,30-39,女性,関東,urban,大学卒,フルタイム,会社員(事務),500-700万円,,安定志向;家族優先,
+p002,50-59,男性,近畿,suburban,大学院卒,フルタイム,大学教員,900-1200万円,,知的探究;社会貢献,
+p003,20-29,男性,九州,rural,高校卒,フルタイム,農業,300-500万円,,伝統重視;地域密着,
+p004,40-49,女性,中部,urban,専門学校卒,パートタイム,看護師,300-500万円,,他者ケア;現実主義,
+p005,60-69,男性,関東,suburban,大学卒,退職,元銀行員,300-500万円,,慎重;伝統重視,

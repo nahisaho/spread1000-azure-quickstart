@@ -44,7 +44,13 @@ research-fields/
 | 02 | [ReactionT5v2 反応予測](research-fields/chemistry/02-reaction-prediction-reactiont5/) | 反応物 SMILES → 生成物 SMILES (HF Transformers, 推論のみ) | T4 |
 | 03 | [PyG GINE 分子物性予測](research-fields/chemistry/03-property-prediction-gnn/) | MoleculeNet ESOL 溶解度回帰 (train + evaluate) | T4 |
 
-その他の分野（電気工学・情報科学 / 社会科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### 👥 [社会科学](research-fields/social-science/)（採択 55 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [LLM ペルソナ調査シミュレーション](research-fields/social-science/01-persona-survey-simulation/) | Azure OpenAI Structured Outputs で仮想ペルソナ × Likert 質問の合成回答 + χ² バイアス分析 (**合成データ専用**) | — (LLM API) |
+
+その他の分野（電気工学・情報科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 

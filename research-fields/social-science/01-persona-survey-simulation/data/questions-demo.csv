@@ -1,0 +1,11 @@
+question_id,category,question_text
+q001,tech_attitude,日常生活で AI 技術の利用が増えることは望ましい。
+q002,tech_attitude,AI が仕事の一部を代替することは自分にとって脅威である。
+q003,social_trust,見知らぬ人でも基本的に信頼できると思う。
+q004,social_trust,政府や公的機関の情報は信頼できる。
+q005,work_life,仕事より私生活を優先すべきである。
+q006,work_life,長時間労働でも高収入の方が良い。
+q007,community,地域社会の活動に積極的に参加したい。
+q008,privacy,個人データを企業に提供することに抵抗がある。
+q009,change,新しい制度や慣習は積極的に取り入れるべきである。
+q010,change,昔からの伝統や慣習は守るべきである。
