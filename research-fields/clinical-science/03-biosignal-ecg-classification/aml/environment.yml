@@ -1,0 +1,13 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: ecg-pytorch-2-4
+version: 1
+description: >
+  PyTorch 2.4.0 + CUDA 12.4 + wfdb 4.3.1 environment for
+  MIT-BIH AAMI 5-class ECG classification (SPReAD-1000 biosignal quickstart).
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:latest
+conda_file: conda.yml
+tags:
+  scenario: biosignal-ecg
+  project: spread1000
+  pytorch_version: "2.4.0"
+  wfdb_version: "4.3.1"

@@ -1,0 +1,16 @@
+$schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
+# MIT-BIH v1.0.0 を Blob 上に登録された uri_folder として AML data asset に登録
+# 事前に scripts/upload-dataset.sh で `datasets/mitdb-1.0.0/` にアップロード済みであること
+name: mitbih-1.0.0
+version: "1"
+description: >
+  PhysioNet MIT-BIH Arrhythmia Database v1.0.0 (48 records, ~104MB).
+  License: ODC-By 1.0. https://physionet.org/content/mitdb/1.0.0/
+type: uri_folder
+# ${{...}} は AML data asset の path syntax。実行時に datastore に解決される。
+path: azureml://datastores/datasets_ds/paths/mitdb-1.0.0/
+tags:
+  scenario: biosignal-ecg
+  project: spread1000
+  source: physionet
+  license: ODC-By-1.0

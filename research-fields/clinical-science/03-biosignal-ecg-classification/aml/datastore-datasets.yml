@@ -1,0 +1,8 @@
+$schema: https://azuremlschemas.azureedge.net/latest/azureBlob.schema.json
+# datasets コンテナ (Bicep で作成済み) を AML datastore として登録
+# ジョブは azureml:mitbih-1.0.0@latest data asset 経由でここを参照
+name: datasets_ds
+type: azure_blob
+description: MIT-BIH 用データセット領域 (workspaceblobstore とは別コンテナ)
+account_name: STORAGE_ACCOUNT_PLACEHOLDER   # deploy.sh が sed で置換
+container_name: datasets

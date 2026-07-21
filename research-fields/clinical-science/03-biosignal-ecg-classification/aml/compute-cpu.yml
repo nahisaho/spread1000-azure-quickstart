@@ -1,0 +1,14 @@
+$schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
+# GPU quota が 0 で T4 が使えない場合の CPU フォールバック。
+# 小型 1D CNN なら CPU でも 60〜90 分程度で完走する。
+name: ecg-cpu
+type: amlcompute
+size: Standard_D4as_v5
+tier: dedicated
+min_instances: 0
+max_instances: 1
+idle_time_before_scale_down: 120
+tags:
+  scenario: biosignal-ecg
+  project: spread1000
+  tier: dedicated-cpu

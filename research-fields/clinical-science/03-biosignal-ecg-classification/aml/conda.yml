@@ -1,0 +1,20 @@
+name: ecg-pytorch
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      # PyTorch 2.4.0 (CUDA 12.4 wheels — matches AML base image)
+      - --extra-index-url https://download.pytorch.org/whl/cu124
+      - torch==2.4.0
+      # PhysioNet 公式リーダー (MIT-BIH 用)
+      - wfdb==4.3.1
+      # NumPy は 1.26.4 に pin (wfdb 4.3.1 は 2.x 対応だが保守的に 1.x で固定)
+      - numpy==1.26.4
+      - scipy==1.14.1
+      - scikit-learn==1.5.2
+      - matplotlib==3.9.2
+      # MLflow / AzureML tracking
+      - mlflow==2.16.2
+      - azureml-mlflow==1.57.0

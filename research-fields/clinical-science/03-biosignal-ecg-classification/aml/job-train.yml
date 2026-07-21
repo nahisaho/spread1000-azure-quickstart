@@ -1,0 +1,40 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+# MIT-BIH AAMI 5-class 1D CNN training job (Azure ML command job v2)
+#
+# 実行:
+#   az ml job create -f aml/job-train.yml \
+#     -g $AZURE_RESOURCE_GROUP -w $AZURE_WORKSPACE_NAME --web
+#
+# GPU quota が無い場合は `compute: azureml:ecg-cpu` に差し替え可能。
+display_name: mitbih-aami5-1dcnn
+experiment_name: ecg-classification
+description: >
+  Train a small 1D CNN (~30k params) on MIT-BIH heartbeats mapped to AAMI 5-class.
+  Uses the canonical de Chazal DS1/DS2 record-level split (records 201/202 are
+  from the same subject — see prepare_data.py header for details).
+code: ../src
+command: >-
+  python prepare_data.py --data-dir ${{inputs.mitdb}} --out-dir ./prepared &&
+  python train.py --data-dir ./prepared
+  --epochs 15
+  --batch-size 512
+  --lr 1e-3
+  --seed 42
+  --output-dir ${{outputs.model}}
+environment: azureml:ecg-pytorch-2-4@latest
+compute: azureml:ecg-t4
+# credentialless datastore を submitter の Azure AD 認証で読むため user_identity を使用
+# (Bicep で deployer に Storage Blob Data Contributor を付与済み)
+identity:
+  type: user_identity
+inputs:
+  mitdb:
+    type: uri_folder
+    path: azureml:mitbih-1.0.0@latest
+    mode: ro_mount
+outputs:
+  model:
+    type: uri_folder
+tags:
+  scenario: biosignal-ecg
+  project: spread1000
