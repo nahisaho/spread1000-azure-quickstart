@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "value": "rnaseq01"
+    },
+    "location": {
+      "value": "japaneast"
+    },
+    "adminUsername": {
+      "value": "azureuser"
+    },
+    "adminSshPublicKey": {
+      "value": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx user@host"
+    },
+    "controllerVmSize": {
+      "value": "Standard_B2s"
+    },
+    "tags": {
+      "value": {
+        "project": "spread1000",
+        "field": "life-pharma-science",
+        "scenario": "rnaseq-nextflow",
+        "owner": "yourname"
+      }
+    }
+  }
+}

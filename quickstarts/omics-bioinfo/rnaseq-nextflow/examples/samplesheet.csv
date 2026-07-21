@@ -1,0 +1,7 @@
+sample,fastq_1,fastq_2,strandedness
+CTRL_1,az://omics/raw-fastq/project-001/CTRL_1_R1.fastq.gz,az://omics/raw-fastq/project-001/CTRL_1_R2.fastq.gz,auto
+CTRL_2,az://omics/raw-fastq/project-001/CTRL_2_R1.fastq.gz,az://omics/raw-fastq/project-001/CTRL_2_R2.fastq.gz,auto
+CTRL_3,az://omics/raw-fastq/project-001/CTRL_3_R1.fastq.gz,az://omics/raw-fastq/project-001/CTRL_3_R2.fastq.gz,auto
+TREAT_1,az://omics/raw-fastq/project-001/TREAT_1_R1.fastq.gz,az://omics/raw-fastq/project-001/TREAT_1_R2.fastq.gz,auto
+TREAT_2,az://omics/raw-fastq/project-001/TREAT_2_R1.fastq.gz,az://omics/raw-fastq/project-001/TREAT_2_R2.fastq.gz,auto
+TREAT_3,az://omics/raw-fastq/project-001/TREAT_3_R1.fastq.gz,az://omics/raw-fastq/project-001/TREAT_3_R2.fastq.gz,auto
