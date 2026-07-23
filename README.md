@@ -76,7 +76,15 @@ research-fields/
 | 02 | [強化学習 CartPole](research-fields/mechanical-energy/02-rl-cartpole/) | Stable-Baselines3 PPO × Gymnasium CartPole-v1、報酬曲線可視化 | — (CPU) |
 | 03 | [振動信号異常検知](research-fields/mechanical-energy/03-vibration-anomaly-ae/) | 合成振動波形 × 1D Conv Autoencoder、再構成誤差閾値で異常判定 | — (CPU) |
 
-その他の分野（数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### 🌏 [数学・物理学・地球科学](research-fields/math-physics-earth/)（採択 30 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [DDPM 最小実装](research-fields/math-physics-earth/01-ddpm-tiny/) | Tiny U-Net (~500K params) + T=200 拡散、Fashion-MNIST 16×16 で拡散モデル体験 | — (CPU) |
+| 02 | [記号回帰で物理法則発見](research-fields/math-physics-earth/02-symbolic-regression/) | gplearn 遺伝的プログラミングで観測データから解析式を学習 | — (CPU) |
+| 03 | [ガウス過程回帰](research-fields/math-physics-earth/03-gp-regression/) | sklearn GaussianProcessRegressor で周期信号 + ノイズを不確実性込みで回帰 | — (CPU) |
+
+その他の分野（農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 
