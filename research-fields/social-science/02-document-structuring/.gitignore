@@ -1,0 +1,5 @@
+# Local artifacts (do not commit)
+.env
+.venv/
+data/output/
+data/*.pdf

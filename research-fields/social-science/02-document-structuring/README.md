@@ -1,0 +1,82 @@
+# 02 — 文書構造化 (Azure OpenAI + Document Intelligence)
+
+日本語 PDF (判例、告示、工場名簿、要項等) を **Azure AI Document Intelligence** で OCR + Markdown 化し、**Azure OpenAI Structured Outputs** で Pydantic スキーマに従った JSON を抽出します。
+
+## 何を得られるか
+
+- Document Intelligence (`prebuilt-layout`) + Azure OpenAI (`gpt-5.4-mini`) を Bicep で構築
+- Managed Identity + AAD 認証 (API キーなし、`disableLocalAuth: true`)
+- 3 種類の架空 PDF (born-digital 判決文 / 表付き工場名簿 / スキャン画像版) からの JSON 抽出
+- 抽出根拠 (ページ範囲) を各レコードに付与
+- 抽出結果は `data/output/*.json` にダウンストリーム利用可能な形で保存
+
+## コスト
+
+| 項目 | 実行中 | 停止中 |
+|---|---:|---:|
+| Document Intelligence (Layout, 6 pages) | **$0.06** | $0 |
+| Azure OpenAI (gpt-5.4-mini, ~12K tokens) | **$0.017** | $0 |
+| Log Analytics (最小構成) | 月額 $1 未満 | 同左 |
+| **合計 (1 デモ実行)** | **約 $0.08〜0.15 (¥12〜22)** | — |
+
+> [!NOTE]
+> どちらのリソースも**存在するだけでは無課金**（トークン / ページ使用量のみ課金）。使い終わったら RG ごと削除するのが最も簡単です。
+
+## 前提
+
+- Azure サブスクリプション (Owner または Contributor + User Access Administrator)
+- Azure OpenAI 利用申請が承認済み
+- Bash 環境 (WSL2 / Linux / macOS / Cloud Shell)
+- az CLI v2.60+
+- Python 3.10+
+
+## 実行順序
+
+| # | 手順 | 所要 |
+|---:|---|---:|
+| 01 | [事前準備](docs/01-prerequisites.md) — az login、Python 環境、Provider 登録 | 10 分 |
+| 02 | [プロビジョニング](docs/02-provision.md) — Bicep で Doc Intelligence + AOAI | 5 分 |
+| 03 | [デモ PDF の準備](docs/03-prepare-documents.md) — 架空 CC0 PDF を生成 | 3 分 |
+| 04 | [抽出実行](docs/04-run-extraction.md) — Layout → LLM → JSON | 5 分 |
+| 05 | [クリーンアップ](docs/05-cleanup.md) — RG を削除 | 3 分 |
+| 06 | [倫理・限界](docs/06-ethics-and-limits.md) — 必読 | 5 分 |
+
+## モデル選定の根拠
+
+### Document Intelligence モデル
+
+| モデル | 内容 | 判定 |
+|---|---|---|
+| `prebuilt-read` | OCR のみ (文字、行、ページ) | 安価だが表・見出し情報を失う |
+| **`prebuilt-layout` (推奨)** | OCR + 段落 + 見出し + 表 + Markdown 出力 | **本シナリオ既定** |
+| `prebuilt-document` | 旧 key-value モデル | v4 で廃止済 |
+
+### AOAI モデル
+
+| モデル | 入力 $/1M | 出力 $/1M | Japan East Regional | 判定 |
+|---|---:|---:|---|---|
+| gpt-4.1-mini | 0.40 | 1.60 | ○ (ただし 2026-10-14 廃止) | **非推奨: 廃止予定** |
+| **gpt-5.4-mini (推奨)** | **0.75** | **4.50** | ○ (GA to 2027-03-18) | **本シナリオ既定** |
+| gpt-5.4 | 2.50 | 15.00 | ○ | デモには過剰 |
+| gpt-4o-mini | 0.15 | 0.60 | Global のみ | データ主権が問題ならNG |
+
+出典: [モデル利用可能性マトリックス](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability?pivots=standard)、[Model retirement schedule](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule)
+
+> [!IMPORTANT]
+> **GPT-5 系モデルでは `temperature` パラメータが非対応**です。代わりに `reasoning_effort=["low"|"medium"|"high"]` を使います。本シナリオは抽出タスクなので `low` を既定にしています。
+
+## ライセンス
+
+- 本ドキュメントと `src/`, `infra/`, `scripts/`: MIT
+- Azure OpenAI / Document Intelligence 出力: Microsoft Product Terms に従う
+- デモ PDF (`data/*.pdf`): 生成スクリプトによる架空データ、CC0
+
+## 参考文献
+
+- [Document Intelligence Layout model](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/layout?view=doc-intel-4.0.0)
+- [Structured Outputs (Azure OpenAI)](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs)
+- [Doc Intelligence + RAG guidance](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/concept/retrieval-augmented-generation?view=doc-intel-4.0.0)
+
+## トラブルシューティング
+
+問題が起きたら [`troubleshooting.md`](troubleshooting.md) を参照してください。

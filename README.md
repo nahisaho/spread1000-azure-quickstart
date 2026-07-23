@@ -49,6 +49,7 @@ research-fields/
 | # | シナリオ | ワークロード | GPU |
 |---:|---|---|---|
 | 01 | [LLM ペルソナ調査シミュレーション](research-fields/social-science/01-persona-survey-simulation/) | Azure OpenAI Structured Outputs で仮想ペルソナ × Likert 質問の合成回答 + χ² バイアス分析 (**合成データ専用**) | — (LLM API) |
+| 02 | [歴史・法務文書の LLM 構造化](research-fields/social-science/02-document-structuring/) | Document Intelligence (prebuilt-layout) + AOAI Structured Outputs で PDF → JSON (判例・工場名簿) | — (LLM API) |
 
 その他の分野（電気工学・情報科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
