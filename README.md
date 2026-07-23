@@ -84,7 +84,15 @@ research-fields/
 | 02 | [記号回帰で物理法則発見](research-fields/math-physics-earth/02-symbolic-regression/) | gplearn 遺伝的プログラミングで観測データから解析式を学習 | — (CPU) |
 | 03 | [ガウス過程回帰](research-fields/math-physics-earth/03-gp-regression/) | sklearn GaussianProcessRegressor で周期信号 + ノイズを不確実性込みで回帰 | — (CPU) |
 
-その他の分野（農学・環境 / 芸術・人文）は順次追加予定です。
+### 🌾 [農学・環境学・生態学](research-fields/agriculture-environment/)（採択 25 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [転移学習で少数データ画像分類](research-fields/agriculture-environment/01-transfer-plant-disease/) | ResNet18 (ImageNet) backbone 凍結 + fc 再学習、Flowers102 5-class 転移学習定番パターン | — (CPU) |
+| 02 | [scRNA-seq クラスタリング](research-fields/agriculture-environment/02-scrnaseq-clustering/) | scanpy (PBMC 3k) で normalization + PCA + UMAP + Leiden、single-cell 定番前処理 | — (CPU) |
+| 03 | [ハイパースペクトル画像分類](research-fields/agriculture-environment/03-hyperspectral-1dcnn/) | Indian Pines 200 バンドスペクトルを 1D-CNN でピクセル単位分類 | — (CPU) |
+
+その他の分野（芸術・人文）は順次追加予定です。
 
 ## 一次資料
 

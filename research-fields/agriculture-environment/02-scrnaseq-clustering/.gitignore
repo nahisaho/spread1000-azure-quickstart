@@ -1,0 +1,5 @@
+data/
+outputs/
+*.h5ad
+.venv/
+__pycache__/
