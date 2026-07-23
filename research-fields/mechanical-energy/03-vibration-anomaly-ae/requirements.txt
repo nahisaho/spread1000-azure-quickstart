@@ -1,0 +1,9 @@
+# requirements for F-3 vibration anomaly detection.
+#
+# torch は先に CPU wheel:
+#   pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
+
+numpy>=1.26,<3
+scipy>=1.13
+scikit-learn>=1.4
+matplotlib>=3.9
