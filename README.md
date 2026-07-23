@@ -27,6 +27,7 @@ research-fields/
 | 03 | [AlphaFold 3 構造予測](research-fields/life-pharma-science/03-protein-structure-alphafold3/) | Multimer / ligand complex | A100 |
 | 04 | [RNA-Seq (nf-core)](research-fields/life-pharma-science/04-transcriptomics-rnaseq/) | Bulk transcriptomics | Azure Batch |
 | 05 | [BioEmu タンパク質アンサンブル](research-fields/life-pharma-science/05-conformational-ensemble-bioemu/) | Conformational ensemble sampling | A100 |
+| 06 | [病理画像 CNN 分類](research-fields/life-pharma-science/06-pathology-cnn/) | MedMNIST PathMNIST 9 クラス、PathoCNN ~95K params | — (CPU) |
 
 ### 🩺 [臨床科学](research-fields/clinical-science/)（採択 70 課題）
 
@@ -83,6 +84,7 @@ research-fields/
 | 01 | [DDPM 最小実装](research-fields/math-physics-earth/01-ddpm-tiny/) | Tiny U-Net (~500K params) + T=200 拡散、Fashion-MNIST 16×16 で拡散モデル体験 | — (CPU) |
 | 02 | [記号回帰で物理法則発見](research-fields/math-physics-earth/02-symbolic-regression/) | gplearn 遺伝的プログラミングで観測データから解析式を学習 | — (CPU) |
 | 03 | [ガウス過程回帰](research-fields/math-physics-earth/03-gp-regression/) | sklearn GaussianProcessRegressor で周期信号 + ノイズを不確実性込みで回帰 | — (CPU) |
+| 04 | [ニューラル PDE サロゲート](research-fields/math-physics-earth/04-pde-surrogate/) | TinyUNet (~117K params) 残差学習で 2D 移流拡散 FD を高速代替、autoregressive rollout | — (CPU) |
 
 ### 🌾 [農学・環境学・生態学](research-fields/agriculture-environment/)（採択 25 課題）
 
@@ -99,8 +101,9 @@ research-fields/
 | 01 | [音声書き起こし](research-fields/arts-humanities/01-speech-transcription/) | Azure Speech continuous recognition (ja-JP)、Detailed 出力で confidence 付き、TTS→STT ラウンドトリップデモ | Speech S0 |
 | 02 | [古文書翻刻](research-fields/arts-humanities/02-document-transcription/) | Document Intelligence Layout OCR → Azure OpenAI Structured Outputs で書誌情報 Pydantic JSON 抽出 | Doc Intelligence + AOAI |
 | 03 | [多言語エンベディング検索](research-fields/arts-humanities/03-multilingual-embedding-search/) | text-embedding-3-large で日/英/仏/独/中 コーパスを FAISS で言語横断検索 | AOAI Embeddings |
+| 04 | [GraphRAG ナレッジグラフ + QA](research-fields/arts-humanities/04-graphrag/) | Microsoft GraphRAG で史料/科学文献からエンティティ・関係抽出 → local/global search | AOAI GPT + Embeddings |
 
-以上で SPReAD-1000 採択 456 課題を 9 分野 × 3 シナリオ (D 分野のみ 3) でカバーします。
+以上で SPReAD-1000 採択 456 課題を 10 分野 × 3-6 シナリオ (計 36 クイックスタート) でカバーします。
 
 ## 一次資料
 

@@ -1,0 +1,12 @@
+.venv/
+.env
+outputs/artifacts/
+outputs/reports/
+outputs/logs/
+outputs/output/
+outputs/cache/
+ragtest/output/
+ragtest/cache/
+ragtest/logs/
+__pycache__/
+*.pyc
