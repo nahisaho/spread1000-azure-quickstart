@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+data/*.npz
+outputs/*.txt
+outputs/*.png
+outputs/*.json
+.vscode/
+.idea/
+.DS_Store
