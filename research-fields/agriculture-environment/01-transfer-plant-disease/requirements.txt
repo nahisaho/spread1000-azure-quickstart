@@ -1,0 +1,7 @@
+# torch, torchvision は先に CPU wheel:
+#   pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
+
+numpy>=1.26,<3
+scikit-learn>=1.4
+matplotlib>=3.9
+Pillow>=10
