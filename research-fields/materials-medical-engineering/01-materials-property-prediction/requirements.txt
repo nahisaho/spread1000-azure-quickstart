@@ -1,0 +1,9 @@
+mp-api>=0.46.4,<1
+pymatgen>=2026.5.4
+matminer>=0.10.1
+xgboost-cpu>=3.3.0,<4
+scikit-learn>=1.9.0,<2
+numpy>=1.26,<3
+pandas>=2.2
+pyarrow>=20
+python-dotenv>=1.0.0

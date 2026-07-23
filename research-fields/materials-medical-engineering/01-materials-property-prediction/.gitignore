@@ -1,0 +1,9 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+data/mp-bandgap.parquet
+data/features.parquet
+data/metrics.json
+data/predictions.parquet
+data/manifest.json

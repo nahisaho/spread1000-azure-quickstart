@@ -52,7 +52,13 @@ research-fields/
 | 02 | [歴史・法務文書の LLM 構造化](research-fields/social-science/02-document-structuring/) | Document Intelligence (prebuilt-layout) + AOAI Structured Outputs で PDF → JSON (判例・工場名簿) | — (LLM API) |
 | 03 | [テキスト分類・トピッククラスタリング](research-fields/social-science/03-text-classification-clustering/) | AOAI Embeddings + scikit-learn (LogReg / KMeans) + gpt-5.4-mini による日本語クラスタラベル生成 | — (LLM API) |
 
-その他の分野（電気工学・情報科学 / 材料・応用医工学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### 🔬 [材料・応用医工学](research-fields/materials-medical-engineering/)（採択 33 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [材料バンドギャップ回帰](research-fields/materials-medical-engineering/01-materials-property-prediction/) | Materials Project + Matminer (magpie) + XGBoost、reduced-formula GroupKFold で組成リーク対策 | — (CPU) |
+
+その他の分野（電気工学・情報科学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 
