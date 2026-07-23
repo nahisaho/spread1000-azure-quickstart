@@ -1,0 +1,12 @@
+# Generated data and model artifacts
+data/*.png
+data/samples/
+data/predictions/
+data/checkpoints/
+data/*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
