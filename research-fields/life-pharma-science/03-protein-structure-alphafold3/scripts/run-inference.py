@@ -274,10 +274,9 @@ def _extract_job_names(input_path: Path) -> list[str]:
     """入力 JSON の `name` フィールドから、AF3 の sanitised_name() 規則で正規化した
     出力ディレクトリ名の一覧を返す (トップレベル配列の場合は全ジョブ分).
 
-    AF3 v3.0.2 の sanitised_name():
-      1. lowercase
-      2. スペースを '_' に置換
-      3. [a-z0-9_-] 以外の文字を削除
+    AF3 v3.0.2 の sanitised_name() 実装 (folding_input.py:1007-1011):
+      1. スペースを '_' に置換 (case は保持)
+      2. 許可文字 = ASCII 英字 (大小) + 数字 + '_' + '-' + '.' 以外を削除
     """
     try:
         data = json.loads(input_path.read_text())
@@ -293,20 +292,22 @@ def _extract_job_names(input_path: Path) -> list[str]:
         name = entry.get("name")
         if not isinstance(name, str) or not name:
             continue
-        lowered = name.lower().replace(" ", "_")
-        sanitised = re.sub(r"[^a-z0-9_-]", "", lowered)
+        spaceless = name.replace(" ", "_")
+        # 大文字小文字とドットを保持 (AF3 upstream 挙動と一致)
+        sanitised = re.sub(r"[^A-Za-z0-9_.\-]", "", spaceless)
         if sanitised:
             names.append(sanitised)
     return names
 
 
 def _print_summary(job_dir: Path) -> None:
-    """summary_confidences.json があれば主要指標を表示."""
-    # トップランクの <job>_summary_confidences.json だけを対象にする (サンプル別 _seed-*_sample-* は除外)
-    summaries = [
-        p for p in job_dir.glob("*_summary_confidences.json")
-        if "_seed-" not in p.name
-    ]
+    """summary_confidences.json があれば主要指標を表示.
+
+    v3.0.2 では sample 出力は job_dir/seed-<s>_sample-<n>/ サブディレクトリに配置され、
+    トップランクのみ job_dir 直下に <job>_summary_confidences.json として置かれる。
+    したがって非再帰の glob でトップランクのみ拾える。
+    """
+    summaries = list(job_dir.glob("*_summary_confidences.json"))
     if not summaries:
         _info("summary_confidences.json が見つかりません (ステージが 'msa' なら正常)")
         return

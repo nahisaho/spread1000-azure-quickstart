@@ -88,10 +88,21 @@ fi
 if command -v findmnt >/dev/null 2>&1; then
   MNT_SOURCE=$(findmnt -n -o SOURCE /mnt 2>/dev/null || echo "")
   if [[ -z "${MNT_SOURCE}" ]] || [[ "${MNT_SOURCE}" == /dev/sda* ]] || [[ "${MNT_SOURCE}" == /dev/root* ]]; then
-    echo "⚠️  /mnt が独立ボリュームとしてマウントされていない可能性 (source=${MNT_SOURCE:-なし})。"
-    echo "    A100 SKU の場合、Azure ML イメージにより /dev/nvme* が未マウントの場合があります。"
-    echo "    lsblk で NVMe デバイスを確認し、必要に応じて 'sudo mount /dev/nvme0n1 /mnt' を実行してください。"
-    lsblk 2>/dev/null | head -20 || true
+    echo "❌ /mnt が独立した一時 NVMe としてマウントされていません (source=${MNT_SOURCE:-なし})。"
+    echo ""
+    echo "    このスクリプトは NVMe を自動マウント/フォーマットしません（データ消失防止）。"
+    echo "    以下のいずれかで対応してください:"
+    echo "      (a) VM 作成時に Azure が /mnt を自動マウントする SKU/イメージを使用する"
+    echo "          （Ubuntu 22.04 マーケットプレイス既定イメージは通常自動マウント済み）"
+    echo "      (b) 未フォーマット NVMe を検出したら Azure の公式手順に従い"
+    echo "          パーティション作成→mkfs→/etc/fstab 追記→mount を **手動** で実施する"
+    echo "          https://learn.microsoft.com/azure/virtual-machines/linux/attach-disk-portal"
+    echo "      (c) Azure ML Compute Instance の場合、SKU に十分な OS ディスク (>=1TB) を割り当て、"
+    echo "          MNT_ROOT を /home/azureuser/af3 等の OS ディスク上に変更する"
+    echo ""
+    echo "    現在のブロックデバイス一覧 (lsblk):"
+    lsblk 2>/dev/null || true
+    exit 1
   fi
 fi
 MNT_FREE_GB=$(df -BG --output=avail /mnt | tail -n 1 | awk '{gsub(/[^0-9]/,""); print}')
@@ -139,26 +150,76 @@ echo "✅ Docker image: ${DOCKER_TAG}"
 # --- 4. データベースダウンロード ---------------------------------------
 echo ""
 echo "==== [4/6] 遺伝子データベース ~630 GB をダウンロード (60-120 分) ===="
+# AF3 v3.0.2 fetch_databases.sh が展開する必須ファイル群 (bfd, uniref90, mgnify, uniprot,
+# rna_central, ncbi rfam, pdb seqres, pdb mmcif, nt_rna 等 - 上流バージョンで細部変動)
+REQUIRED_DB_ARTIFACTS=(
+  "bfd-first_non_consensus_sequences.fasta"
+  "uniref90_2022_05.fa"
+  "mgy_clusters_2022_05.fa"
+  "uniprot_all_2021_04.fa"
+  "rnacentral_active_seq_id_90_cov_80_linclust.fasta"
+  "rfam_14_9_clust_seq_id_90_cov_80_rep_seq.fasta"
+  "pdb_seqres_2022_09_28.fasta"
+  "nt_rna_2023_02_23_clust_seq_id_90_cov_80_rep_seq.fasta"
+  "mmcif_files"
+)
+
+validate_db_completeness() {
+  local missing=0
+  for artifact in "${REQUIRED_DB_ARTIFACTS[@]}"; do
+    if [[ ! -e "${DB_DIR}/${artifact}" ]]; then
+      echo "❌ 必須アーティファクト不足: ${DB_DIR}/${artifact}"
+      missing=$((missing + 1))
+    fi
+  done
+  # mmcif_files ディレクトリ内は 200k 以上のファイル数を期待
+  if [[ -d "${DB_DIR}/mmcif_files" ]]; then
+    local mmcif_count
+    mmcif_count=$(find "${DB_DIR}/mmcif_files" -maxdepth 1 -type f 2>/dev/null | wc -l)
+    if [[ "${mmcif_count}" -lt 100000 ]]; then
+      echo "❌ mmcif_files のファイル数が想定より少ない: ${mmcif_count} (期待: >= 200,000)"
+      missing=$((missing + 1))
+    fi
+  fi
+  local size_gb
+  size_gb=$(du -sBG "${DB_DIR}" 2>/dev/null | awk '{gsub(/[^0-9]/,"",$1); print $1; exit}')
+  size_gb="${size_gb:-0}"
+  if [[ "${size_gb}" -lt 500 ]]; then
+    echo "❌ DB 総サイズが ${size_gb} GB (期待: 600-700 GB)。展開が不完全です。"
+    missing=$((missing + 1))
+  fi
+  echo "==== DB 展開後サイズ: ${size_gb} GB / 不足アーティファクト: ${missing} 件"
+  return "${missing}"
+}
+
 if [[ -f "${DB_DIR}/.fetch_completed" ]]; then
-  echo "既存 DB を検出 (${DB_DIR}/.fetch_completed)。ダウンロードをスキップします。"
-  echo "  再ダウンロードしたい場合: rm -rf ${DB_DIR}/* してから再実行"
-else
+  echo "既存 DB マーカーを検出 (${DB_DIR}/.fetch_completed)。整合性を再検証します。"
+  if ! validate_db_completeness; then
+    echo "⚠️  マーカーは存在するが DB が不完全です。再取得します。"
+    rm -f "${DB_DIR}/.fetch_completed"
+    # 中身をクリア (hidden ファイル含む)。DB_DIR 自体は保持
+    find "${DB_DIR}" -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+  else
+    echo "✅ 既存 DB は完全です。ダウンロードをスキップします。"
+    echo "  強制再取得: rm -rf ${DB_DIR} && mkdir -p ${DB_DIR} してから再実行"
+  fi
+fi
+
+if [[ ! -f "${DB_DIR}/.fetch_completed" ]]; then
   echo "現在の /mnt 空き: $(df -BG /mnt | awk 'NR==2 {print $4}')"
   echo "開始時刻: $(date)"
   sudo -u "${REAL_USER}" -H bash "${AF3_HOME}/fetch_databases.sh" "${DB_DIR}"
-  # ダウンロード完了マーカー
+  echo "完了時刻: $(date)"
+  echo "==== DB 完全性検証 ===="
+  if ! validate_db_completeness; then
+    echo "❌ fetch_databases.sh が正常終了したが必須ファイルが不足しています。"
+    echo "   ネットワーク断・GCS スロットリング等が疑われます。手動で欠損ファイルを"
+    echo "   確認・再取得してから .fetch_completed を作成してください。"
+    exit 1
+  fi
+  # 検証を通過してからマーカー作成 (完了マーカーが不完全 DL を隠さない)
   touch "${DB_DIR}/.fetch_completed"
   chown "${REAL_USER}:${REAL_USER}" "${DB_DIR}/.fetch_completed"
-  echo "完了時刻: $(date)"
-fi
-
-# サイズ確認 (600-700 GB 前後を期待)
-DB_SIZE_GB=$(du -sBG "${DB_DIR}" 2>/dev/null | awk '{gsub(/[^0-9]/,"",$1); print $1; exit}')
-DB_SIZE_GB="${DB_SIZE_GB:-0}"
-echo "==== DB 展開後サイズ: ${DB_SIZE_GB} GB"
-if [[ "${DB_SIZE_GB}" -lt 500 ]]; then
-  echo "⚠️  DB サイズが 500 GB 未満です (期待: 600-700 GB)。展開が不完全な可能性があります。"
-  echo "   ${DB_DIR}/.fetch_completed を削除して再実行を検討してください。"
 fi
 
 # --- 5. サニティチェック ------------------------------------------------

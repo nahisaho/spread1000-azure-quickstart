@@ -14,28 +14,59 @@ AF3 の出力は **AI による予測** であり、実験構造ではありま�
 - **タンパク質-核酸複合体は依然として難しいターゲット** — ipTM が高くても実験で覆るケースあり
 - **医療・臨床判断や創薬の意思決定には利用しない**
 
-出力に含まれる `TERMS_OF_USE.md` を **削除せずに保持** してください。
-これが AF3 Output Terms of Use による帰属表示要件を満たします。
+### 出力・派生物の配布時に必ず満たす条件（AF3 Output Terms of Use ＋ v3.0.2 CC BY-NC-SA 4.0）
+
+構造ファイル・信頼度 JSON・派生図表を他者へ配布・論文の Supplementary として公開する場合、
+以下 **すべて** を満たす必要があります（1 つでも欠けると規約違反）:
+
+1. **`TERMS_OF_USE.md` を出力ディレクトリと共に配布**（削除・改変禁止）
+2. **conspicuous notice**: 配布物の目立つ場所に「AlphaFold 3 で生成された予測構造であり、
+   AlphaFold 3 Output Terms of Use および (v3.0.2 由来コードを再配布する場合) CC BY-NC-SA 4.0 に従う」旨を明記
+3. **改変の開示**: 予測構造をリラックスさせた・トリムした等の後処理を行った場合、
+   その旨とツール名・パラメータを Methods/README に記載
+4. **論文引用**: Abramson et al., *Nature* **630**, 493–500 (2024) を引用
+5. **非商用限定**: 予測構造・派生スクリプト共に商用利用不可（企業共同研究含む場合は法務確認）
+6. **継承 (ShareAlike)**: v3.0.2 のコードや設定を改変・派生させて配布する場合、
+   同一の CC BY-NC-SA 4.0 で公開
+
+`TERMS_OF_USE.md` の**保持のみでは条件 2〜6 を満たさない**点に注意してください。
 
 ## 1. 出力ファイル構造
 
 `run-inference.py` が完了すると、次の構造で出力されます:
 
+> [!NOTE]
+> ジョブ名 (JSON の `"name"`) は AF3 の `sanitised_name()` で正規化されます:
+> スペースを `_` に置換し、`[A-Za-z0-9_-.]` 以外を削除。**大文字小文字は保持** されます。
+> 例: `"My Fold (TEST)"` → `My_Fold_TEST`。既存ディレクトリがある場合は
+> `--force_output_dir` 未指定ならタイムスタンプが suffix として付与されます。
+
 ```text
-/mnt/af3/outputs/<job_name>/
-├── <job_name>_model.cif                              ← トップランクの構造（mmCIF）
-├── <job_name>_confidences.json                       ← 詳細な信頼度（残基/原子ペアの PAE 等）
-├── <job_name>_summary_confidences.json               ← サマリ (トップランク: ptm, iptm, ranking_score, fraction_disordered, has_clash)
-├── <job_name>_data.json                              ← 拡張入力（MSA + テンプレート情報）
-├── <job_name>_ranking_scores.csv                     ← 全サンプルのランキング
+/mnt/af3/outputs/<sanitised_job_name>/                ← 大文字小文字はそのまま。空白は '_'
+├── <sanitised_job_name>_model.cif                    ← トップランクの構造（mmCIF）
+├── <sanitised_job_name>_confidences.json             ← 詳細な信頼度（残基/原子ペアの PAE 等）
+├── <sanitised_job_name>_summary_confidences.json     ← サマリ (トップランク: ptm, iptm, ranking_score, fraction_disordered, has_clash)
+├── <sanitised_job_name>_data.json                    ← 拡張入力（MSA + テンプレート情報）
+├── ranking_scores.csv                                ← 全サンプルのランキング（プレフィックス無し）
 ├── TERMS_OF_USE.md                                   ← 出力ライセンス（削除しない）
-├── <job_name>_seed-42_sample-0_model.cif             ← 各サンプル (既定 5 サンプル)
-├── <job_name>_seed-42_sample-0_confidences.json
-├── <job_name>_seed-42_sample-0_summary_confidences.json
-├── <job_name>_seed-42_sample-1_model.cif
-...
-└── <job_name>_seed-42_sample-4_summary_confidences.json
+├── seed-42_sample-0/                                 ← 各 (seed, sample) はサブディレクトリ
+│   ├── <sanitised_job_name>_seed-42_sample-0_model.cif
+│   ├── <sanitised_job_name>_seed-42_sample-0_confidences.json
+│   └── <sanitised_job_name>_seed-42_sample-0_summary_confidences.json
+├── seed-42_sample-1/
+│   └── ... (同構成)
+├── ...
+├── seed-42_sample-4/
+│   └── ...
+├── seed-42_distogram/                                ← --save_distogram=true 指定時のみ
+│   └── <sanitised_job_name>_seed-42_distogram.npz    ←   (num_tokens² × 64, float16, 5k tokens で ~3 GiB)
+└── seed-42_embeddings/                               ← --save_embeddings=true 指定時のみ
+    └── <sanitised_job_name>_seed-42_embeddings.npz   ←   (single 384 + pair 128, float16, 5k tokens で ~6 GiB)
 ```
+
+**サンプル成果物は必ずサブディレクトリ内**にある点に注意してください。
+出力ディレクトリ直下にはトップランク版のみが配置され、
+`ranking_scores.csv` はプレフィックスなしのファイル名です。
 
 > [!IMPORTANT]
 > AF3 は **PDB ではなく mmCIF** を出力します。PDB 形式に変換する場合は

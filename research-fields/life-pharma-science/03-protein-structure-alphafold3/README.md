@@ -25,9 +25,15 @@ AlphaFold 3 は **3 種類の異なるライセンス** に従います。混同
 
 | 対象 | ライセンス | 商用利用 | 再配布 |
 |------|-----------|---------|-------|
-| **ソースコード** (github.com/google-deepmind/alphafold3) | Apache License 2.0 | ✅ 可 | ✅ 可 |
+| **ソースコード v3.0.2** (github.com/google-deepmind/alphafold3, tag `v3.0.2`) | **CC BY-NC-SA 4.0**（非商用・継承）| ❌ 不可 | ✅ 可（同一ライセンス継承・帰属表示要）|
 | **モデル重み** (`af3.bin`) | AlphaFold 3 Model Parameters Terms of Use（非商用カスタム）| ❌ 不可 | ❌ 不可（承認組織内のみ） |
 | **AF3 の出力** (mmCIF, confidence JSON 等) | AlphaFold 3 Output Terms of Use（非商用）| ❌ 不可 | 条件付き（`TERMS_OF_USE.md` 添付要）|
+
+> [!IMPORTANT]
+> このクイックスタートは v3.0.2 タグ (CC BY-NC-SA 4.0) を pin しています。
+> **`main` ブランチ (2025-01 以降) は Apache 2.0 に変更**されていますが、
+> 本手順では再現性のため v3.0.2 を使用し、そのライセンス条件に従います。
+> 商用利用が必要な場合は `main` の Apache 2.0 コードを別途セットアップしてください。
 
 - **このリポジトリには `af3.bin` を含めません。** ユーザーが Google フォームから直接受領してください。
 - **承認は「個人」または「機関代表者」に対して個別に発行**されます。あなたの承認範囲を確認してください。
@@ -39,6 +45,22 @@ AlphaFold 3 は **3 種類の異なるライセンス** に従います。混同
 - [Model Parameters Terms of Use](https://github.com/google-deepmind/alphafold3/blob/main/WEIGHTS_TERMS_OF_USE.md)
 - [Prohibited Use Policy](https://github.com/google-deepmind/alphafold3/blob/main/WEIGHTS_PROHIBITED_USE_POLICY.md)
 - [Output Terms of Use](https://github.com/google-deepmind/alphafold3/blob/main/OUTPUT_TERMS_OF_USE.md)
+
+> [!WARNING]
+> **バイオセキュリティ／二重使用研究 (Dual-Use Research of Concern, DURC) 上の禁止事項**
+>
+> WEIGHTS_PROHIBITED_USE_POLICY は以下用途への AF3 重み利用を明示的に禁じています。
+> **ヒト病原体・毒素・ウイルスの機能獲得 (gain-of-function)、免疫回避、伝染性強化、
+> 化学兵器・生物兵器の設計・改良、その他公衆衛生を脅かす研究**。
+>
+> **SPReAD-1000 課題であっても、以下のいずれかに該当する場合は所属機関の
+> Institutional Biosafety Committee (IBC) / 生物学的安全委員会と法務レビューを
+> 実行前に受けてください:**
+> - BSL-3/BSL-4 病原体、Select Agents、規制対象毒素を構造モデリング対象とする
+> - 抗体エピトープ回避や中和抗体逃避変異の設計を含む
+> - リガンド設計が神経剤・毒素・農薬中毒性強化に転用され得る
+>
+> 判断に迷う場合は **予測を実行せず** 先に監督組織へ相談してください。
 
 ---
 
