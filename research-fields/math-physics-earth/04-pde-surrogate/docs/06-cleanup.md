@@ -3,6 +3,6 @@
 Azure リソースなし、CPU ローカルのみ。
 
 ```bash
-rm -rf data/* outputs/*
+rm -rf outputs/*
 deactivate && rm -rf .venv
 ```

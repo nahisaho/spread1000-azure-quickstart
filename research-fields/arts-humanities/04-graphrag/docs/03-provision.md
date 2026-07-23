@@ -10,7 +10,17 @@ NAME="aoai-graphrag-$RANDOM"
 az group create -n $RG -l $LOC
 az cognitiveservices account create \
     --name $NAME --resource-group $RG --location $LOC \
-    --kind OpenAI --sku S0
+    --kind OpenAI --sku S0 \
+    --custom-domain $NAME
+```
+
+> [!NOTE]
+> `--custom-domain $NAME` を必ず付けてください。これがないと endpoint が `https://<region>.api.cognitive.microsoft.com/...` になり、`https://<name>.openai.azure.com` 形式にならず GraphRAG が接続できません。
+
+エンドポイント取得:
+```bash
+az cognitiveservices account show --name $NAME --resource-group $RG \
+    --query properties.endpoint -o tsv
 ```
 
 ## 2. モデルのデプロイ
@@ -67,6 +77,9 @@ print(r.choices[0].message.content)
 ## 認証代替: Managed Identity
 
 本番運用では API キーではなく **Managed Identity** を推奨:
-- `settings.yaml` で `auth_type: azure_managed_identity`
+- `settings.yaml` の**両方**のモデル (`default_chat_model`, `default_embedding_model`) で以下を変更:
+  - `auth_type: azure_managed_identity`
+  - `api_key:` の行を**削除** (両方の `api_key` が残っていると設定検証エラーになる)
 - Azure ML/App Service に User-Assigned MI をアタッチ
-- MI に **Cognitive Services OpenAI User** ロールを割り当て
+- MI に **Cognitive Services OpenAI User** ロールを Azure OpenAI リソースに対して割り当て
+- `.env` から `GRAPHRAG_API_KEY` を削除、代わりに `AZURE_CLIENT_ID` を設定 (User-Assigned MI の場合)

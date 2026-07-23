@@ -1,4 +1,5 @@
-data/
+data/*.npz
+data/*.zip
 outputs/
 .venv/
 __pycache__/

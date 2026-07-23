@@ -30,14 +30,15 @@ cp .env.example .env
 ## 使い方
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate   # WSL/macOS/Linux。Windows は WSL2 か Git Bash 推奨
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-# エンドツーエンド (init → index → sample queries)
+# エンドツーエンド (init → dry-run → index → sample queries)
+# 実行前に推定コスト表示 + 予算上限確認 (デフォルト $10、GRAPHRAG_BUDGET_USD で変更可)
 bash src/run.sh
 
-# 追加クエリ (インデックス構築後)
+# 追加クエリ (インデックス構築後、プロジェクトルート .env を自動読み込み)
 python src/query.py --method global --query "明治維新に関わった中心人物は誰で、どう繋がっていたか?"
 python src/query.py --method local  --query "Sugita Genpaku が翻訳した書物は?"
 ```

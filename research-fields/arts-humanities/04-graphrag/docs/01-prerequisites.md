@@ -3,7 +3,7 @@
 ## 環境
 
 - Python 3.10-3.12 (graphrag 2.4 は 3.13 未サポート)
-- OS: Windows/Linux/macOS
+- OS: **Linux / WSL2 / macOS 推奨** (Bash と POSIX ユーティリティに依存)。Windows ネイティブ (PowerShell) からは `src/run.sh` は動きません — WSL2 か Git Bash 経由で実行してください。
 - インターネット (Azure OpenAI 呼び出し)
 
 ## Azure サブスクリプション
@@ -23,7 +23,7 @@
 ```bash
 cd research-fields/arts-humanities/04-graphrag
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate   # WSL/macOS/Linux. Windows は WSL2 か Git Bash を使用してください。
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```

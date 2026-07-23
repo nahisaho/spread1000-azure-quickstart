@@ -21,8 +21,8 @@ def step_advdiff(u: np.ndarray, D: float, vx: float, vy: float,
 
 
 def random_initial(rng: np.random.Generator, n: int = 64, n_blobs: int = 3) -> np.ndarray:
-    """複数のガウシアン重ね合わせで初期場を作る"""
-    x = np.linspace(-1, 1, n)
+    """複数のガウシアン重ね合わせで初期場を作る (周期整合、endpoint=False)"""
+    x = np.linspace(-1, 1, n, endpoint=False)
     X, Y = np.meshgrid(x, x)
     u = np.zeros_like(X)
     for _ in range(n_blobs):
@@ -35,9 +35,14 @@ def random_initial(rng: np.random.Generator, n: int = 64, n_blobs: int = 3) -> n
 
 def generate_trajectories(n_traj: int, n_steps: int, n: int = 64,
                           D: float = 0.02, vx: float = 0.5, vy: float = 0.3,
-                          dx: float = 2.0 / 64, seed: int = 42
+                          dx: float | None = None, seed: int = 42
                           ) -> tuple[np.ndarray, float]:
-    """Return array of shape (n_traj, n_steps+1, n, n) and dt used"""
+    """Return array of shape (n_traj, n_steps+1, n, n) and dt used.
+
+    dx は None のとき n から自動導出 (2.0/n, 周期領域 [-1,1))。
+    """
+    if dx is None:
+        dx = 2.0 / n
     # CFL: dt < min(dx/|v|, dx²/(4D))
     dt_cfl = min(dx / max(abs(vx), abs(vy)), dx ** 2 / (4 * D))
     dt = 0.4 * dt_cfl

@@ -1,9 +1,30 @@
 # 05 — 自前コーパスへの適用
 
-## 手順
+## 手順 (基本 — 全再構築)
 
-1. 自分の文書を `data/input/` に配置 (`.txt` 形式)
-2. `bash src/run.sh` を再実行 → 新規インデックスが構築される
+1. **既存の `ragtest/` を削除** (残留ファイルの混入を防ぐ): `rm -rf ragtest/`
+2. `data/input/` を自分の文書 (`.txt`) に置き換え
+3. `bash src/run.sh` を実行 → 新規インデックスが構築される
+
+`src/run.sh` は `ragtest/input/` を毎回削除→同期するため、`ragtest/` を消さずに実行しても古い入力は残りません。ただし `ragtest/output/` にある**旧インデックスはキャッシュ経由で影響**する可能性があるため、コーパスが大きく変わったときは `rm -rf ragtest/` を推奨。
+
+## 差分更新 (incremental update)
+
+新規文書を**追加**する場合 (既存を消さない):
+```bash
+cp new_doc.txt data/input/
+cp new_doc.txt ragtest/input/
+python -m graphrag update --root ./ragtest
+```
+
+> [!IMPORTANT]
+> GraphRAG 2.4 の `graphrag update` は結果を既定で **`ragtest/update_output/`** に書き出します (`ragtest/output/` は上書きしない)。以降のクエリは `--data` オプションで `update_output` を指定するか、`update_output` の中身を `output/` に手動昇格させる必要があります。
+>
+> ```bash
+> # 昇格例
+> rm -rf ragtest/output
+> mv ragtest/update_output ragtest/output
+> ```
 
 ## 対応フォーマット
 
@@ -63,9 +84,10 @@ Standard S0 は既定で **60 RPM / 60K TPM**。増枠は Azure Portal から「
 ```bash
 cp new_doc.txt ragtest/input/
 python -m graphrag update --root ./ragtest
+# 結果は ragtest/update_output/ に出力される (元の output/ は保持)
 ```
 
-`update` は差分だけ処理するため、フル `index` より安価。
+`update` は差分だけ処理するためフル `index` より安価。詳細は [docs/05-your-data.md](../docs/05-your-data.md) の差分更新セクション参照。
 
 ## 応用例
 

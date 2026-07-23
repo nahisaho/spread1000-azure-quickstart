@@ -4,7 +4,7 @@
 
 - MedMNIST v2 (Yang et al., 2023) は 12 の 2D + 6 の 3D 医用画像ベンチマーク
 - 各データセットは 28×28 (小) / 224×224 (大) にリサイズ済み
-- 全て BSD-3 ライセンス、教育・研究利用フリー
+- **ライセンス**: `medmnist` **Python パッケージ (コード) は Apache-2.0**。各**データセットのライセンスは個別**で、PathMNIST は元データ (Kather 2019) の **CC BY 4.0** を継承。DermaMNIST は元データが **CC BY-NC 4.0** (非営利利用のみ)。データセットごとに [MedMNIST 公式サイト](https://medmnist.com/) で個別確認してください。
 
 ## PathMNIST の中身
 

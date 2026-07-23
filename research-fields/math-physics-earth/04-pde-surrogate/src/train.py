@@ -67,6 +67,13 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
 
+    if args.k_step < 1:
+        raise SystemExit(f"[error] --k-step must be >= 1 (got {args.k_step})")
+    if args.k_step >= args.n_steps:
+        raise SystemExit(f"[error] --k-step ({args.k_step}) must be < --n-steps ({args.n_steps})")
+    if args.n_train < 1 or args.n_val < 1:
+        raise SystemExit("[error] --n-train and --n-val must be >= 1")
+
     torch.manual_seed(args.seed); np.random.seed(args.seed)
     device = torch.device("cpu")
     outputs = Path(__file__).resolve().parent.parent / "outputs"

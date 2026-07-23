@@ -2,8 +2,16 @@
 
 ## MedMNIST ダウンロード失敗
 
-- `data/pathmnist.npz` を手動 DL: https://zenodo.org/records/10519652
-- `PathMNIST(root='data', download=False)` で読み込み
+自動 DL が失敗する場合、手動で入手して配置:
+
+```bash
+mkdir -p data
+curl -L -o data/pathmnist.npz https://zenodo.org/records/10519652/files/pathmnist.npz
+# 再実行 (medmnist は data/pathmnist.npz が存在すれば download=True でも再 DL しない)
+python src/train.py
+```
+
+もしパッケージ側の期待ファイル名が変わっている場合は `python -c "from medmnist import PathMNIST; print(PathMNIST.flag)"` などで実際のファイル名を確認。
 
 ## `IndexError: too many indices for tensor`
 

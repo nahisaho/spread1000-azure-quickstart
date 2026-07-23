@@ -21,10 +21,9 @@ deactivate && rm -rf .venv
 
 ### 事前見積り
 
-`graphrag index` 実行前に `--dry-run` はないが、以下で概算:
-- 文書総トークン数 × 平均 3-5 回 (extract + summarize + report) × モデル単価
-- gpt-4o-mini (入力 $0.15/1M, 出力 $0.60/1M)
-- text-embedding-3-small ($0.02/1M)
+- `bash src/run.sh` は index 実行前にコーパスサイズを推定して警告する仕組みを内蔵 (デフォルト上限 $10)。上限を超えると停止 → `GRAPHRAG_BUDGET_USD=50 bash src/run.sh` で明示的に緩和。
+- **preflight 検証**: `python -m graphrag index --root ./ragtest --dry-run` で LLM 呼び出しなしに設定を検証できる (`run.sh` 内で自動実行)。
+- 手動概算式: 総トークン数 × 3-5 (extract + summarize + report) × モデル単価。gpt-4o-mini は入力 $0.15/1M、出力 $0.60/1M、text-embedding-3-small は $0.02/1M。
 
 ### 実行中モニタリング
 
@@ -32,18 +31,23 @@ Azure Portal → Cost Management → 対象サブスクリプション → 「�
 
 過去 24 時間の Azure OpenAI 支出をリアルタイム確認可能 (更新に 8-24 時間ラグあり)。
 
-### 予算アラート設定
+### 予算アラート設定 (**遅延通知のみ、ハードキャップではない**)
+
+Azure 予算は通知のみで、超過時に自動停止しません。有意な保護には Azure Cost Management → Budget → **Action Group** (Web Hook で Function を呼びリソースをロック) が必要。以下は通知先つきの最小例:
 
 ```bash
-az consumption budget create-with-rg \
-    --resource-group rg-graphrag-quickstart \
+EMAIL="you@example.com"
+az consumption budget create \
     --budget-name "graphrag-monthly" \
     --amount 20 \
     --time-grain Monthly \
-    --time-period start-date=$(date +%Y-%m-01)
+    --category Cost \
+    --start-date "$(date +%Y-%m-01)" \
+    --end-date "$(date -d '+12 months' +%Y-%m-01)" \
+    --notifications 'notification1={"operator":"GreaterThan","threshold":80,"contactEmails":["'"$EMAIL"$'"],"enabled":true}'
 ```
 
-$20/月を超えると通知メールが飛ぶ。
+`az consumption budget create-with-rg` は **notifications 引数を受け付けない古い CLI サブコマンド**なので、上記のように `az consumption budget create` + `--notifications` を使ってください (CLI 拡張 `costmanagement` が必要な場合あり)。
 
 ## 大規模インデックスの中断復旧
 

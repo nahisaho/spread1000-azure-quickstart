@@ -2,8 +2,9 @@
 
 - データ: 大腸組織 28×28 RGB × 9 クラス (adipose, background, debris,
   lymphocytes, mucus, smooth muscle, normal, cancer-stroma, adenocarcinoma)
-- モデル: 軽量 CNN (Conv3+FC), ~40K params
-- 学習: 5-10 epoch で val_acc ~0.85-0.90
+- モデル: 軽量 CNN (Conv3+FC), ~95K params
+- 学習: 5-10 epoch で val_acc ~0.85-0.90 (MedMNIST ベンチマーク上)
+- 注意: 研究・教育目的のみ。診断・治療には使用不可。
 """
 from __future__ import annotations
 import argparse
@@ -58,6 +59,13 @@ def main() -> None:
     ap.add_argument("--train-frac", type=float, default=0.2, help="train データを高速化のため縮小 (0-1)")
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
+
+    if not (0.0 < args.train_frac <= 1.0):
+        raise SystemExit(f"[error] --train-frac must be in (0, 1] (got {args.train_frac})")
+    if args.epochs < 1:
+        raise SystemExit(f"[error] --epochs must be >= 1 (got {args.epochs})")
+    if args.batch_size < 1:
+        raise SystemExit(f"[error] --batch-size must be >= 1 (got {args.batch_size})")
 
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)

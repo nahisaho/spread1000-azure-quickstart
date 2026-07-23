@@ -15,10 +15,15 @@
 ### 認証エラー (401 Unauthorized)
 - `.env` の `GRAPHRAG_API_KEY` を Azure Portal で再確認・再取得
 - `GRAPHRAG_API_BASE` が末尾スラッシュなしの `https://<name>.openai.azure.com` か確認
+  - `az cognitiveservices account show --name <NAME> --resource-group <RG> --query properties.endpoint -o tsv` で正しいエンドポイントを取得
+  - エンドポイントが `<region>.api.cognitive.microsoft.com` 形式の場合はリソース作成時に `--custom-domain` が未指定 → リソース再作成が必要 (`docs/03-provision.md` 参照)
 
 ### モデル未デプロイ (404 DeploymentNotFound)
 - Azure OpenAI Studio でデプロイ名を確認
 - `.env` の `GRAPHRAG_LLM_DEPLOYMENT_NAME` とデプロイ名が完全一致か
+
+### 設定検証エラー (Managed Identity 使用時)
+- `auth_type: azure_managed_identity` に切り替えた場合、`api_key:` の行を settings.yaml の**両モデル**から削除する必要あり (併記するとエラー)
 
 ### レート制限 (429 Too Many Requests)
 - `src/settings.yaml` の `concurrent_requests: 4` を 2 に減らす

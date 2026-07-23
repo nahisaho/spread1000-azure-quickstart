@@ -21,7 +21,7 @@ python src/train.py --n-train 64 --epochs 15 --k-step 5
 ```
 [data] generating FD solutions: n_train=64 n_val=16 n_steps=40
 [data] dt=0.00488, k-step prediction horizon = 0.0244
-[data] train pairs=2240 val pairs=560
+[data] train pairs=2304 val pairs=576
 [model] TinyUNet | params=116,753
 [epoch  1/15] train_mse=0.00612 val_relL2=0.11
 [epoch  8/15] train_mse=0.00001 val_relL2=0.012
@@ -37,11 +37,11 @@ python src/train.py --n-train 64 --epochs 15 --k-step 5
 - **行 2 (pred)**: ニューラルサロゲートの autoregressive 予測
 - **行 3 (|err|)**: 絶対誤差、赤くなるほど大きい
 
-## サロゲートの高速化率
+## サロゲートの高速化 (考え方)
 
-CPU 実測 (64×64, 40 ステップ, batch=1):
-- FD: ~50 ms
-- Neural: ~2 ms
-- **~25 倍高速** (batch=32 なら **~200 倍**)
-
-実用気象モデル (数百万格子) では 1000 倍以上の高速化が報告されている。
+- 1 モデル呼び出し = k FD ステップ相当のジャンプ
+- 同じ物理時間 T を進めるのに: FD は N ステップ、サロゲートは N/k 呼び出し
+- **ただし絶対速度は問題規模・実装・ハードに大きく依存**
+  - 小規模 (64×64, NumPy FD) では NumPy が既に高速で、モデル呼び出しオーバーヘッドで**サロゲートの方が遅い**ことも
+  - 大規模 (数百万格子, スパース線形代数) では**明確に速い** — FourCastNet が ECMWF IFS を数百〜数千倍上回るのはこの領域
+- 教材レベルでは「速度」より「学習で PDE 挙動を近似できる」ことに注目してください

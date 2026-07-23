@@ -4,16 +4,22 @@
 
 `medmnist` パッケージには他にも:
 
-| データセット | 内容 | 用途 |
-|---|---|---|
-| PneumoniaMNIST | 胸部 X 線 (2 class) | 感染症スクリーニング |
-| DermaMNIST | 皮膚病変 (7 class) | 皮膚科補助診断 |
-| BloodMNIST | 血液細胞 (8 class) | 血液学 |
-| BreastMNIST | 乳腺超音波 (2 class) | 悪性度判定 |
-| RetinaMNIST | 網膜眼底 (5 class) | 糖尿病網膜症 |
-| ChestMNIST | 胸部 X 線 (14 multi-label) | 多疾患検出 |
+| データセット | 内容 | チャネル | 種別 | ライセンス |
+|---|---|---|---|---|
+| PneumoniaMNIST | 胸部 X 線 (2 class) | 1ch (Grayscale) | 単一ラベル | CC BY 4.0 |
+| DermaMNIST | 皮膚病変 (7 class) | 3ch (RGB) | 単一ラベル | **CC BY-NC 4.0 (非営利のみ)** |
+| BloodMNIST | 血液細胞 (8 class) | 3ch (RGB) | 単一ラベル | CC BY 4.0 |
+| BreastMNIST | 乳腺超音波 (2 class) | 1ch (Grayscale) | 単一ラベル | CC BY 4.0 |
+| RetinaMNIST | 網膜眼底 (5 class) | 3ch (RGB) | 単一ラベル | CC BY 4.0 |
+| ChestMNIST | 胸部 X 線 (14 label) | 1ch (Grayscale) | **多ラベル (multi-label)** | CC BY 4.0 |
 
-`src/train.py` の `PathMNIST` を `PneumoniaMNIST` 等に差し替え + `CLASS_NAMES` を更新するだけ。
+> [!IMPORTANT]
+> データセットを差し替える場合、**単純に `PathMNIST` を置き換えるだけでは動きません**。以下の変更が全て必要です。
+>
+> 1. **クラス数**: `PathoCNN(n_classes=9)` を新データセットのクラス数に変更 (例: `PneumoniaMNIST` は 2)、`CLASS_NAMES` も置換
+> 2. **チャネル数**: Grayscale データ (1ch) の場合、モデル 1 層目 `Conv2d(3, 32, ...)` を `Conv2d(1, 32, ...)`、`Normalize` の `mean/std` も 1 要素に変更
+> 3. **多ラベル (ChestMNIST)**: `CrossEntropyLoss` を `BCEWithLogitsLoss` に、ラベル squeeze を除去、評価指標を multi-label 用 (AUROC など) に置換
+> 4. **ライセンス**: DermaMNIST など NC ライセンスは商用不可、二次配布に制約あり
 
 ## 実 WSI (Whole Slide Image) への拡張
 
