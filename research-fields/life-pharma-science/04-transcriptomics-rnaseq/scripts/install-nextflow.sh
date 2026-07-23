@@ -33,10 +33,18 @@ az version --output table
 
 echo "==== Nextflow ${NEXTFLOW_VERSION} ===="
 mkdir -p "$HOME/bin"
+NEXTFLOW_URL="https://github.com/nextflow-io/nextflow/releases/download/v${NEXTFLOW_VERSION}/nextflow"
 if [[ ! -x "$HOME/bin/nextflow" ]]; then
-  curl -sSL https://github.com/nextflow-io/nextflow/releases/download/v${NEXTFLOW_VERSION}/nextflow \
-    -o "$HOME/bin/nextflow"
-  chmod +x "$HOME/bin/nextflow"
+  # --fail: HTTP エラーで exit non-zero
+  # -S: エラー時にメッセージを表示
+  # -L: リダイレクト追従
+  # 別名一時ファイルに落としてから rename (中断時に破損 nextflow を残さない)
+  curl --fail -sSL -o "$HOME/bin/nextflow.tmp" "${NEXTFLOW_URL}" \
+    || { echo "❌ Nextflow ダウンロードに失敗: ${NEXTFLOW_URL}"; rm -f "$HOME/bin/nextflow.tmp"; exit 1; }
+  # 上流はリリース資産の GPG 署名は提供するが SHA256 マニフェストは公開していないため、
+  # スクリプトでは pin バージョンでの HTTP 200 完全ダウンロード + バージョン一致検証で担保する。
+  chmod +x "$HOME/bin/nextflow.tmp"
+  mv "$HOME/bin/nextflow.tmp" "$HOME/bin/nextflow"
 fi
 
 # PATH に追加 (~/.bashrc)
@@ -52,7 +60,19 @@ fi
 export NXF_VER="${NEXTFLOW_VERSION}"
 
 echo "==== Nextflow バージョン確認 ===="
-nextflow -version || true
+# 実際にリクエストしたバージョンを報告するか厳密に検証 (`|| true` で失敗を握りつぶさない)
+NF_REPORTED=$(nextflow -version 2>&1 | grep -oE 'version [0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}' | head -1)
+if [[ -z "${NF_REPORTED}" ]]; then
+  echo "❌ nextflow -version が期待通り応答しません。バイナリが破損している可能性:"
+  nextflow -version 2>&1 | head -5
+  exit 1
+fi
+if [[ "${NF_REPORTED}" != "${NEXTFLOW_VERSION}" ]]; then
+  echo "❌ Nextflow のバージョン不一致: 期待 ${NEXTFLOW_VERSION}, 実測 ${NF_REPORTED}"
+  echo "   (~/.bashrc の NXF_VER が override されている可能性。別 shell で 'unset NXF_VER' して再確認)"
+  exit 1
+fi
+echo "✅ Nextflow ${NF_REPORTED} を確認"
 
 # Managed Identity で az login
 echo "==== Managed Identity で Azure にログイン ===="

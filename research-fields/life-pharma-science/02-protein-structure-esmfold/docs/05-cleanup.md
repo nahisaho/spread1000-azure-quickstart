@@ -111,20 +111,24 @@ az ml compute delete \
 ```bash
 # 上記「対象リソースの特定」で取得した RG を使う
 
-# 1. リソースグループ内の Key Vault 名を先に控える (削除後にパージするため)
-KV_NAMES=($(az keyvault list --resource-group "${RG}" --query "[].name" -o tsv))
-echo "対象 Key Vault: ${KV_NAMES[@]:-(なし)}"
+# 1. リソースグループ内の Key Vault 名と各 vault のリージョンを先に控える
+KV_INFO=$(az keyvault list --resource-group "${RG}" --query "[].{name:name, loc:location}" -o tsv)
+echo "対象 Key Vault (name<TAB>location):"
+echo "${KV_INFO:-(なし)}"
 
 # 2. リソースグループごと削除 (完了まで 5-15 分)
 az group delete --name "${RG}" --yes
 
-# 3. Key Vault はソフト削除保護 (7 日) が残る。放置しても課金は発生しない
-for KV in "${KV_NAMES[@]}"; do
-  read -rp "Key Vault '${KV}' をパージしますか？ [y/N] " ANS
-  if [[ "${ANS}" == "y" ]]; then
-    az keyvault purge --name "${KV}" --location japaneast
+# 3. Key Vault はソフト削除保護 (7 日) が残る。放置しても課金は発生しないが、
+#    同名で再作成したい場合はパージが必要。各 vault の実リージョンで purge する
+#    (japaneast にハードコードすると別リージョンで作成された vault では失敗する)
+while IFS=$'\t' read -r KV KV_LOC; do
+  [[ -z "${KV}" ]] && continue
+  read -rp "Key Vault '${KV}' (location=${KV_LOC}) をパージしますか？ [y/N] " ANS
+  if [[ "${ANS}" == "y" || "${ANS}" == "Y" ]]; then
+    az keyvault purge --name "${KV}" --location "${KV_LOC}"
   fi
-done
+done <<< "${KV_INFO}"
 ```
 
 > [!CAUTION]

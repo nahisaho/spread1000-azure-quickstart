@@ -18,15 +18,35 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from pathlib import Path
+
+_PDB_ID_RE = re.compile(r"^[0-9][A-Za-z0-9]{3}$")
+
+
+def _validate_pdb_id(pdb: str) -> str:
+    """Validate PDB entry ID: exactly 4 chars, first digit, rest alphanumeric.
+
+    Prevents command-injection when the ID is later passed to upstream code that
+    may construct shell commands with `os.system`.
+    """
+    if not _PDB_ID_RE.match(pdb):
+        raise argparse.ArgumentTypeError(
+            f"invalid PDB ID '{pdb}': must be 4 characters, first digit, rest alphanumeric "
+            "(e.g. 3wze, 1abc, 5bs8)."
+        )
+    return pdb.lower()
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Generate TamGen molecules for a given PDB target.")
-    ap.add_argument("--pdb", required=True, help="PDB ID (e.g. 3wze). 小文字化される。")
+    ap.add_argument("--pdb", required=True, type=_validate_pdb_id,
+                    help="PDB entry ID (4 chars, first digit; e.g. 3wze). 小文字化される。")
     ap.add_argument("--num-molecules", type=int, default=50,
-                    help="生成する有効・ユニーク分子の目標数 (既定 50)。")
+                    help="生成する有効・ユニーク分子の目標数 (既定 50)。上流の beam サンプラは "
+                         "この目標を「超えるまで」ビームを追加するので実際の生成数は多くなり得る。"
+                         "本ラッパーは Lipinski/物性計算後に決定論的に先頭 N 件へ truncate する。")
     ap.add_argument("--max-seeds", type=int, default=101,
                     help="ランダムシードの上限 (既定 101)。")
     ap.add_argument("--pocket-threshold", type=float, default=10.0,
@@ -39,7 +59,7 @@ def main() -> int:
                     help="出力ディレクトリ (既定: output/<pdb>)。")
     args = ap.parse_args()
 
-    pdb_id = args.pdb.lower()
+    pdb_id = args.pdb  # already validated + lowercased
     out_dir = Path(args.output_dir or f"output/{pdb_id}")
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -93,6 +113,14 @@ def main() -> int:
             rows.append(row)
         except Exception as e:  # pragma: no cover
             print(f"  warning: {smi}: {e}", file=sys.stderr)
+
+    # 決定論的に先頭 N 件へ truncate (上流サンプラは目標を超えて生成し得る)
+    if len(rows) > args.num_molecules:
+        print(f"  info: {len(rows)} 個生成されたので --num-molecules={args.num_molecules} に truncate", file=sys.stderr)
+        rows = rows[: args.num_molecules]
+    elif len(rows) < args.num_molecules:
+        print(f"  warning: 目標 {args.num_molecules} 個に対し {len(rows)} 個しか有効分子が得られませんでした。"
+              f"--max-seeds を増やす、または --pocket-threshold を調整してください。", file=sys.stderr)
 
     # Tanimoto 多様性
     mols_valid = [Chem.MolFromSmiles(r["SMILES"]) for r in rows]

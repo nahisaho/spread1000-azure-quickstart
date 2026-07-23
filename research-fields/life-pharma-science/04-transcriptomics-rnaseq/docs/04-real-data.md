@@ -47,6 +47,28 @@ nf-core/rnaseq では以下のいずれかを選びます:
 
 ## 2. 実データ (FASTQ) のアップロード
 
+> [!CAUTION]
+> **本テンプレートの既定構成は「公開可能な非個人情報 RNA-Seq」向けです。**
+>
+> ヒト由来 FASTQ は個人識別可能情報 (PHI) に該当する可能性があり、以下いずれかに
+> 該当する場合は本テンプレートを **そのまま使ってはなりません**:
+> - **dbGaP controlled-access** データ (Data Use Certification が必要、NIH Trusted Partner 環境が推奨)
+> - 患者由来検体で **次世代医療基盤法 / GDPR / HIPAA 等の対象**
+> - 未同意の患者データ、あるいは検体番号→患者 ID を復元可能な状態
+>
+> 該当する場合は次のいずれかを実施してください:
+> 1. **所属機関 IRB / 倫理委員会** および **セキュリティ委員会** の事前承認を取得
+> 2. **Azure Landing Zone (Confidential compute / Private endpoints only)** を構築し、
+>    - Storage account は `publicNetworkAccess: 'Disabled'` + Private Endpoint
+>    - Controller VM は Bastion 経由アクセスのみ (`infra/main.bicep:117-133` の SSH 公開を無効化)
+>    - Batch pool は VNet 内 subnet 配置 + NSG で送受信を制限
+>    - 顧客管理鍵 (CMK) による Storage 暗号化
+> 3. **Controller VM の `~/raw-fastq/` を解析完了後に必ず削除** (残置防止スクリプトは
+>    cleanup 手順 05 に含まれるが、controlled data では追加で監査ログを取得)
+> 4. 生 FASTQ ではなく **de-identified counts のみ** をクラウドにアップロード
+>
+> 判断に迷う場合は **アップロード前に** 所属機関 IRB へ相談してください。
+
 ```bash
 # Controller VM 上で作業ディレクトリを作る
 mkdir -p ~/raw-fastq && cd ~/raw-fastq
@@ -201,7 +223,35 @@ azure {
 ```
 
 > [!IMPORTANT]
-> `lowPriority = true` は **auto-pool の全ノードを Spot に切り替える**設定で、「dedicated と Spot の混在」ではありません。STAR など長時間タスクだけ dedicated にしたい場合は、別途 named pool を定義し `process.STAR_ALIGN.queue = '<dedicated-pool-name>'` のように process selector でルーティングする必要があります (本テンプレートには含まれていません)。
+> `lowPriority = true` は **auto-pool の全ノードを Spot に切り替える**設定で、「dedicated と Spot の混在」ではありません。
+>
+> **nf-azure の auto-pool モード (`autoPoolMode = true`) では `process.queue` は無視されます。**
+> STAR など長時間タスクだけ dedicated にしたい場合は、次のように **auto-pool を無効化して
+> 名前付きプールを 2 つ定義** し、`process.<NAME>.queue` でルーティングしてください:
+>
+> ```groovy
+> azure.batch {
+>     autoPoolMode = false
+>     allowPoolCreation = true       // 存在しなければ Nextflow が作る
+>     deletePoolsOnCompletion = false // 手動 cleanup を推奨 (下記の共存問題も回避)
+>     pools {
+>         'spot-pool' {
+>             vmType = 'Standard_E16ds_v5'
+>             autoScale = true; maxVmCount = 6; lowPriority = true
+>         }
+>         'dedicated-pool' {
+>             vmType = 'Standard_E16ds_v5'
+>             autoScale = true; maxVmCount = 2; lowPriority = false
+>         }
+>     }
+> }
+> process {
+>     queue = 'spot-pool'                    // 既定
+>     withName: 'STAR_ALIGN' { queue = 'dedicated-pool' }
+> }
+> ```
+>
+> `autoPoolMode = true` のまま `process.queue` を書いても効かない点に注意。
 
 Spot のメリット/デメリット:
 
@@ -269,17 +319,35 @@ TREAT_2,treat
 TREAT_3,treat
 ```
 
-`contrasts.csv`:
-```csv
-id,variable,reference,target
-treat_vs_ctrl,condition,ctrl,treat
-```
-
-上記を `az://omics/de-inputs/` にアップロードしたうえで、**Controller VM 上で**:
+`contrasts.csv` は §8 で `blocking` カラム込みの完全な形式を示します。詳しくは [公式 usage](https://nf-co.re/differentialabundance/1.5.0/docs/usage) を参照。
 
 ```bash
-# Controller VM 上で実行 (rnaseq 解析と同じ nextflow.azure.config を使用)
-# auto-pool は工程ごとに新規プールを作るため、rnaseq 解析の autoPool と共存できます
+上記を `az://omics/de-inputs/` にアップロードしたうえで、**Controller VM 上で**:
+
+> [!WARNING]
+> **同一 Batch アカウントで rnaseq 解析と DE 解析を同時に走らせてはいけません。**
+>
+> nf-azure の auto-pool ID は「VM SKU + オプション」で決まるため、同じ SKU を要求する
+> 2 実行が同一 Batch アカウント上で並行すると **同じプールを共有**します。
+> かつ `deletePoolsOnCompletion=true` (auto-pool の既定) では、
+> **どちらかが完了した瞬間にもう片方の実行中プールも削除されます**。
+> 対策:
+> - **serialize** して片方が完全に完了してから次を走らせる (最も安全)
+> - もしくは **別の Batch アカウント** を用意して独立させる
+> - もしくは auto-pool を無効化し (上記 §5 参照)、`deletePoolsOnCompletion=false` にして
+>   pool 名を明示的に分離 (`spot-pool-rnaseq`, `spot-pool-de` 等)
+
+`contrasts.csv` (nf-core/differentialabundance 1.5.0 は `blocking` カラムを要求 -
+未指定でも empty を含めないと `.replace()` で AttributeError になる):
+```csv
+id,variable,reference,target,blocking
+treat_vs_ctrl,condition,ctrl,treat,
+```
+
+```bash
+# 事前に固定 RUN_ID を定義 (再実行時に -resume で同じ work dir を再利用可能に)
+export DE_RUN_ID="de-$(date +%Y%m%d-%H%M%S)"
+# Controller VM 上で実行 (必ず前実行が完了してから!)
 cd ~/nf-rnaseq
 nextflow run nf-core/differentialabundance \
   -r 1.5.0 \
@@ -288,8 +356,9 @@ nextflow run nf-core/differentialabundance \
   --matrix "az://omics/results/project-001-.../star_salmon/salmon.merged.gene_counts_length_scaled.tsv" \
   --contrasts "az://omics/de-inputs/contrasts.csv" \
   -profile rnaseq \
-  -w "az://omics/nf-work/de-$(date +%Y%m%d)" \
-  --outdir "az://omics/results/de-$(date +%Y%m%d)"
+  -w "az://omics/nf-work/${DE_RUN_ID}" \
+  --outdir "az://omics/results/${DE_RUN_ID}"
+# -resume で再開したいときは同じ DE_RUN_ID を export してから -resume を付けて再実行
 ```
 
 ### 選択肢 B: ローカルで DESeq2 (R) を実行

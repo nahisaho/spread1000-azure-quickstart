@@ -36,28 +36,57 @@ from transformers import AutoTokenizer, EsmForProteinFolding  # noqa: E402
 
 # ESMFold の位置埋め込み上限 (これを超えると外挿になり品質が急落)
 MAX_SUPPORTED_LENGTH = 1024
-# 標準 20 アミノ酸 + gap (X は許容するが警告)
+# HuggingFace facebook/esmfold_v1 のトークナイザは標準 20 アミノ酸 + X のみを扱う。
+# B/Z/J/U/O 等の曖昧・希少コードはトークナイズ段階でエラーになる:
+#   - B = Asn/Asp 曖昧, Z = Glu/Gln 曖昧, J = Ile/Leu 曖昧 (拡張 IUPAC)
+#   - U = Selenocysteine, O = Pyrrolysine (稀な 21/22 番目のアミノ酸)
+# → 本ラッパーはこれらを reject する。X への正規化が必要な場合は
+#   --coerce-nonstandard-to-x フラグを明示的に指定させる。
 _VALID_AA = set("ACDEFGHIKLMNPQRSTVWY")
-_TOLERATED_AA = set("XBZJUO")  # ambiguous / rare, 警告のみ
+_X_TOKEN = {"X"}
+_NON_TOKENIZABLE = set("BZJUO")
 
 
 def _log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-def _validate_sequence(seq_id: str, seq: str, max_length: int) -> tuple[bool, str]:
-    """Return (ok, cleaned_seq_or_reason)."""
-    s = seq.upper().replace("*", "").replace("-", "")
+def _validate_sequence(
+    seq_id: str, seq: str, max_length: int, coerce_nonstandard_to_x: bool = False,
+) -> tuple[bool, str]:
+    """Return (ok, cleaned_seq_or_reason).
+
+    - Rejects sequences containing internal stops '*' or gaps '-' (silently stripping
+      would materially alter the predicted protein). Trailing '*' as an explicit stop
+      symbol is tolerated by trimming.
+    - Rejects B/Z/J/U/O unless --coerce-nonstandard-to-x is set; the ESMFold tokenizer
+      does not accept them.
+    """
+    raw = seq.upper()
+    # Allow only a trailing single '*' (translation stop convention); reject internal '*' / '-'
+    stripped = raw.rstrip("*")
+    if "*" in stripped or "-" in stripped:
+        return False, "internal '*' or '-' found (would silently change sequence)"
+    s = stripped
     if not s:
         return False, "empty sequence"
     if len(s) > max_length:
         return False, f"length {len(s)} > max_length {max_length}"
-    unknown = set(s) - _VALID_AA - _TOLERATED_AA
+    non_tokenizable = set(s) & _NON_TOKENIZABLE
+    if non_tokenizable:
+        if not coerce_nonstandard_to_x:
+            return False, (
+                f"contains ESMFold-non-tokenizable residues {sorted(non_tokenizable)}. "
+                "Re-run with --coerce-nonstandard-to-x to normalize these to X (predicted structure "
+                "will not reflect the exact residue identity)."
+            )
+        s = "".join(c if c not in _NON_TOKENIZABLE else "X" for c in s)
+        _log(f"⚠  {seq_id}: 非標準残基 {sorted(non_tokenizable)} を 'X' に正規化しました (精度低下の可能性)")
+    unknown = set(s) - _VALID_AA - _X_TOKEN
     if unknown:
         return False, f"contains non-standard chars: {sorted(unknown)}"
-    tolerated = set(s) & _TOLERATED_AA
-    if tolerated:
-        _log(f"⚠  {seq_id}: 非標準アミノ酸 {sorted(tolerated)} を含みます（予測精度低下の可能性）")
+    if "X" in set(s):
+        _log(f"⚠  {seq_id}: 'X' (未知残基) を含みます (該当位置の側鎖予測は信頼できません)")
     return True, s
 
 
@@ -163,6 +192,15 @@ def main(argv: list[str] | None = None) -> int:
         "--summary", type=Path, default=None,
         help="サマリ CSV の出力パス (省略時: <output>/summary.csv)",
     )
+    parser.add_argument(
+        "--coerce-nonstandard-to-x", action="store_true",
+        help="B/Z/J/U/O 等の非標準残基を 'X' に強制正規化 (既定: reject)。"
+             "予測構造は該当位置の残基同一性を反映しません。",
+    )
+    parser.add_argument(
+        "--allow-partial-success", action="store_true",
+        help="1 件でも成功があれば exit 0 を返す (既定: 全件成功で 0、1 件でも失敗/skip があれば 6)。",
+    )
 
     args = parser.parse_args(argv)
     if args.max_length > MAX_SUPPORTED_LENGTH:
@@ -186,7 +224,10 @@ def main(argv: list[str] | None = None) -> int:
     validated: list[tuple[str, str]] = []
     skipped: list[tuple[str, str]] = []
     for seq_id, seq in records:
-        ok, result = _validate_sequence(seq_id, seq, args.max_length)
+        ok, result = _validate_sequence(
+            seq_id, seq, args.max_length,
+            coerce_nonstandard_to_x=args.coerce_nonstandard_to_x,
+        )
         if ok:
             validated.append((seq_id, result))
         else:
@@ -229,6 +270,10 @@ def main(argv: list[str] | None = None) -> int:
         writer = csv.writer(sumfh)
         writer.writerow(["seq_id", "length", "mean_plddt", "ptm", "inference_sec", "status"])
 
+        # 入力に含まれていた全レコードをサマリに残す (skip も含む)
+        for skipped_id, reason in skipped:
+            writer.writerow([skipped_id, "", "", "", "", f"skipped: {reason}"])
+
         for seq_id, seq in validated:
             _log(f"→ {seq_id} ({len(seq)} aa) ...")
             t0 = time.time()
@@ -267,7 +312,16 @@ def main(argv: list[str] | None = None) -> int:
 
     _log(f"Summary written: {summary_path}")
     _log(f"Done. {n_ok} succeeded, {n_oom} OOM, {n_err} errored, {len(skipped)} skipped.")
-    return 0 if n_ok > 0 else 5
+    # 既定は 「全件成功で 0、1 件でも失敗/skip があれば 6」。--allow-partial-success 指定時は
+    # 従来通り 1 件でも成功があれば 0 を返す。
+    partial_failures = n_oom + n_err + len(skipped)
+    if n_ok == 0:
+        return 5
+    if partial_failures > 0 and not args.allow_partial_success:
+        _log(f"⚠  {partial_failures} 件の失敗/skip があるため exit 6 で終了 "
+             "(--allow-partial-success で 0 を返せます)")
+        return 6
+    return 0
 
 
 if __name__ == "__main__":

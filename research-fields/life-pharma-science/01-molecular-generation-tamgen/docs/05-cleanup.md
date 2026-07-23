@@ -108,9 +108,22 @@ done
 
 CLI で確認したい場合は Cost Management REST API を `az rest` で直接叩きます（`az costmanagement query` サブコマンドは現行の costmanagement 拡張から削除されています）。
 
+> [!NOTE]
+> 以下は `jq` と GNU `date` (`date -d`) を要求します。macOS では `brew install jq coreutils` で
+> インストール後、`date` を `gdate` に読み替えてください。`jq` を入れずに実行したい場合は
+> body を静的な JSON ファイルに保存して `--body @cost-query.json` で渡すこともできます。
+
 ```bash
 SUB_ID=$(az account show --query id -o tsv)
-START=$(date -d "7 days ago" +%Y-%m-%d)
+# GNU date (-d) を使用。macOS の場合は 'gdate' に置換
+if date -d "7 days ago" +%Y-%m-%d >/dev/null 2>&1; then
+  START=$(date -d "7 days ago" +%Y-%m-%d)
+elif command -v gdate >/dev/null 2>&1; then
+  START=$(gdate -d "7 days ago" +%Y-%m-%d)
+else
+  # BSD date のフォールバック (macOS 標準)
+  START=$(date -v-7d +%Y-%m-%d)
+fi
 END=$(date +%Y-%m-%d)
 
 az rest --method post \

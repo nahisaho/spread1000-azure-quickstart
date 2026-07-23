@@ -31,7 +31,17 @@ SCENARIO="tamgen-drug-discovery"
 
 # サブスクリプションから決定論的なユニーク接尾辞を生成 (5 文字)
 SUB_ID=$(az account show --query id -o tsv)
-UNIQ=$(printf "%s|%s|%s" "${SUB_ID}" "${YOUR_NAME}" "${SCENARIO}" | md5sum | cut -c1-5)
+# macOS の stock 環境には md5sum も coreutils も無いため portable なハッシュを使用
+if command -v md5sum >/dev/null 2>&1; then
+  UNIQ=$(printf "%s|%s|%s" "${SUB_ID}" "${YOUR_NAME}" "${SCENARIO}" | md5sum | cut -c1-5)
+elif command -v md5 >/dev/null 2>&1; then
+  # macOS/BSD の md5 (-q は quiet)
+  UNIQ=$(printf "%s|%s|%s" "${SUB_ID}" "${YOUR_NAME}" "${SCENARIO}" | md5 -q | cut -c1-5)
+else
+  # 最後の手段: Python (どの環境にも通常入っている)
+  UNIQ=$(printf "%s|%s|%s" "${SUB_ID}" "${YOUR_NAME}" "${SCENARIO}" \
+    | python3 -c 'import hashlib,sys; print(hashlib.md5(sys.stdin.read().encode()).hexdigest()[:5])')
+fi
 
 RG="rg-${PROJECT}-${SCENARIO}-${YOUR_NAME}"
 WS="mlw-${SCENARIO:0:12}-${YOUR_NAME}"           # 33 文字以内
@@ -58,7 +68,11 @@ echo " Compute (GPU)     : ${CI_NAME} (${COMPUTE_SIZE})"
 echo " Owner             : ${OWNER_EMAIL}"
 echo "==================================================================="
 read -rp "この内容で作成しますか? [y/N]: " ANS
-[[ "${ANS,,}" != "y" ]] && { echo "中止しました"; exit 1; }
+# ${var,,} は Bash 4+ 依存 (macOS の stock Bash 3.2 では syntax error)。portable な case 文で判定
+case "${ANS}" in
+  y|Y|yes|Yes|YES) ;;
+  *) echo "中止しました"; exit 1 ;;
+esac
 
 # --- 0. Azure ML 拡張機能 ------------------------------------------------
 echo "[0/5] Azure ML 拡張機能を確認..."

@@ -58,7 +58,9 @@ GPU tensor op OK : sum=...
 上流の `scripts/example_inference.sh` は `data/crossdocked/bin/` を要求します（この 100 GB 超のデータセットはリポジトリに含まれず、事前構築が必要）。したがって **クリーンインストールでは動かない** ため、本クイックスタートは独自スクリプトを提供します。
 
 ```bash
-# 例: PDB 3WZE (Mycobacterium tuberculosis の DNA gyrase B) を標的に 50 個生成
+# 例: PDB 3WZE (ヒト VEGFR2/KDR キナーゼ、レンバチニブ結合構造) を標的に 50 個生成
+# (この構造は Okamoto et al., ACS Med Chem Lett 2015, DOI:10.1021/ml500394m の由来。
+#  Mtb DNA gyrase B を試したい場合は 5BS8 等を指定)
 bash ~/spread1000-azure-quickstart/research-fields/life-pharma-science/01-molecular-generation-tamgen/scripts/run-inference.sh 3wze 50
 ```
 

@@ -94,9 +94,22 @@ conda activate "${CONDA_ENV}"
 # --- 3. 依存パッケージ (非対話モードで) --------------------------------
 echo ""
 echo "==== [3/5] 上流の setup_env.sh を非対話モードで実行 (15-25 分) ===="
+# 注意: 上流 setup_env.sh は torch_geometric / scipy / tensorboardX / einops / pandas を
+#       バージョン固定なしでインストールする。厳密再現には conda env export で lockfile を
+#       残すか、conda-lock を利用してください:
+#         conda env export --no-builds > ~/TamGen/environment.lock.yml
+#       このクイックスタートでは上流動作確認済みの pin (2024-09 commit) をベースに、
+#       生成された conda env を lockfile として保存します。
 # 上流の setup_env.sh は 'conda install ... -y' を付けていないため、
 # CONDA_ALWAYS_YES で確認プロンプトを自動 yes に。
 CONDA_ALWAYS_YES=true bash setup_env.sh
+
+echo ""
+echo "==== [3.5/5] 再現用に conda env の lockfile を出力 ===="
+conda env export --no-builds -n "${CONDA_ENV}" > "${WORK_DIR}/environment.lock.yml" 2>/dev/null || {
+  echo "⚠️  lockfile 生成に失敗しました。手動で 'conda env export -n ${CONDA_ENV} > environment.lock.yml' を実行してください。"
+}
+echo "  保存先: ${WORK_DIR}/environment.lock.yml"
 
 # --- 4. 重み DL + MD5 検証 --------------------------------------------
 echo ""
