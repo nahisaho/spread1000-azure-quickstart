@@ -68,7 +68,15 @@ research-fields/
 | 02 | [時系列信号分類 (1D-CNN)](research-fields/electrical-informatics/02-timeseries-1dcnn/) | UCI HAR (加速度+ジャイロ 9ch × 128 時点) × コンパクト 1D-CNN (~32K params)、被験者独立分割 | — (CPU) |
 | 03 | [画像復元 U-Net (Gaussian ノイズ除去)](research-fields/electrical-informatics/03-image-restoration-unet/) | 合成幾何画像 + Gaussian ノイズ × MiniUNet (~117K params, D-3 と同構造)、L1 損失 + PSNR/SSIM | — (CPU) / T4 任意 |
 
-その他の分野（機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### ⚙️ [機械・社会基盤・エネルギー工学](research-fields/mechanical-energy/)（採択 32 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [PINNs で 1D 熱伝導](research-fields/mechanical-energy/01-pinns-heat/) | 座標入力 MLP + Autograd 二階微分 + PDE 残差損失 (Adam→L-BFGS)、1D 熱伝導方程式 | — (CPU) |
+| 02 | [強化学習 CartPole](research-fields/mechanical-energy/02-rl-cartpole/) | Stable-Baselines3 PPO × Gymnasium CartPole-v1、報酬曲線可視化 | — (CPU) |
+| 03 | [振動信号異常検知](research-fields/mechanical-energy/03-vibration-anomaly-ae/) | 合成振動波形 × 1D Conv Autoencoder、再構成誤差閾値で異常判定 | — (CPU) |
+
+その他の分野（数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 
