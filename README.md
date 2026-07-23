@@ -92,7 +92,15 @@ research-fields/
 | 02 | [scRNA-seq クラスタリング](research-fields/agriculture-environment/02-scrnaseq-clustering/) | scanpy (PBMC 3k) で normalization + PCA + UMAP + Leiden、single-cell 定番前処理 | — (CPU) |
 | 03 | [ハイパースペクトル画像分類](research-fields/agriculture-environment/03-hyperspectral-1dcnn/) | Indian Pines 200 バンドスペクトルを 1D-CNN でピクセル単位分類 | — (CPU) |
 
-その他の分野（芸術・人文）は順次追加予定です。
+### 🎨 [芸術・人文学](research-fields/arts-humanities/)（採択 21 課題）
+
+| # | シナリオ | ワークロード | Azure リソース |
+|---:|---|---|---|
+| 01 | [音声書き起こし](research-fields/arts-humanities/01-speech-transcription/) | Azure Speech continuous recognition (ja-JP)、Detailed 出力で confidence 付き、TTS→STT ラウンドトリップデモ | Speech S0 |
+| 02 | [古文書翻刻](research-fields/arts-humanities/02-document-transcription/) | Document Intelligence Layout OCR → Azure OpenAI Structured Outputs で書誌情報 Pydantic JSON 抽出 | Doc Intelligence + AOAI |
+| 03 | [多言語エンベディング検索](research-fields/arts-humanities/03-multilingual-embedding-search/) | text-embedding-3-large で日/英/仏/独/中 コーパスを FAISS で言語横断検索 | AOAI Embeddings |
+
+以上で SPReAD-1000 採択 456 課題を 9 分野 × 3 シナリオ (D 分野のみ 3) でカバーします。
 
 ## 一次資料
 

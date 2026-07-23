@@ -1,0 +1,6 @@
+.env
+data/index.faiss
+data/index_meta.json
+outputs/
+.venv/
+__pycache__/
