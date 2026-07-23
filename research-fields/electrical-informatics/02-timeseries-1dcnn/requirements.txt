@@ -1,0 +1,9 @@
+# CPU 版 PyTorch — --index-url は torch のインストールにのみ影響 (他パッケージは通常 PyPI)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.13.0
+torchmetrics==1.9.0
+numpy==2.5.1
+pandas==3.0.5
+scikit-learn==1.9.0
+matplotlib==3.11.1

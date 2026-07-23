@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# データ・成果物
+data/UCI_HAR_Dataset/
+data/*.zip
+data/*.npz
+outputs/*.pt
+outputs/*.npz
+outputs/*.png
+outputs/*.json
+
+# Azure
+.azure/
+.env
+
+# エディタ
+.vscode/
+.idea/
+.DS_Store
