@@ -8,7 +8,7 @@ SPReAD-1000 第1回公募で **55 課題**が採択された分野です。LLM �
 |---:|---|---|---|---:|
 | [01](01-persona-survey-simulation/) | **LLM ペルソナ調査シミュレーション** | 仮想ペルソナ × Likert 質問を Structured Outputs で回答生成、χ² バイアス分析 | Azure OpenAI (gpt-4.1-mini) | $0.01〜0.10 (¥1.5〜15) |
 | [02](02-document-structuring/) | **歴史・法務文書の LLM 構造化** | PDF → JSON 抽出パイプライン (判例・工場名簿を Document Intelligence + Structured Outputs で構造化) | Azure OpenAI (gpt-5.4-mini) + Document Intelligence | $0.08〜0.15 (¥12〜23) |
-| 03 | **テキスト分類・トピッククラスタリング** — 予定 | AOAI Embeddings + scikit-learn で SNS/レビュー/偽情報分析 | Azure OpenAI Embeddings | 予定 |
+| [03](03-text-classification-clustering/) | **テキスト分類・トピッククラスタリング** | AOAI Embeddings (text-embedding-3-small) + scikit-learn (LogReg / KMeans+silhouette) + gpt-5.4-mini でクラスタラベル生成 | Azure OpenAI (embed + gpt-5.4-mini) | $0.03〜0.05 (¥5〜8) |
 
 ## 学習パス（推奨順）
 

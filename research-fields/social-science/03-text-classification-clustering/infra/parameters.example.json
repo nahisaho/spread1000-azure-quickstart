@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": { "value": "japaneast" },
+    "aoaiAccountName": { "value": "aoai-social-03-example" },
+    "embedDeploymentName": { "value": "embed-small" },
+    "labelDeploymentName": { "value": "label-gpt54mini" },
+    "embedCapacityK": { "value": 30 },
+    "labelCapacityK": { "value": 30 }
+  }
+}
