@@ -1,0 +1,13 @@
+# GPU dependencies for QLoRA on Azure ML T4 (NCasT4_v3) or local cu126 GPU (16GB+).
+# Install torch separately BEFORE this file:
+#   pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+
+transformers==5.14.1
+peft==0.19.1
+trl==1.9.0
+bitsandbytes==0.49.2
+accelerate==1.14.0
+datasets==5.0.0
+
+# Utilities
+sentencepiece>=0.2,<1

@@ -60,7 +60,13 @@ research-fields/
 | 02 | [MACE-MP-0 汎用 NNP](research-fields/materials-medical-engineering/02-nnp-mace-mp/) | MACE-MPA-0 (MIT) で Si ダイヤモンド構造緩和 + 5 ps NVT-MD (ASE Langevin) | — (CPU) / T4 任意 |
 | 03 | [顕微鏡画像セグメンテーション](research-fields/materials-medical-engineering/03-microscopy-segmentation/) | MiniUNet (~117K params) で合成 SEM 粒界セグメンテーション、torch 2.7.1 + torchmetrics | — (CPU) / T4 任意 |
 
-その他の分野（電気工学・情報科学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+### 💻 [電気工学・電子工学・情報科学・コンピューターサイエンス](research-fields/electrical-informatics/)（採択 68 課題）
+
+| # | シナリオ | ワークロード | GPU |
+|---:|---|---|---|
+| 01 | [Phi-4-mini LoRA ファインチューニング](research-fields/electrical-informatics/01-llm-lora/) | `databricks-dolly-15k-ja` × QLoRA 4-bit (TRL SFTTrainer) × Azure ML T4、日本語 instruction 適応 | T4 (CPU スモークテスト可) |
+
+その他の分野（電気工学・情報科学の 02/03 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 

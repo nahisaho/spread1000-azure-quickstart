@@ -1,0 +1,24 @@
+# Data (downloaded / generated)
+data/*.jsonl
+data/adapter/
+data/checkpoints/
+data/logs/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# HuggingFace cache
+.cache/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
