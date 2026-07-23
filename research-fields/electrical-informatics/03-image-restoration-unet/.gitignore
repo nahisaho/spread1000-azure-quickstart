@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 合成データ・成果物
+data/train/
+data/val/
+data/samples/
+outputs/*.pt
+outputs/*.png
+outputs/*.json
+
+# Azure
+.azure/
+.env
+
+# エディタ
+.vscode/
+.idea/
+.DS_Store

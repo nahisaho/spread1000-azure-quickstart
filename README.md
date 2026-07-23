@@ -66,8 +66,9 @@ research-fields/
 |---:|---|---|---|
 | 01 | [Phi-4-mini LoRA ファインチューニング](research-fields/electrical-informatics/01-llm-lora/) | `databricks-dolly-15k-ja` × QLoRA 4-bit (TRL SFTTrainer) × Azure ML T4、日本語 instruction 適応 | T4 (CPU スモークテスト可) |
 | 02 | [時系列信号分類 (1D-CNN)](research-fields/electrical-informatics/02-timeseries-1dcnn/) | UCI HAR (加速度+ジャイロ 9ch × 128 時点) × コンパクト 1D-CNN (~32K params)、被験者独立分割 | — (CPU) |
+| 03 | [画像復元 U-Net (Gaussian ノイズ除去)](research-fields/electrical-informatics/03-image-restoration-unet/) | 合成幾何画像 + Gaussian ノイズ × MiniUNet (~117K params, D-3 と同構造)、L1 損失 + PSNR/SSIM | — (CPU) / T4 任意 |
 
-その他の分野（電気工学・情報科学の 03 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
+その他の分野（機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 
 ## 一次資料
 

@@ -8,7 +8,7 @@ SPReAD-1000 の当該分野は **68 課題**、LLM/生成 AI、時系列信号�
 |---|---|---|
 | **LLM／生成 AI** | 推論高速化、パーソナライズ、意味推論、安全性、教材生成、対話 | 01 |
 | **時系列・生体信号** | EMG、脳波、IMU、超音波、モーション | 02 |
-| **画像処理・復元** | 低品質画像復元、RAW 画像、磁気光学画像、超伝導線材の可視化 | 03 (準備中) |
+| **画像処理・復元** | 低品質画像復元、RAW 画像、磁気光学画像、超伝導線材の可視化 | 03 |
 
 ## シナリオ一覧
 
@@ -16,7 +16,7 @@ SPReAD-1000 の当該分野は **68 課題**、LLM/生成 AI、時系列信号�
 |---:|---|---|---|---:|
 | 01 | [Phi-4-mini LoRA ファインチューニング](01-llm-lora/) | Azure ML T4 + QLoRA 4-bit + `trl.SFTTrainer` + `databricks-dolly-15k-ja` サンプル、日本語 instruction 適応 | AML T4 (主) / ローカル CPU (スモークテスト) | ~$0.50（T4 45 分）/ ~$0（CPU） |
 | 02 | [時系列信号分類 (1D-CNN)](02-timeseries-1dcnn/) | UCI HAR (加速度+ジャイロ 9ch × 128 時点) × コンパクト 1D-CNN (~32K params)、被験者独立 subject-independent 分割 | ローカル (CPU) | ~$0 |
-| 03 | 画像復元 U-Net（準備中） | 合成劣化 → 復元、PSNR/SSIM 評価 | ローカル (CPU) / AML T4 任意 | ~$0 / ~$0.35 |
+| 03 | [画像復元 U-Net (Gaussian ノイズ除去)](03-image-restoration-unet/) | 合成幾何画像 + Gaussian ノイズ σ=0.10 × MiniUNet (~117K params, D-3 と同構造)、L1 損失、PSNR/SSIM 評価 | ローカル (CPU) / AML T4 任意 | ~$0 / ~$0.35 |
 
 ## 進め方
 
