@@ -57,6 +57,7 @@ research-fields/
 | # | シナリオ | ワークロード | GPU |
 |---:|---|---|---|
 | 01 | [材料バンドギャップ回帰](research-fields/materials-medical-engineering/01-materials-property-prediction/) | Materials Project + Matminer (magpie) + XGBoost、reduced-formula GroupKFold で組成リーク対策 | — (CPU) |
+| 02 | [MACE-MP-0 汎用 NNP](research-fields/materials-medical-engineering/02-nnp-mace-mp/) | MACE-MPA-0 (MIT) で Si ダイヤモンド構造緩和 + 5 ps NVT-MD (ASE Langevin) | — (CPU) / T4 任意 |
 
 その他の分野（電気工学・情報科学 / 機械・エネルギー / 数物・地球 / 農学・環境 / 芸術・人文）は順次追加予定です。
 

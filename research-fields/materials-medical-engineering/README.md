@@ -17,7 +17,7 @@ SPReAD-1000 第 1 回公募（令和 8 年度）**材料・プロセス・応用
 | # | シナリオ | 手法 | 実行環境 | コスト目安 |
 |---:|---|---|---|---:|
 | 01 | [材料バンドギャップ回帰](01-materials-property-prediction/) | Materials Project API + Matminer (magpie 132-d) + XGBoost、reduced-formula GroupKFold | ローカル / WSL2 (Python 3.12) | ~$0（ローカル） |
-| 02 | MACE-MP-0 汎用 NNP（準備中） | Pretrained foundation model による構造緩和・エネルギー予測 | AML GPU (T4) | ~$0.5–1 |
+| 02 | [MACE-MP-0 汎用 NNP](02-nnp-mace-mp/) | MACE-MPA-0 (MIT) で構造緩和 + Langevin NVT-MD、任意で Azure ML T4 GPU | ローカル (CPU) / AML T4 (任意) | ~$0（ローカル）/ ~$0.5（T4） |
 | 03 | 顕微鏡画像セグメンテーション（準備中） | U-Net で合成 SEM/STEM 粒界・欠陥検出 | AML GPU (T4) | ~$1–2 |
 
 ## 進め方

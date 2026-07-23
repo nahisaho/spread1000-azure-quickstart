@@ -1,0 +1,15 @@
+# Generated data and trajectories
+data/*.traj
+data/*.extxyz
+data/*.cif
+data/*.log
+data/*.json
+
+# MACE model cache (auto-downloaded)
+.mace_cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
