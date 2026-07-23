@@ -10,6 +10,8 @@ SPReAD-1000 第1回公募で **98 課題**が採択された最大の分野で�
 | [02](02-protein-structure-esmfold/) | **ESMFold** — 単一配列 protein folding | MSA 不要の高速タンパク質構造予測 | NC24ads_A100_v4 (Spot) | ¥200〜500 |
 | [03](03-protein-structure-alphafold3/) | **AlphaFold 3** — 多量体・複合体構造予測 | タンパク質–リガンド / 核酸複合体 | NC24ads_A100_v4 (PAYG) | ¥1,000〜3,000 |
 | [04](04-transcriptomics-rnaseq/) | **RNA-Seq (nf-core/rnaseq)** | Bulk RNA-Seq 定量パイプライン | Azure Batch (Spot) | ¥500〜2,000 |
+| [05](05-bioemu-conformations/) | **BioEmu** — タンパク質コンフォメーション | エネルギー面上の複数構造をサンプリング | NC24ads_A100_v4 (Spot) | ¥300〜800 |
+| [06](06-pathology-cnn/) | **病理画像 CNN** (MedMNIST PathMNIST) | 大腸組織 9 クラス CNN 分類 (~95K params) | ノート PC (CPU) | 無料 |
 
 ## 学習パス（推奨順）
 
@@ -27,6 +29,5 @@ SPReAD-1000 第1回公募で **98 課題**が採択された最大の分野で�
 
 ## 追加予定
 
-- **BioEmu** — タンパク質コンフォメーションアンサンブル
 - **Single-cell (Scanpy on AML)**
 - **分子動力学 (OpenMM / GROMACS on GPU)**
