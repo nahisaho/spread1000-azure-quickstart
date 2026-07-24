@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": { "value": "spread-ts" },
+    "location": { "value": "japaneast" },
+    "logRetentionDays": { "value": 30 },
+    "kvSoftDeleteDays": { "value": 7 },
+    "deployerObjectId": { "value": "<YOUR_OBJECT_ID>" },
+    "deployerPrincipalType": { "value": "User" },
+    "enablePublicNetworkAccess": { "value": true }
+  }
+}

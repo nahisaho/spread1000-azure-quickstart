@@ -1,0 +1,38 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: uci-har-1dcnn-gpu
+experiment_name: spread1000-timeseries-1dcnn
+
+code: ..
+
+command: >-
+  python src/prepare_data.py &&
+  python src/train.py --device cuda --epochs 15 --batch-size 128 --seed 42
+    --output-dir ${{outputs.artifacts}} &&
+  python src/evaluate.py --device cuda --output-dir ${{outputs.artifacts}} &&
+  python src/verify.py
+    --checkpoint ${{outputs.artifacts}}/best_model.pt
+    --normalization ${{outputs.artifacts}}/normalization.npz
+    --dataset-npz data/har_windows.npz
+    --manifest ${{outputs.artifacts}}/reproducibility_manifest.json
+    --min-macro-f1 0.85
+
+environment: azureml:spread-timeseries-gpu:1
+
+compute: azureml:gpu-t4
+
+resources:
+  instance_count: 1
+
+limits:
+  timeout: 3600
+
+outputs:
+  artifacts:
+    type: uri_folder
+
+tags:
+  dataset: uci-har
+  model: compact-1d-cnn
+  split: subject-independent-official-test

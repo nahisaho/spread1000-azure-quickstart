@@ -1,9 +1,14 @@
-# CPU 版 PyTorch — --index-url は torch のインストールにのみ影響 (他パッケージは通常 PyPI)
---extra-index-url https://download.pytorch.org/whl/cpu
+# CPU-only requirements — regenerate hashes with:
+#   pip-compile --generate-hashes requirements.in -o requirements.txt
+#
+# WORKSHOP MAINTAINER: fill in the correct --hash=sha256:... below after running pip-compile.
+# Until then, install with: pip install -r requirements.txt
+#
+# torch CPU direct wheel (cp312, manylinux_2_28_x86_64):
+# torch @ https://download.pytorch.org/whl/cpu/torch-2.7.1%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl \
+#     --hash=sha256:<FILL_IN>
 
-torch==2.13.0
-torchmetrics==1.9.0
-numpy==2.5.1
-pandas==3.0.5
-scikit-learn==1.9.0
-matplotlib==3.11.1
+torch==2.7.1+cpu
+numpy>=2.0,<3
+scikit-learn>=1.7,<2
+matplotlib>=3.9,<4

@@ -1,0 +1,6 @@
+# Top-level requirements for local CPU development
+# Run: pip-compile --generate-hashes requirements.in -o requirements.lock
+torch==2.7.1+cpu
+numpy>=2.0
+scikit-learn>=1.7
+matplotlib>=3.9

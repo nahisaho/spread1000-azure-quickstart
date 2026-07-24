@@ -7,6 +7,7 @@ train.py で計算した mean/std を必ず再利用 (train に fit した統計
 from __future__ import annotations
 
 import argparse
+import hmac
 import json
 from pathlib import Path
 
@@ -24,23 +25,52 @@ from sklearn.metrics import (
 )
 from torch.utils.data import DataLoader, TensorDataset
 
+from _argtypes import positive_int
 from model import BiosignalCNN
 
 ROOT = Path(__file__).resolve().parents[1]
 NPZ_PATH = ROOT / "data" / "har_windows.npz"
 OUT_DIR = ROOT / "outputs"
+N_CLASSES = 6
+
+
+def _sha256(path: Path) -> str:
+    import hashlib
+
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _warn_if_hash_mismatch(name: str, expected: str | None, actual: str) -> None:
+    if not expected:
+        print(f"[eval] note: checkpoint does not contain {name} metadata (older checkpoint?)")
+        return
+    if not hmac.compare_digest(expected, actual):
+        print(
+            f"[eval] WARNING: {name} mismatch. checkpoint={expected}, current={actual}",
+        )
 
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--device", choices=("cpu", "cuda"), default="cpu")
-    p.add_argument("--batch-size", type=int, default=256)
+    p.add_argument("--batch-size", type=positive_int, default=256)
     p.add_argument("--output-dir", type=Path, default=None)
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise SystemExit(
+            "CUDA requested but not available. "
+            f"torch.cuda.is_available()=False; torch built with CUDA: {torch.version.cuda}; "
+            f"detected devices: {torch.cuda.device_count()}"
+        )
+
     out_dir = args.output_dir or OUT_DIR
     ckpt_path = out_dir / "best_model.pt"
     norm_path = out_dir / "normalization.npz"
@@ -50,26 +80,45 @@ def main() -> None:
             "best_model.pt または normalization.npz が見つかりません。"
             " 先に train.py を実行してください。"
         )
+    if not NPZ_PATH.exists():
+        raise FileNotFoundError(f"dataset not found: {NPZ_PATH}")
 
     device = torch.device(args.device)
     ckpt = torch.load(ckpt_path, map_location=device, weights_only=True)
     activities = list(ckpt["activities"])
 
+    current_dataset_sha256 = _sha256(NPZ_PATH)
+    current_normalization_sha256 = _sha256(norm_path)
+    _warn_if_hash_mismatch("dataset_sha256", ckpt.get("dataset_sha256"), current_dataset_sha256)
+    _warn_if_hash_mismatch(
+        "normalization_sha256",
+        ckpt.get("normalization_sha256"),
+        current_normalization_sha256,
+    )
+    if ckpt.get("split_uuid"):
+        print(f"[eval] split_uuid = {ckpt['split_uuid']}")
+    if ckpt.get("run_uuid"):
+        print(f"[eval] run_uuid   = {ckpt['run_uuid']}")
+
     model = BiosignalCNN(
         n_channels=ckpt.get("n_channels", 9),
-        n_classes=ckpt.get("n_classes", 6),
+        n_classes=ckpt.get("n_classes", N_CLASSES),
         dropout=ckpt.get("dropout", 0.30),
     ).to(device)
     model.load_state_dict(ckpt["model_state_dict"])
     model.eval()
 
-    data = np.load(NPZ_PATH, allow_pickle=True)
-    X_test, y_test = data["X_test"], data["y_test"]
+    data = np.load(NPZ_PATH, allow_pickle=False)
+    X_test = data["X_test"]
+    y_test = data["y_test"]
     subj_test = data["subj_test"]
 
-    norm = np.load(norm_path)
-    mean, std = norm["mean"], norm["std"]
+    norm = np.load(norm_path, allow_pickle=False)
+    mean = norm["mean"]
+    std = norm["std"]
     X_test = ((X_test - mean) / std).astype(np.float32)
+    if not np.isfinite(X_test).all():
+        raise RuntimeError("normalized X_test contains non-finite values")
     print(f"[eval] test: X={X_test.shape}, subjects={sorted(set(subj_test.tolist()))}")
 
     loader = DataLoader(
@@ -79,18 +128,33 @@ def main() -> None:
         num_workers=0,
     )
 
-    preds = []
+    preds: list[np.ndarray] = []
     with torch.no_grad():
-        for xb, _ in loader:
-            preds.append(model(xb.to(device)).argmax(-1).cpu().numpy())
+        for batch_idx, (xb, _) in enumerate(loader, start=1):
+            xb = xb.to(device)
+            if not bool(torch.isfinite(xb).all().item()):
+                raise RuntimeError(f"non-finite inputs during evaluation at batch={batch_idx}")
+            logits = model(xb)
+            if not bool(torch.isfinite(logits).all().item()):
+                raise RuntimeError(f"non-finite logits during evaluation at batch={batch_idx}")
+            preds.append(logits.argmax(-1).cpu().numpy())
     y_pred = np.concatenate(preds)
     y_true = y_test
 
     accuracy = float(accuracy_score(y_true, y_pred))
-    macro_f1 = float(f1_score(y_true, y_pred, average="macro"))
+    macro_f1 = float(
+        f1_score(
+            y_true,
+            y_pred,
+            labels=np.arange(N_CLASSES),
+            average="macro",
+            zero_division=0,
+        )
+    )
     report = classification_report(
         y_true,
         y_pred,
+        labels=list(range(len(activities))),
         target_names=activities,
         output_dict=True,
         zero_division=0,
@@ -107,18 +171,21 @@ def main() -> None:
         "split": "official_subject_independent_test",
         "n_test_windows": int(len(y_true)),
         "test_subjects": sorted(set(subj_test.tolist())),
+        "dataset_sha256": current_dataset_sha256,
+        "normalization_sha256": current_normalization_sha256,
+        "split_uuid": ckpt.get("split_uuid"),
+        "run_uuid": ckpt.get("run_uuid"),
     }
-    with (out_dir / "metrics.json").open("w", encoding="utf-8") as f:
-        json.dump(metrics, f, indent=2, ensure_ascii=False)
-    with (out_dir / "classification_report.json").open("w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2, ensure_ascii=False)
+    with (out_dir / "metrics.json").open("w", encoding="utf-8") as handle:
+        json.dump(metrics, handle, indent=2, ensure_ascii=False)
+    with (out_dir / "classification_report.json").open("w", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=2, ensure_ascii=False)
 
     print("[eval] test accuracy = {:.4f}".format(accuracy))
     print("[eval] test macro-F1 = {:.4f}".format(macro_f1))
     for name, val in per_class_f1.items():
         print(f"[eval]   {name:20s} F1 = {val:.4f}")
 
-    # Confusion matrix PNG
     fig, ax = plt.subplots(figsize=(6.5, 5.5))
     im = ax.imshow(cm, cmap="Blues")
     ax.set_xticks(range(len(activities)))
