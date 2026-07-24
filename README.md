@@ -120,3 +120,15 @@ research-fields/
 ## ライセンス
 
 各クイックスタート内で利用するモデル・データセット・OSS のライセンスは、それぞれの README に明記しています。
+
+## サポートポリシー（重要）
+
+> [!IMPORTANT]
+> **本リポジトリはコミュニティ提供の非公式サンプルであり、Microsoft 公式のサポート対象ではありません。**
+> コードは MIT ライセンスの "AS IS" 条項に従って提供され、Microsoft は本コードに対する SLA・障害対応・個別サポート・保証を提供しません。
+>
+> - **技術的な質問・不具合報告 (ベストエフォート)**: GitHub Issues / Microsoft Learn / Stack Overflow
+> - **Azure サービスの障害対応・SLA が必要な場合**: [Azure Support プラン](https://azure.microsoft.com/support/plans/) (Developer / Standard / Professional Direct) または組織の **Microsoft Unified サポート契約**
+> - **ライセンス調達・Enterprise 契約 (EA / MCA-E) ・本番運用の SI サポート**: [マイクロソフト パートナー (MSP / SI)](https://partner.microsoft.com/)
+> - **研究データの分類・IRB・データガバナンス**: 所属機関の情報部門・倫理審査
+
