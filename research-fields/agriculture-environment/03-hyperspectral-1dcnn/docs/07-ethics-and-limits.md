@@ -2,30 +2,61 @@
 
 ## 合成データの本質的限界
 
-- 本教材の合成スペクトルは Gaussian ピークで簡略化しており、実 HSI の
-  **大気補正残差、隣接効果、水吸収帯 (~1400/1900 nm) 欠損**を模していない
-- 「動く」ことは確認できるが、**論文級の精度評価には実データ必須**
+- 本教材の合成スペクトルは Gaussian ピーク + ノイズで生成した **教材用 toy データ** であり、
+  「Indian Pines 相当」ではありません
+- 実 HSI の大気補正残差・隣接効果・water-absorption bands 欠損・センサー応答を模倣していない
+- **合成データで高精度が出ても、実データの性能は保証されません**
+- 論文ベンチマーク目的には必ず実データ (Indian Pines / Salinas 等) を使用すること
 
-## Hyperspectral 実データの落とし穴
+## Indian Pines データの引用義務
 
-- **チャネル正規化欠如**: 反射率スケールがバンドで大きく違うと学習破綻
-- **同一 flight/scene からのみ学習**: 別日・別センサーで精度急落 (domain shift)
-- **クラス不均衡**: Indian Pines では最小クラス 20 サンプル、最大 2455 → 不均衡対応必須
+Indian Pines データを使用・発表する場合は必ず引用してください:
 
-## リモートセンシング応用の倫理
+> Landgrebe, D. (2003). *Signal Theory Methods in Multispectral Remote Sensing*.
+> Wiley-Interscience.
 
-- **プライバシー**: 高分解能 HSI は個人の私有地/庭を識別可能 → 分解能規制
-- **軍事転用**: HSI 分類技術は camouflage 検出等の軍事応用の歴史 → デュアルユース
-- **土地利用政策への影響**: 誤分類が土地税/補助金判定に使われると不利益発生
-- **先住民の土地・農地権**: 遠隔地の土地利用マッピングは合意なき情報収集になりうる
+関連する精度参照論文:
+> Roy et al. (2020). "HybridSN", IEEE GRSL
+
+`.mat` ファイルの正式なオープンライセンスは未文書化です。
+研究・教育目的以外の利用は Purdue 大学に確認してください。
+
+## 空間分割と精度の誇張
+
+- **random_pixel split で Indian Pines を評価すると acc ~0.90 が出る場合があるが過大評価**
+- 隣接ピクセルは高い空間相関を持つため、ランダム分割すると test セットが train と
+  ほぼ同一の統計を持つ → `disjoint_patch` split を使うこと
+- 単一シーン・単一日付のみで学習した場合、別日・別センサーで精度が急落する (domain shift)
+
+## デュアルユース・悪用リスク
+
+| 応用 | リスク |
+|---|---|
+| 精密農業・ドローン圃場モニタリング | プライバシー: 個人農地の植生/作付けが特定可能 |
+| 衛星リモートセンシング | 国家地図規制・安全保障上の規制対象になり得る |
+| 軍事 ISR (情報収集・偵察・監視) | カモフラージュ検出・施設識別への転用 |
+| 野生生物追跡 | 密猟者による生息地・個体追跡への悪用 (ポーチングリスク) |
+| 重要インフラ・標的識別 | 高分解能 HSI は軍事攻撃計画に利用可能 |
+| 有人地上空の HSI 取得 | 各国の地図・航空写真規制・プライバシー法に抵触する可能性 |
+
+## 追加注意事項
+
+- **座標の集約リスク**: 高精度予測マップから人の行動パターンが推定可能な場合、
+  公開前に座標の一般化・遅延公開・アクセス制御を検討すること
+- **農業診断への過信**: 小規模ピクセル分類器を生産現場の収量予測・病害診断に
+  直接適用しないこと; 現場検証なしの意思決定に使ってはならない
+- **土地利用・農地権**: 合意なく他者の土地をマッピングすることは
+  先住民の土地権・農地権の観点から倫理的問題を生じさせる可能性がある
 
 ## 説明可能性
 
-- 「なぜこのバンドが判定根拠か」を示すのが重要
-- 手法: **Saliency / SHAP を band 次元に適用**、重要バンドを可視化
+- モデルがどのバンドを根拠に分類したかを示すことが重要
+- 手法: **Saliency / SHAP / Integrated Gradients を band 次元に適用**
 - 実装例: `captum.attr.IntegratedGradients` を Conv1d モデルに適用
 
 ## 参考文献
 
-- Roy et al. (2020). *"HybridSN"*, IEEE GRSL — 実 Indian Pines 精度の参照
-- Camps-Valls et al. (2020). *"Advances in Hyperspectral Image and Signal Processing"*, IEEE Signal Process. Mag.
+- Roy et al. (2020). *"HybridSN"*, IEEE GRSL
+- Camps-Valls et al. (2020). *"Advances in Hyperspectral Image and Signal Processing"*,
+  IEEE Signal Process. Mag.
+- Landgrebe, D. (2003). *Signal Theory Methods in Multispectral Remote Sensing*. Wiley.

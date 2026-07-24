@@ -17,14 +17,14 @@ AdaptiveAvgPool1d(1)               → (B, 64, 1) → (B, 64)
 Linear(64 → n_classes)
 ```
 
-パラメータ数: **~9.5K** (超軽量、CPU で数秒/epoch)
+パラメータ数: **9,542** (synthetic 6-class / 200-band; n_classes 変更で変化)
 
 ## 設計判断
 
 | 選択 | 理由 |
 |---|---|
 | kernel size 7→5→3 の減少 | 初期は広い受容野で連続バンドのパターン、後段で局所特徴 |
-| BatchNorm | 反射率のスケールが波長帯ごとに違うため必須 |
+| BatchNorm | 各 Conv 層後の特徴チャネルを正規化して学習を安定化させる (最適化の安定化; 入力バンドの正規化は train.py の --norm-method が担当) |
 | Global Average Pool (GAP) | Flatten より overfitting しにくく、可変長入力にも対応 |
 | チャネル数 16→32→64 | 抽象度上昇に伴い特徴数を増加 |
 

@@ -1,36 +1,88 @@
 # 05 — 自前データへの適用
 
-## 実 Indian Pines への差し替え
+## モード一覧
 
-### データ入手
+| モード | データ | コマンド例 |
+|---|---|---|
+| `synthetic` | 合成 6-class (デフォルト) | `python src/train.py` |
+| `indianpines` | 実 Indian Pines (要初回インターネット) | `python src/train.py --mode indianpines` |
+| `custom` | 自前 NPY/CSV | `python src/train.py --mode custom --data-root path/` |
+
+---
+
+## indianpines モード
+
+### データ出典とライセンス
+
+Indian Pines シーンは 1992 年 6 月に NASA/JPL の AVIRIS センサーがインディアナ州
+農地上空で取得したデータです。処理済み `.mat` ファイルは Purdue 大学の
+David Landgrebe 教授グループが公開し、学術研究で広く使われています。
+
+**引用義務**: 研究・発表に使う場合は以下を引用してください:
+> Landgrebe, D. (2003). *Signal Theory Methods in Multispectral Remote Sensing*.
+> Wiley-Interscience.
+
+**ライセンス注意**: `.mat` ファイルの正式なオープンライセンスは文書化されていません。
+非研究用途 (商用・再配布等) の場合は Purdue 大学に問い合わせて確認してください。
+本ツールは研究・教育目的のみで使用してください。
+
+### ダウンロード (自動)
 
 ```bash
-# 145×145 pixels × 200 bands
-wget https://www.ehu.eus/ccwintco/uploads/6/67/Indian_pines_corrected.mat -O data/indian_pines.mat
-wget https://www.ehu.eus/ccwintco/uploads/c/c4/Indian_pines_gt.mat -O data/indian_pines_gt.mat
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/agriculture-environment/03-hyperspectral-1dcnn"
+cd "$SCENARIO_DIR"
+test -f src/train.py || { echo "abort: wrong directory"; exit 1; }
+
+# 初回実行時に data/ へ自動ダウンロード (インターネット必要)
+python src/train.py --mode indianpines \
+    --split-strategy disjoint_patch \
+    --balance weighted_ce \
+    --epochs 30
 ```
 
-### `src/dataset.py` の差し替え
+### 手動ダウンロード (ミラー不安定時)
 
-```python
-import scipy.io as sio
-import numpy as np
-
-def load_indian_pines(data_dir="data"):
-    cube = sio.loadmat(f"{data_dir}/indian_pines.mat")["indian_pines_corrected"]  # (145,145,200)
-    gt = sio.loadmat(f"{data_dir}/indian_pines_gt.mat")["indian_pines_gt"]        # (145,145)
-    # ピクセル単位に flatten、背景クラス 0 を除外
-    mask = gt > 0
-    X = cube[mask].astype(np.float32)   # (N, 200)
-    y = gt[mask].astype(np.int64) - 1   # (N,) 0-indexed
-    # 反射率正規化 (per-band z-score)
-    X = (X - X.mean(0, keepdims=True)) / (X.std(0, keepdims=True) + 1e-8)
-    return X, y
+以下 URL から手動取得して `data/` に置いてください:
+```
+# ミラー (2026 年時点; 利用不可の場合は Kaggle / Zenodo を検索)
+https://www.ehu.eus/ccwintco/uploads/6/67/Indian_pines_corrected.mat
+https://www.ehu.eus/ccwintco/uploads/c/c4/Indian_pines_gt.mat
 ```
 
-要件: `pip install scipy`
+```bash
+# 取得後
+python src/train.py --mode indianpines --data-root data/
+```
 
-## 他のハイパースペクトル公開データ
+---
+
+## custom モード
+
+### ディレクトリ構成
+
+```
+data-root/
+  X.npy           # (N, B) float32 — N ピクセル × B バンド
+  y.npy           # (N,) int64     — 0-indexed クラスラベル
+  class_names.txt # クラス名 1 行 1 名 (省略可)
+  coords.npy      # (N, 2) int32 [row, col]  ← disjoint_patch split に必要
+```
+
+### 空間分割について
+
+```bash
+# 空間座標あり → disjoint_patch 推奨 (空間リーク防止)
+python src/train.py --mode custom --data-root path/to/ \
+    --split-strategy disjoint_patch
+
+# 座標なし → random_pixel (警告が出る; 実データには非推奨)
+python src/train.py --mode custom --data-root path/to/ \
+    --split-strategy random_pixel --allow-random-pixel-split
+```
+
+---
+
+## 他の公開ハイパースペクトルデータセット
 
 | データセット | サイズ | クラス数 | ドメイン |
 |---|---|---|---|
@@ -38,17 +90,14 @@ def load_indian_pines(data_dir="data"):
 | Salinas | 512×217×204 | 16 | 農地 (加州) |
 | Pavia University | 610×340×103 | 9 | 都市 |
 | Houston 2013 | 349×1905×144 | 15 | 都市+植生 |
-| KSC (Kennedy Space Center) | 512×614×176 | 13 | 湿地植生 |
+| KSC | 512×614×176 | 13 | 湿地植生 |
 
-## 精度向上のコツ
+---
 
-- **チャネル正規化必須** (per-band z-score または min-max)
-- Indian Pines 等では **クラス不均衡が大きい** (Soybean 数千, Oats 20) → `WeightedRandomSampler`
-- **PCA で 200 → 30 バンドに削減**してから 1D-CNN に入れる方法もある
+## 精度向上のヒント
+
+- Indian Pines 等では **クラス不均衡が大きい** (Oats 20, Soybean 2455) →
+  `--balance weighted_ce` または `focal`
+- **disjoint_patch** で空間リークを防ぐ (デフォルト)
+- PCA で 200 → 30 バンドに削減後に 1D-CNN も有効
 - 空間コンテキストが必要なら 2D-CNN で 5×5 patch を入力に
-
-## 応用例
-
-- 精密農業: 圃場のドローン HSI → 品種/生育ステージ/病害マッピング
-- 環境: 湿地/森林の分類、河川 chl-a 推定
-- 地質: 鉱物分類、地表被覆分類

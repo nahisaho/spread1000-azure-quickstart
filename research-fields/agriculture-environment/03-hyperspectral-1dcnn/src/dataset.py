@@ -1,10 +1,11 @@
-"""合成ハイパースペクトルデータ生成器
+"""合成ハイパースペクトルデータ生成器 (教材用 toy データ)
 
-Indian Pines 相当 (200 バンド × 数千ピクセル × 6 農作物クラス) の合成データ。
-実データ URL 不安定への保険 + オフライン学習体験用。
+6 農作物クラス × 200 バンド の合成スペクトルを生成する。
+実センサー校正・大気補正・water-absorption bands 欠損を模倣していないため
+「Indian Pines 相当」ではなく「教材用 6-class スペクトル玩具データ」である。
+実験・学習体験専用 (論文ベンチマーク用途には実データを使うこと)。
 
-各クラスは異なる中心波長ピーク・幅・ベースライン反射率を持つガウシアン
-スペクトル + ホワイトノイズで生成する。
+各クラスは Gaussian ピーク + ベースライン + ホワイトノイズで生成。
 """
 from __future__ import annotations
 import numpy as np
@@ -38,7 +39,10 @@ _CLASS_BASELINE = {
 def generate(n_per_class: int = 200, n_bands: int = 200,
              noise_std: float = 0.02, seed: int = 42
              ) -> tuple[np.ndarray, np.ndarray, list[str]]:
-    """Return X (N, n_bands) float32 reflectance in [0,1], y (N,) int, names."""
+    """Return X (N, n_bands) float32 reflectance clipped to [0, 1], y (N,) int, names.
+
+    Note: clip range is [0, 1] — reflectance cannot exceed 1 in this toy model.
+    """
     rng = np.random.default_rng(seed)
     bands = np.arange(n_bands)
     X_all, y_all = [], []
@@ -54,7 +58,7 @@ def generate(n_per_class: int = 200, n_bands: int = 200,
                 a = amp * (1.0 + rng.normal(0, 0.05))
                 spec += a * np.exp(-0.5 * ((bands - c) / width) ** 2)
             spec += rng.normal(0, noise_std, size=n_bands).astype(np.float32)
-            spec = np.clip(spec, 0.0, 1.5)
+            spec = np.clip(spec, 0.0, 1.0)   # reflectance in [0, 1]
             X_all.append(spec)
             y_all.append(cls_idx)
     X = np.asarray(X_all, dtype=np.float32)

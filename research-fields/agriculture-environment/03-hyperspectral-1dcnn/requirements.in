@@ -1,0 +1,8 @@
+# Direct dependencies — compile with pip-compile to get hashed lockfile:
+#   pip install pip-tools
+#   pip-compile requirements.in -o requirements-lock/linux-cpu-py312.txt --generate-hashes
+torch>=2.7.1
+numpy>=1.24
+scikit-learn>=1.4
+matplotlib>=3.7
+scipy>=1.11        # required for Indian Pines .mat loading + exclusion-radius KD-tree
