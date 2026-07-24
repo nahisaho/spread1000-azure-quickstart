@@ -1,0 +1,13 @@
+# torch, torchvision は先に CPU wheel:
+#   pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
+#
+# 再現性のためにロック済みファイルを生成する方法:
+#   pip install pip-tools
+#   pip-compile requirements.in -o requirements-lock/requirements.txt
+#   pip install -r requirements-lock/requirements.txt
+# 詳細: requirements-lock/README.md
+
+numpy>=1.26,<3
+scikit-learn>=1.4
+matplotlib>=3.9
+Pillow>=10

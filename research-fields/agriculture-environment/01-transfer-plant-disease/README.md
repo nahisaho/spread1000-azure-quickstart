@@ -1,7 +1,7 @@
 # 01 — 転移学習: 事前学習済み ResNet で少数データ分類
 
 **対象**: ImageNet 事前学習モデルを **自分の少量データセット** に適応させたい農学・環境系研究者
-**目標**: torchvision の ResNet18 (ImageNet 事前学習) のバックボーンを凍結し、**分類ヘッドのみ再学習**する定番手法を体験。デモは Oxford Flowers102 (102 種の花分類、公開データ、~330MB) — 農学の実データ (葉病害、雑草分類、作物種同定) にもそのまま適用できるテンプレート
+**目標**: torchvision の ResNet18 (ImageNet 事前学習) のバックボーンを凍結し、**分類ヘッドのみ再学習**する定番手法を体験。デモは Oxford Flowers102 (102 種の花分類、公開データ、~330MB) — 農学の実データ (葉病害、雑草分類、作物種同定) への転用を試みる際は別途現場検証が必要な **教育用テンプレート (実運用には別途検証が必要)**
 **手法**: `torchvision.models.resnet18(weights=IMAGENET1K_V1)` + Linear head → 5-class subset
 
 > [!NOTE]
@@ -25,8 +25,13 @@ src/train.py --epochs 8 --n-classes 5
 ## クイックスタート
 
 ```bash
+# 作業ディレクトリを固定してから実行する (BLOCKING 2)
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/agriculture-environment/01-transfer-plant-disease"
+cd "$SCENARIO_DIR"
+test -f src/train.py || { echo "wrong dir; abort"; exit 1; }
+
 python -m pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -r requirements.txt
+python -m pip install -r requirements.in
 
 python src/train.py --epochs 8 --n-classes 5 --seed 42
 python src/evaluate.py --model outputs/best_model.pt
@@ -35,7 +40,7 @@ python src/evaluate.py --model outputs/best_model.pt
 ## タスク
 
 - **データ**: Oxford 102 Flower Category Dataset (Nilsback & Zisserman 2008)
-- **サブサンプル**: 先頭 5 クラスのみ使用 → 学習 ~150, val ~40, test ~50 画像
+- **サブサンプル**: 先頭 5 クラスのみ使用 → 学習 50, val 50, test 161 画像
 - **入力**: 224×224 RGB (ImageNet 標準)
 - **モデル**: ResNet18 backbone (11.7M params, 全 frozen) + Linear(512→5) head (2.5K params)
 
@@ -62,9 +67,10 @@ python src/evaluate.py --model outputs/best_model.pt
 
 ## ライセンス
 
-- Flowers102: Oxford VGG (研究利用フリー)
+- **Oxford Flowers102**: 公式ページに明示ライセンスなし。再配布・商用利用前に権利元 (Oxford VGG) へ許諾確認が必要
+- **PlantVillage (mohanty 配布版)**: CC BY-SA 3.0。派生物にも同一ライセンスと帰属表示が必要
 - ResNet18 weights: BSD (torchvision)
-- コード: リポジトリのライセンス
+- コード: リポジトリのライセンス (MIT)
 
 ## 免責
 

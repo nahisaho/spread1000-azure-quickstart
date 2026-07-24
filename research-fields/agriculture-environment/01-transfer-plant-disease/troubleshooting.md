@@ -13,8 +13,17 @@
 
 ## val_acc が 1/n_classes 前後で動かない
 
-- Backbone が完全に凍結されているか確認: `for p in model.parameters(): assert not p.requires_grad`
-- fc head のみ trainable: `sum(p.numel() for p in model.parameters() if p.requires_grad)` が 2K 程度
+- Backbone が正しく凍結・head が trainable か確認 (MED 12):
+
+```python
+# backbone frozen, fc trainable のみが正しい状態
+frozen = [n for n, p in model.named_parameters() if not n.startswith("fc.") and p.requires_grad]
+trainable = [n for n, p in model.named_parameters() if n.startswith("fc.") and p.requires_grad]
+if frozen:
+    raise RuntimeError(f"Non-fc params still trainable: {frozen}")
+if len(trainable) < 2:
+    raise RuntimeError(f"fc not fully trainable: {trainable}")
+```
 
 ## Windows で DataLoader ハング
 
