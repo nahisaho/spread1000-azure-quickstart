@@ -10,9 +10,10 @@ sudo apt install -y libasound2t64
 
 ## `AZURE_SPEECH_KEY not set`
 
-`.env` ファイルの存在と内容を確認:
+`.env` ファイルの存在と内容を確認 (キーを echo しない):
 ```bash
-cat .env  # KEY と REGION が入っているか
+stat -c '%a %n' .env   # パーミッションが 600 であることを確認
+# Entra 認証を使っている場合はキー不要 (az login 済みか確認)
 ```
 
 ## `USP.HTTP.ERROR: 401 Unauthorized`
@@ -36,4 +37,6 @@ cat .env  # KEY と REGION が入っているか
 - `--voice ja-JP-NanamiNeural` が既定。他候補:
   - `ja-JP-KeitaNeural` (男性)
   - `ja-JP-DaichiNeural`, `ja-JP-AoiNeural` 等
-- 全一覧: `az cognitiveservices account list-models --resource-group $RG --name $NAME`
+- 全一覧: `az cognitiveservices account list-skus --kind SpeechServices --location japaneast`  
+  または SDK: `speech_synthesizer.get_voices_async().get()`  
+  または REST: `GET https://<region>.tts.speech.microsoft.com/cognitiveservices/voices/list`

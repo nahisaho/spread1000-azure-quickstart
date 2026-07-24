@@ -1,6 +1,6 @@
 # データ
 
-このシナリオは **音声データを含みません** (すべて `.gitignore` 対象)。
+このシナリオは **音声データを含みません**。`.gitignore` で WAV / MP3 / M4A / FLAC / OGG / OPUS / WMA / AAC / WEBM を再帰的に除外しています。`data/README.md` のみ追跡対象です。
 
 デモ音声は `src/synthesize_demo.py` で毎回 Azure TTS から生成できます (`data/sample_ja.wav`)。
 

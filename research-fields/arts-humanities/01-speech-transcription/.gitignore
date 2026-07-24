@@ -1,5 +1,24 @@
-.env
-data/*.wav
+# Audio files — excluded recursively to prevent accidental commit of sensitive recordings
+data/**
+!data/README.md
+!data/LICENSE
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+*.opus
+*.wma
+*.aac
+*.webm
+
+# Generated outputs and transcripts
 outputs/
+
+# Secrets
+.env
+
+# Python
 .venv/
 __pycache__/
+*.pyc

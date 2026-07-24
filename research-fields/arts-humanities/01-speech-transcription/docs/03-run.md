@@ -5,6 +5,8 @@
 自前 WAV がない場合は Azure TTS で作成:
 
 ```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
 python src/synthesize_demo.py
 # → data/sample_ja.wav (16kHz 16bit mono, ~15 秒)
 ```
@@ -18,6 +20,8 @@ python src/synthesize_demo.py --text-file my_script.txt
 ## Step 2: 書き起こし
 
 ```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
 python src/transcribe.py --audio data/sample_ja.wav
 ```
 
@@ -36,8 +40,10 @@ python src/transcribe.py --audio data/sample_ja.wav
 `transcribe.py`:
 | フラグ | 既定 | 説明 |
 |---|---|---|
-| `--audio` | (必須) | 入力 WAV パス |
-| `--language` | `ja-JP` | `en-US`, `zh-CN` 等も可 |
+| `--audio` | (必須) | 入力音声ファイルパス (存在確認あり) |
+| `--language` | `ja-JP` | BCP-47 ロケール (`en-US`, `zh-CN` 等) |
+| `--timeout` | `3600` | 認識完了待機の最大秒数 |
+| `--allow-long-run` | off | 30 分超の音声を許可 (Batch API 推奨) |
 
 ## 出力
 

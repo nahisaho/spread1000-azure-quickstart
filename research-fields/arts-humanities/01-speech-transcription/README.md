@@ -27,9 +27,12 @@ cp .env.example .env
 ## 使い方
 
 ```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
+
 python -m venv .venv && source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirements.in
 
 # 1) デモ音声を Azure TTS で生成 (data/sample_ja.wav)
 python src/synthesize_demo.py
@@ -40,11 +43,13 @@ python src/transcribe.py --audio data/sample_ja.wav
 
 ## コスト
 
-| 項目 | 従量 |
+| 項目 | 参考値 (2026-07 時点、japaneast, S0) |
 |---|---|
 | Speech Standard S0 STT | $1.00 / 1 時間音声 |
 | Speech Neural TTS | $16 / 100 万文字 |
 | **本デモ (30 秒音声 × TTS+STT)** | **$0.01 未満** |
+
+最新の料金: https://azure.microsoft.com/pricing/details/cognitive-services/speech-services/
 
 リソースは**存在するだけでは無課金** (トークン/秒数のみ課金)。
 

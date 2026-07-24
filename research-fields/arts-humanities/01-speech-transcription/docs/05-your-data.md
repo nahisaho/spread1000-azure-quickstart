@@ -10,15 +10,30 @@ Speech SDK は以下を直接受け取ります:
 ## 変換 (ffmpeg)
 
 ```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
+
 # MP3 → 16kHz 16bit mono WAV
-ffmpeg -i interview.mp3 -ar 16000 -ac 1 -sample_fmt s16 interview.wav
+ffmpeg -i interview.mp3 -ar 16000 -ac 1 -sample_fmt s16 data/interview.wav
 ```
+
+> **権限管理**: `chmod 700 data/ outputs/` および `chmod 600 data/*.wav` を推奨。  
+> 機微な音声ファイルは暗号化ストレージ (Azure Disk Encryption / LUKS) に保管してください。
 
 ## 長時間音声 (30 分以上)
 
-- Continuous recognition (本教材) は数時間の音声にも対応、ただしメモリを消費
-- **Batch Transcription API** を推奨 (Blob Storage 経由、非同期、大量ファイル向け)
-  - https://learn.microsoft.com/azure/ai-services/speech-service/batch-transcription
+- `transcribe.py` (continuous recognition) は 30 分を超えるファイルに対して `--allow-long-run` フラグが必要
+- **30 分超は Batch Transcription API を推奨** (非同期、大量ファイル向け):
+
+```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
+python src/transcribe_batch.py \
+    --urls "https://your-storage.blob.core.windows.net/audio/file.wav?<SAS>" \
+    --locale ja-JP
+```
+
+詳細: https://learn.microsoft.com/azure/ai-services/speech-service/batch-transcription
 
 ## 応用例
 
@@ -37,7 +52,26 @@ ffmpeg -i interview.mp3 -ar 16000 -ac 1 -sample_fmt s16 interview.wav
 - 学習: ~1 時間、精度は分野特有語彙で 20-40% 改善が典型的
 - 詳細: https://learn.microsoft.com/azure/ai-services/speech-service/custom-speech-overview
 
+## Phrase List (カスタム語彙)
+
+人名・学術用語など固有名詞の認識精度を上げるには SDK の `PhraseListGrammar` を使用:
+
+```python
+from azure.cognitiveservices.speech import PhraseListGrammar
+phrase_list = PhraseListGrammar.from_recognizer(recognizer)
+phrase_list.addPhrase("源氏物語")
+phrase_list.addPhrase("デジタル人文学")
+```
+
 ## 話者分離 (Diarization)
 
-対話・複数話者音声は `ConversationTranscriber` に切り替え。1 API 呼び出しで
-`Speaker Guest-1: …` 形式のラベル付き結果が得られます。
+対話・複数話者音声は `src/transcribe_diarized.py` を使用:
+
+```bash
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/arts-humanities/01-speech-transcription"
+cd "$SCENARIO_DIR"
+python src/transcribe_diarized.py --audio data/interview.wav
+```
+
+`outputs/transcript_diarized.json` にスピーカーID付きセグメントが出力されます。  
+**制限**: 最大 240 分、話者重複時は精度低下、話者数の誤推定あり。
