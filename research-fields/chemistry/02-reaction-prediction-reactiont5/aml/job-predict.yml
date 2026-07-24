@@ -11,7 +11,7 @@ command: >-
   --num-beams 5
   --model-revision 933114058cb2604dc1bf536dbebdfcefbe83d4fc
 
-environment: azureml:reaction-t5:1
+environment: azureml:reaction-t5:2
 compute: azureml:gpu-cluster
 
 inputs:

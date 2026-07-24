@@ -39,7 +39,13 @@ T4 (16 GB) は本モデルには十分ですが、他プロセスが GPU を掴�
 - 参照生成物 SMILES が無効 (RDKit で正規化できない)
 
 ### 予測 SMILES と参照 SMILES が同一化合物なのに `match=False`
-RDKit で正規化して比較していますが、立体化学 (`/`, `\`, `@`) や電荷 (`+`, `-`) が違うと別化合物扱いです。`InChIKey` ベースの比較に切り替えるには `src/predict.py` の `canonicalize` を `Chem.MolToInchiKey(mol)` に変更してください。
+RDKit で正規化して比較していますが、canonical SMILES は既定で立体化学 (`/`, `\`, `@`) を保持し、電荷 (`+`, `-`) や互変異性体は正規化しません。したがって以下のパターンでは同一分子でも `match=False` になります:
+
+- **鏡像異性体 / ジアステレオマー**: `[C@H]` と `[C@@H]` は別分子
+- **プロトネーション状態**: `[NH3+]` と `NH2` は別分子
+- **互変異性体**: `O=C-OH` と `OH-C=O` は別分子
+
+なお、標準 InChIKey もこれら（特に立体・電荷）で異なるキーになるため、単純に `Chem.MolToInchiKey(mol)` に置き換えても問題は解決しません。立体無視で比較したい場合は `Chem.MolToSmiles(mol, isomericSmiles=False)` を使用し、その方針を実験ノートに明記してください。
 
 ### `training_args.bin` のダウンロードで警告
 `snapshot_download` は `allow_patterns` で `.safetensors` と `.json` のみ許可しています。pickle ファイル (`training_args.bin`) は取得しません。警告が出ても無視して問題ありません。

@@ -1,6 +1,9 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: reaction-t5
-version: 1
+version: 2
 description: ReactionT5v2 forward reaction prediction (Transformers + Torch CUDA 12.4 + RDKit)
-image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:latest
+# Pinned to a dated MCR tag (not :latest) so environment version 2 is
+# reproducible across rebuilds. Bump both this tag and the environment
+# version together when picking up a newer base image.
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
 conda_file: conda.yml

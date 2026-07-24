@@ -43,14 +43,15 @@
 
 ## ライセンス
 
-- **モデル** ([sagawa/ReactionT5v2-forward](https://huggingface.co/sagawa/ReactionT5v2-forward)): MIT
+- **モデル** ([sagawa/ReactionT5v2-forward](https://huggingface.co/sagawa/ReactionT5v2-forward)): MIT。学習は Open Reaction Database (ORD) で行われ、USPTO-MIT ベンチマークで top-1 92.8% を達成（[モデルカード参照](https://huggingface.co/sagawa/ReactionT5v2-forward)）。
 - **コード** ([sagawatatsuya/ReactionT5v2](https://github.com/sagawatatsuya/ReactionT5v2)): MIT
-- **学習データ** (Open Reaction Database, ORD): CC BY-SA 4.0 — 本シナリオでは**データセット再配布は行いません**（推論のみ）
-- **本ドキュメントと `src/`, `infra/`, `scripts/`**: MIT
+- **学習データ** (Open Reaction Database, ORD): CC BY-SA 4.0
+- **同梱デモ CSV (`data/demo-reactions.csv`)**: ORD (CC BY-SA 4.0) から抽出・改変した 5 反応レコードを含みます。試薬列 (`reagents`) は溶媒/触媒等を人が抜粋しており、元 ORD レコードの完全再現ではありません。**継承ライセンス: CC BY-SA 4.0**。改変履歴は `data/demo-reactions.csv` のコメント行と `docs/03-prepare-data.md` に記載。個別レコードの ORD ID (`ord-...`) が失われているため、独自データで実験する際は `docs/03-prepare-data.md` の手順で ORD から直接取得することを推奨します。
+- **本ドキュメントと `src/`, `infra/`, `scripts/`**: 親リポジトリ (SPReAD-1000 Azure Quickstart) と同じライセンス。ライセンスファイルが未整備の場合は「All rights reserved (研究利用に限る)」として扱ってください。
 
 ## 学術引用
 
-Sagawa T., Kojima R. *ReactionT5: a large-scale pre-trained model towards application of limited reaction data*. Journal of Cheminformatics (2025). https://doi.org/10.1186/s13321-025-01075-4
+Sagawa T., Kojima R. *ReactionT5: a pre-trained transformer model for accurate chemical reaction prediction with limited data*. Journal of Cheminformatics (2025). https://doi.org/10.1186/s13321-025-01075-4
 
 ## 次のシナリオ
 

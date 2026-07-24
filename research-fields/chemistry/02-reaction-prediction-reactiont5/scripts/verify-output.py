@@ -59,12 +59,22 @@ def main() -> int:
     metrics = run.data.metrics
     print("MLflow metrics:")
     missing_metrics: list[str] = []
-    for k in ("num_reactions", "valid_ratio", "top1_accuracy"):
+    # top1_accuracy is only expected when the reference CSV actually contained
+    # at least one non-empty reference_product. Detect that via num_scored so
+    # the no-reference workflow (which docs/03-prepare-data.md explicitly
+    # allows) doesn't fail verification.
+    num_scored = metrics.get("num_scored")
+    required = ["num_reactions", "valid_ratio"]
+    if num_scored is not None and num_scored > 0:
+        required.append("top1_accuracy")
+    for k in ("num_reactions", "num_scored", "num_unscored", "valid_ratio", "top1_accuracy"):
         if k in metrics:
             print(f"  {k:<15} = {metrics[k]}")
-        else:
+        elif k in required:
             print(f"  {k:<15} = (missing)")
             missing_metrics.append(k)
+        else:
+            print(f"  {k:<15} = (not applicable — no scored rows)")
 
     print("Output files:")
     with tempfile.TemporaryDirectory() as tmp:

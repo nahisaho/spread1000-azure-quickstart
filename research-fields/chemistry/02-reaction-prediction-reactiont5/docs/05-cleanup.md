@@ -31,7 +31,11 @@ az group delete -n spread-chem-react-rg --yes --no-wait
 
 - 完全削除まで **10〜20 分**
 - Storage / Key Vault / Log Analytics / App Insights / ACR / Workspace / Compute 全てが消えます
-- Key Vault と Log Analytics は**論理削除保持期間**（90 日程度）を残しますが、追加課金はありません
+- 論理削除の保持期間は**リソース種別ごとに異なります**（追加課金はいずれも無し）:
+  - **Key Vault** (`infra/main.bicep` の `softDeleteRetentionInDays: 7`): **7 日**間 purge 可能
+  - **Log Analytics workspace**: **14 日**間 (Azure 既定の soft-delete)
+  - **Azure OpenAI / Cognitive Services**: リージョンごとに 7〜14 日程度
+  同名で作り直したい場合は上記期間内に `az keyvault purge` / `az cognitiveservices account purge` を実施してください。
 
 ## 削除確認
 

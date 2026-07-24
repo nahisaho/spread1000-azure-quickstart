@@ -77,8 +77,24 @@ def main() -> None:
         allow_patterns=["*.json", "*.safetensors", "*.model", "README.md"],
     )
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"[predict] device={device} torch={torch.__version__}", flush=True)
+    if not torch.cuda.is_available():
+        # This job is templated on a T4 GPU compute (aml/job-predict.yml
+        # requests Standard_NC4as_T4_v3). A CUDA-less fallback to CPU would
+        # still bill the GPU VM at ~$0.53/hr while running 10-50x slower.
+        # Fail fast so the user diagnoses the driver/runtime issue.
+        raise RuntimeError(
+            "CUDA is not available on this compute. The ReactionT5 predict job "
+            "is templated for a T4 GPU (Standard_NC4as_T4_v3); running on CPU "
+            "would still incur GPU VM billing. Check compute image (should be "
+            "openmpi-cuda), verify torch was installed with CUDA wheels, and "
+            "confirm 'nvidia-smi' works inside the container."
+        )
+    device = torch.device("cuda")
+    print(
+        f"[predict] device={device} name={torch.cuda.get_device_name(0)} "
+        f"torch={torch.__version__} cuda={torch.version.cuda}",
+        flush=True,
+    )
 
     tokenizer = AutoTokenizer.from_pretrained(local_model_dir)
     model = (
@@ -91,9 +107,22 @@ def main() -> None:
     canon_preds: list[str | None] = []
     canon_refs: list[str | None] = []
     matches: list[bool | None] = []
+    truncated_rows: list[int] = []
 
     for i, row in df.iterrows():
         text = build_input(str(row["reactants"]), str(row["reagents"]))
+        # Detect and warn about truncation before we invoke the model, so a
+        # silently truncated reaction can't masquerade as a successful
+        # prediction. `.encode(...)` returns the un-truncated token count.
+        full_len = len(tokenizer.encode(text, add_special_tokens=True))
+        if full_len > args.max_input_length:
+            truncated_rows.append(int(i))
+            print(
+                f"  WARN row {i}: input has {full_len} tokens > "
+                f"max_input_length={args.max_input_length}; will be truncated. "
+                "Prediction may not reflect the full reaction.",
+                flush=True,
+            )
         inputs = tokenizer(
             text,
             return_tensors="pt",
@@ -113,11 +142,25 @@ def main() -> None:
         cp = canonicalize(pred)
         canon_preds.append(cp)
 
+        cr_raw: str | None = None
+        cr: str | None = None
         ref = str(row["reference_product"]).strip()
-        cr = canonicalize(ref) if ref else None
+        if ref:
+            # Non-empty reference must be a parseable SMILES; otherwise the
+            # accuracy denominator becomes silently biased. Fail fast so the
+            # user fixes their data instead of trusting an inflated metric.
+            cr = canonicalize(ref)
+            if cr is None:
+                raise ValueError(
+                    f"row {i}: reference_product '{ref}' is not a valid SMILES "
+                    "(RDKit could not parse). Either remove the value to mark the "
+                    "row as unscored, or fix the SMILES. Rows are 0-indexed."
+                )
+            cr_raw = ref
         canon_refs.append(cr)
 
-        # Reference present but prediction invalid ⇒ False (not skipped).
+        # Reference present and valid ⇒ True/False. Reference absent ⇒ None (unscored).
+        # Reference invalid was rejected above.
         if cr is not None:
             matches.append(cp == cr)
         else:
@@ -136,18 +179,31 @@ def main() -> None:
 
     n_valid = sum(1 for cp in canon_preds if cp is not None)
     scored = [m for m in matches if m is not None]
-    top1 = (sum(1 for m in scored if m) / len(scored)) if scored else float("nan")
+    num_scored = len(scored)
+    num_unscored = len(matches) - num_scored
+    top1 = (sum(1 for m in scored if m) / num_scored) if scored else float("nan")
     valid_ratio = n_valid / len(canon_preds) if canon_preds else 0.0
 
     mlflow.log_metric("num_reactions", len(df))
+    mlflow.log_metric("num_scored", num_scored)
+    mlflow.log_metric("num_unscored", num_unscored)
+    mlflow.log_metric("num_truncated", len(truncated_rows))
     mlflow.log_metric("valid_ratio", valid_ratio)
     if scored:
         mlflow.log_metric("top1_accuracy", top1)
     mlflow.log_artifact(str(predictions_csv))
 
+    if truncated_rows:
+        print(
+            f"[predict] WARNING: {len(truncated_rows)} row(s) exceeded "
+            f"max_input_length={args.max_input_length} tokens and were "
+            f"truncated: {truncated_rows}",
+            flush=True,
+        )
     print(
         f"[predict] SUMMARY: num_reactions={len(df)} "
-        f"valid_ratio={valid_ratio:.3f} top1_accuracy={top1:.3f} (scored={len(scored)})",
+        f"valid_ratio={valid_ratio:.3f} top1_accuracy={top1:.3f} "
+        f"(scored={num_scored}, unscored={num_unscored})",
         flush=True,
     )
 
