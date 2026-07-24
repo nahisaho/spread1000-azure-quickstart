@@ -100,7 +100,7 @@ research-fields/
 |---:|---|---|---|
 | 01 | [音声書き起こし](research-fields/arts-humanities/01-speech-transcription/) | Azure Speech continuous recognition (ja-JP)、Detailed 出力で confidence 付き、TTS→STT ラウンドトリップデモ | Speech S0 |
 | 02 | [古文書翻刻](research-fields/arts-humanities/02-document-transcription/) | Document Intelligence Layout OCR → Azure OpenAI Structured Outputs で書誌情報 Pydantic JSON 抽出 | Doc Intelligence + AOAI |
-| 03 | [多言語エンベディング検索](research-fields/arts-humanities/03-multilingual-embedding-search/) | text-embedding-3-large で日/英/仏/独/中 コーパスを FAISS で言語横断検索 | AOAI Embeddings |
+| 03 | [多言語エンベディング検索](research-fields/arts-humanities/03-multilingual-embedding-search/) | text-embedding-3-large + Azure AI Search (HNSW ベクター + BM25 ハイブリッド) で日/英/仏/独/中 コーパスを言語横断検索、FAISS ローカルフォールバック対応 | Azure AI Search + AOAI Embeddings |
 | 04 | [GraphRAG ナレッジグラフ + QA](research-fields/arts-humanities/04-graphrag/) | Microsoft GraphRAG で史料/科学文献からエンティティ・関係抽出 → local/global search | AOAI GPT + Embeddings |
 
 以上で SPReAD-1000 採択 456 課題を 10 分野 × 3-6 シナリオ (計 36 クイックスタート) でカバーします。
