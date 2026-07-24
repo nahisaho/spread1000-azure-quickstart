@@ -5,9 +5,16 @@ writes the file. Also emits a small `eval_prompts.json` with fixed prompts for
 before/after comparison in `compare.py`.
 
 Usage:
-    python src/prepare_data.py                          # 1000 samples, seed 42
-    python src/prepare_data.py --n 100                  # smoke-test size
-    python src/prepare_data.py --output data/train.jsonl
+    python src/prepare_data.py \
+        --builtin-dataset dolly-ja \
+        --dataset-revision 6391034b0126850543299cda071dc6281c31a6fb
+
+    python src/prepare_data.py \
+        --dataset my-org/my-dataset \
+        --dataset-revision abc123 \
+        --data-provenance data/my-dataset.provenance.json
+
+    python src/prepare_data.py --n 100   # smoke-test size (requires one of above)
 """
 from __future__ import annotations
 
@@ -17,6 +24,24 @@ import sys
 from pathlib import Path
 
 DEFAULT_SYSTEM = "あなたは丁寧で正確な日本語アシスタントです。"
+
+# Built-in dataset aliases and their provenance
+_BUILTIN_DATASETS: dict[str, dict] = {
+    "dolly-ja": {
+        "hf_id": "kunishou/databricks-dolly-15k-ja",
+        "provenance": {
+            "source": "kunishou/databricks-dolly-15k-ja on HuggingFace Hub; "
+                      "derived from databricks/databricks-dolly-15k (CC BY-SA 3.0) "
+                      "translated to Japanese.",
+            "license": "CC BY-SA 3.0",
+            "purpose": "Instruction-following fine-tuning for Japanese language models.",
+            "lawful_basis": "Publicly released under CC BY-SA 3.0 license.",
+            "contains_user_text": False,
+            "pii_reviewed": True,
+            "content_safety_reviewed": True,
+        },
+    },
+}
 
 EVAL_PROMPTS = [
     "研究論文の要約を書くときに気をつけるべき点を 3 つ挙げてください。",
@@ -31,36 +56,69 @@ EVAL_PROMPTS = [
     "Transformer アーキテクチャの Self-Attention の計算量を教えてください。",
 ]
 
+_PROVENANCE_REQUIRED_KEYS = frozenset([
+    "source", "license", "purpose", "lawful_basis",
+    "contains_user_text", "pii_reviewed", "content_safety_reviewed",
+])
+
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    # Dataset source (exactly one of --builtin-dataset or --dataset required)
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument("--builtin-dataset", choices=list(_BUILTIN_DATASETS.keys()),
+                       help="Use a pre-approved built-in dataset alias.")
+    group.add_argument("--dataset",
+                       help="HuggingFace dataset ID for custom data.")
+    p.add_argument("--dataset-revision", required=True,
+                   help="Pinned dataset commit SHA (required for reproducibility).")
+    p.add_argument("--data-provenance", type=Path, default=None,
+                   help="Path to provenance sidecar JSON (required for --dataset).")
     p.add_argument("--n", type=int, default=1000,
                    help="Number of samples to keep (default 1000)")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--output", type=Path, default=Path("data/train.jsonl"))
     p.add_argument("--eval-output", type=Path, default=Path("data/eval_prompts.json"))
-    p.add_argument("--dataset", default="kunishou/databricks-dolly-15k-ja",
-                   help="HuggingFace dataset ID")
     return p.parse_args()
 
 
+def _resolve_dataset_and_provenance(args: argparse.Namespace) -> tuple[str, dict]:
+    """Return (hf_dataset_id, provenance_dict). Fails if provenance is missing."""
+    if args.builtin_dataset:
+        info = _BUILTIN_DATASETS[args.builtin_dataset]
+        return info["hf_id"], info["provenance"]
+
+    # Custom dataset — require provenance sidecar
+    if args.data_provenance is None:
+        raise SystemExit(
+            "[error] --dataset requires --data-provenance <path-to-provenance.json>.\n"
+            "Create a JSON file with fields: "
+            + ", ".join(sorted(_PROVENANCE_REQUIRED_KEYS))
+            + "\n"
+            "See docs/07-ethics-and-limits.md for guidance on data governance."
+        )
+    if not args.data_provenance.exists():
+        raise SystemExit(
+            f"[error] provenance sidecar not found: {args.data_provenance}\n"
+            "Create it before running data preparation. "
+            "See docs/07-ethics-and-limits.md."
+        )
+    try:
+        provenance = json.loads(args.data_provenance.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise SystemExit(f"[error] cannot read provenance sidecar: {exc}")
+
+    missing = _PROVENANCE_REQUIRED_KEYS - set(provenance.keys())
+    if missing:
+        raise SystemExit(
+            f"[error] provenance sidecar missing required fields: {sorted(missing)}\n"
+            "See docs/07-ethics-and-limits.md."
+        )
+    return args.dataset, provenance
+
+
 def format_sample(example: dict) -> dict:
-    """Map dolly-ja fields into TRL prompt/completion (conversational) format.
-
-    We use TRL's prompt/completion pair rather than a single `messages` field so
-    that ``SFTTrainer`` applies **completion-only loss** — i.e. the model is only
-    trained to predict the assistant response, not the (already-known) system
-    prompt or user instruction. This matches how you would prompt the model at
-    inference time and avoids wasting capacity on memorising the input.
-
-    Dolly's ``input``/``context`` field is a *passage* (not a system directive),
-    so we concatenate it with the instruction inside the user turn rather than
-    promoting it to a system message. This preserves the instruction hierarchy
-    (system = fixed persona, user = task + context, assistant = answer).
-
-    Handles both ``context``/``response`` (older dolly-ja) and ``input``/``output``
-    (newer mirrors) field naming.
-    """
+    """Map dolly-ja fields into TRL prompt/completion (conversational) format."""
     instruction = example.get("instruction", "").strip()
     ctx = (example.get("input") or example.get("context") or "").strip()
     response = (example.get("output") or example.get("response") or "").strip()
@@ -84,8 +142,15 @@ def main() -> int:
               file=sys.stderr)
         return 1
 
-    print(f"[data] loading {args.dataset} …")
-    ds = load_dataset(args.dataset, split="train")
+    dataset_id, provenance = _resolve_dataset_and_provenance(args)
+    print(f"[data] dataset: {dataset_id} @ {args.dataset_revision}")
+    print(f"[data] license: {provenance.get('license', 'unknown')}")
+    if provenance.get("contains_user_text"):
+        print("[data] WARNING: provenance indicates this dataset contains user text. "
+              "Ensure PII review is complete before training.", file=sys.stderr)
+
+    print(f"[data] loading {dataset_id} …")
+    ds = load_dataset(dataset_id, revision=args.dataset_revision, split="train")
     print(f"[data] total rows available: {len(ds)}")
 
     n = min(args.n, len(ds))
@@ -98,10 +163,24 @@ def main() -> int:
         for row in ds:
             formatted = format_sample(row)
             if not formatted["prompt"][1]["content"] or not formatted["completion"][0]["content"]:
-                continue  # skip rows with empty instruction or response
+                continue
             f.write(json.dumps(formatted, ensure_ascii=False) + "\n")
             kept += 1
     print(f"[data] wrote {kept} prompt/completion samples → {args.output}")
+
+    # Save provenance alongside output for traceability
+    prov_out = args.output.with_suffix(".provenance.json")
+    prov_out.write_text(
+        json.dumps({
+            "dataset_id": dataset_id,
+            "dataset_revision": args.dataset_revision,
+            "n_samples": kept,
+            "seed": args.seed,
+            **provenance,
+        }, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print(f"[data] wrote provenance → {prov_out}")
 
     args.eval_output.parent.mkdir(parents=True, exist_ok=True)
     with args.eval_output.open("w", encoding="utf-8") as f:

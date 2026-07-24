@@ -1,8 +1,6 @@
 # Data (downloaded / generated)
-data/*.jsonl
-data/adapter/
-data/checkpoints/
-data/logs/
+data/**
+!data/README.md
 
 # Python
 __pycache__/
@@ -13,6 +11,9 @@ venv/
 
 # HuggingFace cache
 .cache/
+
+# Environment / secrets
+.env
 
 # Editor
 .vscode/

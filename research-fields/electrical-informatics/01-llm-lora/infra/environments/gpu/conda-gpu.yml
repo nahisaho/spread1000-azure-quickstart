@@ -1,0 +1,9 @@
+name: spread-lora-gpu
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - --require-hashes
+    - -r requirements-gpu.lock

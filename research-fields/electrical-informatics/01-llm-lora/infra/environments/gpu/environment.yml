@@ -1,0 +1,9 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: spread-lora-gpu
+version: "1"
+description: >
+  GPU environment for E-1 LLM LoRA quickstart.
+  Based on MCR openmpi5.0-cuda12.4-ubuntu22.04 (2026-07-15).
+  All Python dependencies are hash-pinned via requirements-gpu.lock.
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
+conda_file: conda-gpu.yml

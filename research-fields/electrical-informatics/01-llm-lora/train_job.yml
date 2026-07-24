@@ -1,0 +1,48 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+# Remove fixed `name` — AML will auto-generate a unique run name.
+display_name: Phi-4-mini JP LoRA fine-tune
+experiment_name: spread1000-e1-llm-lora
+description: QLoRA 4-bit SFT on databricks-dolly-15k-ja (1000 samples, 3 epochs)
+
+compute: azureml:t4-cluster
+environment: azureml:spread-lora-gpu:1
+
+code: ./
+command: >-
+  python src/prepare_data.py
+  --builtin-dataset dolly-ja
+  --dataset-revision 6391034b0126850543299cda071dc6281c31a6fb
+  --n 1000
+  --output train.jsonl &&
+  python src/train_lora.py
+  --model microsoft/Phi-4-mini-instruct
+  --model-revision cfbefacb99257ffa30c83adab238a50856ac3083
+  --dataset-revision 6391034b0126850543299cda071dc6281c31a6fb
+  --data train.jsonl
+  --epochs 3
+  --batch-size 2
+  --grad-accum 4
+  --lr 2e-4
+  --max-seq-length 512
+  --lora-r 16
+  --lora-alpha 32
+  --output ${{outputs.adapter}}
+  --max-gpu-hours 2.0
+  --allow-long-run &&
+  python src/verify.py
+  --output ${{outputs.adapter}}
+
+outputs:
+  adapter:
+    type: uri_folder
+    mode: rw_mount
+
+limits:
+  timeout: 3600
+
+tags:
+  model: microsoft/Phi-4-mini-instruct
+  model_revision: cfbefacb99257ffa30c83adab238a50856ac3083
+  dataset_revision: 6391034b0126850543299cda071dc6281c31a6fb

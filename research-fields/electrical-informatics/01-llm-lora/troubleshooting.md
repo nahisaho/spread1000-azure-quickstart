@@ -94,4 +94,4 @@ az ml environment list --resource-group <RG> --workspace-name <WS> --query "[].n
 ### ジョブ完了後もクラスタが 0 に戻らない
 
 - Idle scale-down (5 分) を待つ、または手動で Cluster → Edit → Min = 0 → Save
-- それでも駄目なら Cluster を削除 (次のジョブ実行時に自動再作成される)
+- それでも駄目なら Cluster を削除 (`az ml compute delete --name t4-cluster -g $RG -w $WS --yes`)。**自動再作成はされません**。次回使用時は `az ml compute create -f infra/t4-cluster.yml -g $RG -w $WS` で手動再作成してください
