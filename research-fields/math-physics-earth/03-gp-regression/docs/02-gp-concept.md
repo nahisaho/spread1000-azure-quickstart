@@ -21,9 +21,15 @@ $$y \sim \mathcal{GP}(m(t), k(t, t'))$$
 
 Kernel は**加算・乗算で組み合わせ可能**:
 ```
-periodic * amplitude + trend + noise
-= ExpSineSquared * ConstantKernel + RBF + WhiteKernel
+periodic × amplitude + linear_trend + noise
+= ConstantKernel * ExpSineSquared + ConstantKernel * DotProduct + WhiteKernel
 ```
+
+> **カーネルの選び方 (MED-6)**:
+> - **RBF** は *定常* (平均回帰的) — 長期線形トレンドを吸収できない。
+> - **DotProduct** は線形トレンド $(\alpha t + \beta)$ を表現できる非定常カーネル。
+> - **`ExpSineSquared * RBF`** は「準周期 (quasi-periodic)」カーネル — 振幅が時間とともに変動する周期信号に適する。
+> - 今回のトイ信号 $\sin(2\pi t/5) + 0.1t$ には `ExpSineSquared + DotProduct` が適切。
 
 ## ハイパラ最適化
 
@@ -46,7 +52,13 @@ $\bar{y}^* \pm 1.96 \sigma^*$ で 95% 信頼区間。
 **強み**:
 - 少ないデータ (数十点) で予測 + 不確実性 が得られる
 - ハイパラが少ない (kernel を選べば良い)
-- 内挿は極めて正確、外挿でも不確実性が増加して知らせてくれる
+- 内挿は極めて正確
+
+> **外挿と不確実性 (HIGH-2)**:  
+> "外挿で帯が広がる" はカーネル依存。**周期カーネル (ExpSineSquared) では、同位相の点は遠くても相関が残るため、不確実性は単調増加しない**。  
+> 例: `--extrap-horizon 5` (1 周期先) では帯はほぼ変わらない。  
+> `--extrap-horizon 50 --init-period 7` (周期を誤推定) では帯が乱れる場合がある。  
+> RBF のみのカーネルでは外挿で単調に広がるが、ExpSineSquared は異なる挙動を示す。
 
 **弱み**:
 - 計算量 $O(n^3)$: 数千点以上でスケールしない (Sparse GP, Inducing points で対処)

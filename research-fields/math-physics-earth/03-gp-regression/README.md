@@ -1,32 +1,33 @@
 # 03 — ガウス過程による周期信号フィッティング
 
-**対象**: 観測値に **不確実性 (エラーバー)** をつけて予測したい天体・地球観測系研究者
-**目標**: 合成周期信号 (系外惑星ライトカーブ模擬) をガウス過程で回帰し、**平均予測 + 95% 信頼区間** を可視化する
-**手法**: `sklearn.gaussian_process.GaussianProcessRegressor` に RBF + ExpSineSquared kernel
+**対象**: 観測値に **不確実性 (エラーバー)** をつけて予測したい天体・地球観測系研究者  
+**目標**: 合成周期信号 (正弦波 + 線形トレンドのトイ信号) をガウス過程で回帰し、**予測平均 + 95% 予測区間** を可視化する  
+**手法**: `sklearn.gaussian_process.GaussianProcessRegressor` に ExpSineSquared + DotProduct kernel
 
 > [!NOTE]
-> 完全にローカル CPU 完結。1 分以内。ライブラリは scikit-learn のみで完結。
+> 完全にローカル CPU 完結。1 分以内。直接依存: scikit-learn, numpy, matplotlib。
 
 ## 全体像
 
 ```
 src/train.py
 
-   ├→ 合成: y(t) = sin(2π t / 5) + 0.1 t + ノイズ
+   ├→ 合成: y(t) = sin(2π t / 5) + 0.1 t + ノイズ  (トイ信号; 正弦波 + 線形トレンド)
    ├→ 一部データ (30 点) のみ観測、残りは未観測
-   ├→ Kernel = ExpSineSquared * ConstantKernel + WhiteKernel
-   ├→ GP fit (最尤法でハイパラ最適化)
-   ├→ 予測: 全 t 上で mean + std
+   ├→ Kernel = ConstantKernel * ExpSineSquared + ConstantKernel * DotProduct + WhiteKernel
+   ├→ GP fit (最尤法でハイパラ最適化; --init-period 3.0 → 5.0 を発見)
+   ├→ 予測: 全 t 上で mean + std (観測バンド & 潜在バンドの 2 種)
    └→ outputs/
-        ├── gp_fit.png       # データ点 + 予測平均 + 95%CI + 真の関数
-        ├── residuals.png
-        └── metrics.json     # RMSE, log-marginal-likelihood
+        ├── gp_fit.png       # データ点 + 予測平均 + 95%CI (2 帯) + 真の関数
+        ├── residuals.png    # in-sample + holdout 残差
+        └── metrics.json     # RMSE, holdout 指標, バージョン, プロベナンス
 ```
 
 ## クイックスタート
 
 ```bash
-python -m pip install -r requirements.txt
+cd "$(git rev-parse --show-toplevel)/research-fields/math-physics-earth/03-gp-regression"
+python -m pip install -r requirements.in
 python src/train.py --seed 42
 ```
 
@@ -41,10 +42,10 @@ python src/train.py --seed 42
 
 | 種別 | 選定 | 理由 |
 |---|---|---|
-| ライブラリ | `scikit-learn>=1.4` | GP 実装が付属、追加依存なし |
-| Kernel | `ConstantKernel * ExpSineSquared + WhiteKernel` | 周期性を陽に表現 + ノイズ吸収 |
-| ハイパラ最適化 | 最尤 (log-marginal likelihood 最大化) | GP 標準 |
-| 予測 | `return_std=True` で 1σ | 95%CI = ±1.96σ |
+| ライブラリ | `scikit-learn>=1.4`, `numpy`, `matplotlib` | GP 実装付属; 可視化 |
+| Kernel | `ConstantKernel * ExpSineSquared + ConstantKernel * DotProduct + WhiteKernel` | 周期性 + 線形トレンド + ノイズ |
+| ハイパラ最適化 | 最尤 (log-marginal likelihood 最大化), 8 restarts | GP 標準 |
+| 予測 | 観測バンド (`return_std=True`) + 潜在バンド (WhiteKernel 除く) | 2 種類の不確実性を可視化 |
 
 ## ドキュメント
 
