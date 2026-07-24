@@ -5,13 +5,21 @@
 ### `MPRestError: 401 Unauthorized`
 
 - API キー未設定または誤り。https://next-gen.materialsproject.org/dashboard で確認
-- `echo $MP_API_KEY` で環境変数を確認
+- 環境変数を確認する際は **キーそのものを表示しないでください** (画面共有・スクリーンショットで漏洩する事故が多発しています):
+  ```bash
+  # 良い例: 値ではなく「設定されているか」だけを確認
+  test -n "${MP_API_KEY:-}" && echo "MP_API_KEY is set (length=${#MP_API_KEY})" \
+                            || echo "MP_API_KEY is missing"
+  # 悪い例: `echo $MP_API_KEY` はキーそのものをターミナル履歴に残す
+  ```
 - 旧レガシー API (`https://materialsproject.org/rest/`) のキーは新 API では使えません。新 API 用に再生成してください
 
 ### `429 Too Many Requests`
 
-- MP API は 25 req/s 制限。`chunk_size=1000` を維持し `num_chunks` を大きくしすぎない
-- `fetch_data.py` は既定で `chunk_size=1000, num_chunks=2` = 最大 2000 件を取得
+- MP API は**リクエスト頻度 (req/s)** に対して制限がかかります (公式ドキュメント上限)
+- `chunk_size` を大きくすると 1 リクエストあたりの取得件数が増え、総リクエスト数はむしろ**減ります** — したがって `429` を防ぐには `chunk_size` を維持したまま**並列実行を減らす・リトライ間隔を空ける**のが正解です
+- `fetch_data.py` は `mp-api` クライアント標準のバックオフに従います。それでも 429 が続く場合は数分待ってから再試行してください
+- 大量ダウンロードが目的なら [MP 公式の bulk download 手順](https://docs.materialsproject.org/downloading-data) を使い、API を叩き続けないでください
 
 ### `search()` が空の結果を返す
 
@@ -56,5 +64,5 @@
 
 ### AML Compute Instance が起動しない
 
-- クォータ不足の可能性: `az ml compute list-usage --workspace-name <ws> -o table`
+- クォータ不足の可能性: `az ml compute list-usage --resource-group <rg> --workspace-name <ws> -o table` (`--resource-group` は現行 CLI で必須)
 - Standard_E2s_v3 が Japan East で 2 vCPU 分空いているか確認

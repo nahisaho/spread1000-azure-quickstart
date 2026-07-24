@@ -24,21 +24,31 @@ python src/featurize.py \
 python src/featurize.py --input ... --output ... --preset megnet_el
 ```
 
-- `megnet_el`: MEGNet の元素埋め込み (16 次元)。事前学習された埋め込みで表現力が高い
-- `matminer`: matminer の内部プリセット (67 次元、Deml et al. 2016)
+| preset | 出力次元 | 説明 |
+|---|---|---|
+| `magpie` | **132** | 22 元素物性 × 6 統計量 (mean, avg_dev, min, max, mode, range) |
+| `megnet_el` | **80** | MEGNet の 16 次元元素埋め込み × 5 統計量 (mean, avg_dev, min, max, mode) |
+| `matminer` | **65** | 内部プリセット (13 元素物性 × 5 統計量、Deml et al. 2016) |
 
 > [!NOTE]
-> `MEGNetElementEmbedding` クラスは存在しません。**`ElementProperty.from_preset("megnet_el")`** を使ってください。
+> MEGNet の**素の**元素埋め込みは 16 次元ですが、`ElementProperty.from_preset("megnet_el")` は組成中の各元素で統計量を取るため出力は 80 次元になります。混同しないよう注意してください。
 
 ## NaN の扱い
 
-放射性元素や希ガスなど、Magpie 事典に含まれない元素があると特徴量計算が NaN を含みます。`featurize.py` は既定で NaN 行を削除し、削除件数を stderr に表示します。
+放射性元素や希ガスなど、Magpie 事典に含まれない元素があると特徴量計算が NaN を含みます。本教材の `featurize.py` は既定で `impute_nan=False` (matminer 0.10.1 の既定 `True` から**明示的にオフ**にしています) を渡し、NaN 行はそのまま出力に含まれ、`--drop-nan-rows` (既定 on) で削除します。
 
-削除件数が想定より多い (10% 超) 場合は、取得データに希元素が多く混入していないか `data/mp-bandgap.parquet` を確認してください。
+- `--no-drop-nan-rows`: NaN 行を残す (デバッグ用途)
+- `--impute-nan`: matminer の平均値 imputation を有効化 (**化学的意味を持たない平均値**で埋めるため、通常は推奨しません)
+
+`data/features.manifest.json` に削除した material_id 一覧が記録されるので、10% 超が落ちる場合はデータ取得時のフィルタ条件を見直してください。
+
+> [!WARNING]
+> `impute_nan=True` (matminer デフォルト) を使うと、`dropna()` で消えるはずだった行が「化学的に無意味な平均値」で埋められ、そのままモデルに投入されます。**サイエンスの結論を歪める**恐れがあるため、本教材ではオフにしています。
 
 ## 出力
 
 - `data/features.parquet` — material_id, formula_pretty, 132 特徴列, band_gap (135 列)
+- `data/features.manifest.json` — 入力 SHA-256、出力 SHA-256、preset、`impute_nan` 設定、matminer/pymatgen バージョン、入力行数、出力行数、削除された material_id 一覧、feature_names
 - ファイルサイズは 1500 行で約 2〜5 MB
 
 ## 発展: 結晶構造ベースの特徴量

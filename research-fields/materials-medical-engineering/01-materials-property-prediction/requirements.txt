@@ -1,7 +1,10 @@
 mp-api>=0.46.4,<1
 pymatgen>=2026.5.4
 matminer>=0.10.1
-xgboost-cpu>=3.3.0,<4
+# xgboost-cpu is Linux/Windows-only. macOS (Darwin) does not have a
+# 'xgboost-cpu' wheel on PyPI, so pull the regular 'xgboost' package there.
+xgboost-cpu>=3.3.0,<4; platform_system != "Darwin"
+xgboost>=3.3.0,<4;     platform_system == "Darwin"
 scikit-learn>=1.9.0,<2
 numpy>=1.26,<3
 pandas>=2.2

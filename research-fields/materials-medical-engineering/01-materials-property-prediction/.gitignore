@@ -4,6 +4,11 @@ __pycache__/
 *.pyc
 data/mp-bandgap.parquet
 data/features.parquet
+data/features.manifest.json
 data/metrics.json
 data/predictions.parquet
-data/manifest.json
+data/parity.png
+# fetch/featurize manifests (any *.manifest.json under data/)
+data/*.manifest.json
+data/model_xgboost.ubj
+data/split_ids.json

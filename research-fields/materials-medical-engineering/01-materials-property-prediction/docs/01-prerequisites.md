@@ -17,8 +17,8 @@
 
 - **Python 3.12** を推奨 (matminer は 3.13 の公式 classifier を持ちません)
 - Git、curl、bash
-- WSL2 (Windows) または macOS / Linux
-- ディスク空き 200 MB 以上
+- WSL2 (Windows) / Linux / macOS のいずれか
+- ディスク空き **1〜2 GB 以上** (SciPy / PyArrow / matplotlib / pymatgen / matminer データ + `pip cache` 込み)
 
 ```bash
 python3.12 -m venv .venv
@@ -34,31 +34,33 @@ pip install -r requirements.txt
 | mp-api | >=0.46.4 | Materials Project API v2 クライアント |
 | pymatgen | >=2026.5.4 | 結晶構造データ操作 |
 | matminer | >=0.10.1 | 特徴量化 (Magpie 記述子) |
-| xgboost-cpu | >=3.3.0 | 勾配ブースティング (CPU 版) |
+| xgboost-cpu (Linux/Windows) / xgboost (macOS) | >=3.3.0 | 勾配ブースティング |
 | scikit-learn | >=1.9.0 | ベースライン + CV |
 | pyarrow | >=20 | Parquet 入出力 |
 
 > [!NOTE]
-> **GPU は不要**です。データ量が数千件程度ならすべて CPU で完結します。`xgboost-cpu` は GPU ランタイムを含まない軽量パッケージです。
+> **GPU は不要**です。数千件程度なら CPU で完結します。`xgboost-cpu` は Linux/Windows のみ公式 wheel が提供されており、macOS では PyPI に該当パッケージが存在しないため `requirements.txt` は `platform_system` マーカーで通常版 `xgboost` を選択します。
 
-## Azure 側 (任意)
+> [!WARNING]
+> **Cloud Shell はサポート対象外**です。Microsoft Learn の現行ドキュメントでは Cloud Shell 標準の Python は 3.9 系で、本教材が要求する 3.12 系ではありません (`xgboost-cpu>=3.3` は Python 3.12+ 必須)。Cloud Shell は `az` CLI ターミナルとしてのみ使ってください。
 
-Azure ML Compute Instance で実行する場合のみ:
+## Azure 側 (任意 — 本教材の主経路ではありません)
 
-- Azure サブスクリプション
-- 対象リソースグループへの `Contributor` + `User Access Administrator` (または `Owner`) 権限
+本教材はローカルで完結する CPU-only ワークフローのため、**Bicep / infra / deploy スクリプトは同梱していません**。既に Azure ML ワークスペースを持っていて再現環境として使いたい場合のみ、以下の**最小権限ロール**で AML Compute Instance を起動できます:
+
+- サブスクリプション: ワークスペース所有済み
+- ワークスペーススコープの `AzureML Data Scientist` + `AzureML Compute Operator` (ロール割り当ての権限は不要)
 - Standard_E2s_v3 (2 vCPU) のクォータ 2 以上、Japan East
+- **idle shutdown を必ず設定** (Compute Instance の作成時 `--idle-time-before-shutdown 30`)
+
+クォータ確認 (現行 CLI は `--resource-group` が必須):
 
 ```bash
-az login
-az account show --query name -o tsv
-az ml compute list-usage --workspace-name <ws> --resource-group <rg> -o table
+az extension add -n ml --upgrade
+az ml compute list-usage --resource-group <rg> --workspace-name <ws> -o table
 ```
 
-Bicep テンプレートは同梱していません。本教材はローカル / WSL2 / Cloud Shell で完結する CPU-only ワークフローのため、Azure リソースの払い出しが不要です。AML 上で実行したい場合は生命科学 01 の `infra/main.bicep` を参考にしてください。
+> [!IMPORTANT]
+> `Owner` / `User Access Administrator` は不要です (ロール割り当ての権限は本教材で使いません)。既に発行済みのワークスペースに `Data Scientist` として招待してもらう運用を推奨します。
 
-## Cloud Shell を使う場合
-
-- Python 3.12 が既にインストール済み
-- 20 分無操作でタイムアウトするため、長い CV には不向き
-- Materials Project からのデータ取得と学習だけなら十分間に合います
+## 追加チェック

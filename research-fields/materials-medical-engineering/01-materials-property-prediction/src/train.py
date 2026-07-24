@@ -6,6 +6,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -17,20 +18,34 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--features", required=True, type=Path)
     p.add_argument("--output", type=Path, default=Path("data/metrics.json"))
     p.add_argument("--predictions", type=Path, default=Path("data/predictions.parquet"))
+    p.add_argument("--model-out", type=Path, default=Path("data/model_xgboost.ubj"))
+    p.add_argument("--split-ids-out", type=Path, default=Path("data/split_ids.json"))
     p.add_argument("--test-size", type=float, default=0.2)
     p.add_argument("--n-splits", type=int, default=5)
     p.add_argument("--random-state", type=int, default=42)
     p.add_argument("--n-estimators", type=int, default=500)
     p.add_argument("--max-depth", type=int, default=6)
     p.add_argument("--learning-rate", type=float, default=0.05)
+    p.add_argument("--n-jobs", type=int, default=1,
+                   help="XGBoost threads. 1 = deterministic (default). >1 = faster but "
+                        "results may vary bit-for-bit across runs.")
+    p.add_argument("--force", action="store_true", help="Allow overwriting existing outputs.")
     return p.parse_args()
 
 
 def main() -> int:
     args = parse_args()
 
+    for path in (args.output, args.predictions, args.model_out, args.split_ids_out):
+        if path.exists() and not args.force:
+            raise SystemExit(
+                f"ERROR: {path} already exists. Use --force to overwrite."
+            )
+
     import numpy as np
     import pandas as pd
+    import xgboost as _xgb
+    import sklearn as _sklearn
     from sklearn.dummy import DummyRegressor
     from sklearn.impute import SimpleImputer
     from sklearn.linear_model import LinearRegression
@@ -84,7 +99,7 @@ def main() -> int:
         max_depth=args.max_depth,
         learning_rate=args.learning_rate,
         objective="reg:squarederror",
-        n_jobs=2,
+        n_jobs=args.n_jobs,
         random_state=args.random_state,
     )
 
@@ -114,22 +129,55 @@ def main() -> int:
         "band_gap_true": y_te,
         "band_gap_pred_xgboost": xgb.predict(X_te),
     })
-    args.predictions.parent.mkdir(parents=True, exist_ok=True)
-    pred_df.to_parquet(args.predictions, index=False)
+    for out in (args.output, args.predictions, args.model_out, args.split_ids_out):
+        out.parent.mkdir(parents=True, exist_ok=True)
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    tmp_pred = args.predictions.with_suffix(args.predictions.suffix + ".part")
+    pred_df.to_parquet(tmp_pred, index=False)
+    tmp_pred.replace(args.predictions)
+
+    # Persist the trained XGBoost model so downstream analysis or verification
+    # can reuse it without re-training. .ubj = XGBoost's universal binary JSON.
+    xgb.save_model(str(args.model_out))
+
+    # Persist exact train/test split so metrics can be reproduced from ids alone.
+    args.split_ids_out.write_text(json.dumps({
+        "train_material_ids": [str(i) for i in id_tr.tolist()],
+        "test_material_ids": [str(i) for i in id_te.tolist()],
+    }, ensure_ascii=False))
+
+    from importlib.metadata import version as _pkg_version
+    features_sha = hashlib.sha256(args.features.read_bytes()).hexdigest()
     args.output.write_text(json.dumps({
         "features": str(args.features),
+        "features_sha256": features_sha,
         "n_samples": int(len(y)),
         "n_features": int(X.shape[1]),
         "test_size": args.test_size,
         "n_splits": args.n_splits,
         "random_state": args.random_state,
+        "n_jobs": args.n_jobs,
+        "hyperparameters": {
+            "n_estimators": args.n_estimators,
+            "max_depth": args.max_depth,
+            "learning_rate": args.learning_rate,
+            "objective": "reg:squarederror",
+        },
+        "package_versions": {
+            "xgboost": _xgb.__version__,
+            "scikit_learn": _sklearn.__version__,
+            "numpy": np.__version__,
+            "pandas": pd.__version__,
+        },
         "results": results,
         "trained_at": datetime.now(timezone.utc).isoformat(),
+        "model_path": str(args.model_out),
+        "split_ids_path": str(args.split_ids_out),
     }, ensure_ascii=False, indent=2))
     print(f"[train] wrote {args.output}")
     print(f"[train] wrote {args.predictions}")
+    print(f"[train] wrote {args.model_out}")
+    print(f"[train] wrote {args.split_ids_out}")
     return 0
 
 
