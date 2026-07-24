@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+# infra/deploy.sh — Azure AI Search + Azure OpenAI プロビジョニング
+#
+# 使用例:
+#   bash infra/deploy.sh
+#
+# 前提: az CLI + Bicep CLI インストール済み、az login 済み
+
+set -euo pipefail
+
+# スクリプト位置からシナリオルートを決定 (CWD 非依存)
+SCENARIO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BICEP_FILE="$SCENARIO_DIR/infra/main.bicep"
+PARAMS_FILE="$SCENARIO_DIR/infra/parameters.example.json"
+ENV_OUT="$SCENARIO_DIR/.env"
+
+# ────────────────────────────────────────────
+# 設定 (環境変数で上書き可)
+# ────────────────────────────────────────────
+RESOURCE_GROUP="${RESOURCE_GROUP:-rg-multiling-search}"
+LOCATION="${LOCATION:-japaneast}"
+NAME_PREFIX="${NAME_PREFIX:-multil}"
+SEARCH_SKU="${SEARCH_SKU:-basic}"
+
+# ────────────────────────────────────────────
+# ヘルパー
+# ────────────────────────────────────────────
+info()  { echo "[info]  $*"; }
+warn()  { echo "[warn]  $*" >&2; }
+error() { echo "[error] $*" >&2; exit 1; }
+
+# ────────────────────────────────────────────
+# Preflight checks
+# ────────────────────────────────────────────
+info "=== Preflight checks ==="
+
+# Bicep ファイル存在確認
+[[ -f "$BICEP_FILE" ]] || error "Bicep ファイルが見つかりません: $BICEP_FILE"
+
+# az CLI 確認
+command -v az >/dev/null 2>&1 || error "az CLI が未インストール。https://aka.ms/install-azure-cli"
+
+# ログイン状態確認
+az account show --query id -o tsv >/dev/null 2>&1 || error "Azure CLI にログインしていません。'az login' を実行してください。"
+
+SUBSCRIPTION_ID="$(az account show --query id -o tsv)"
+info "サブスクリプション: $SUBSCRIPTION_ID"
+
+# デプロイヤー Object ID 取得
+DEPLOYER_OBJECT_ID="$(az ad signed-in-user show --query id -o tsv 2>/dev/null || true)"
+if [[ -z "$DEPLOYER_OBJECT_ID" ]]; then
+    error "サインインユーザーの Object ID を取得できませんでした。'az login' を再実行してください。"
+fi
+info "デプロイヤー Object ID: $DEPLOYER_OBJECT_ID"
+
+# リソースプロバイダー登録
+info "=== リソースプロバイダー登録 ==="
+for provider in Microsoft.Search Microsoft.CognitiveServices Microsoft.Authorization; do
+    state="$(az provider show -n "$provider" --query registrationState -o tsv 2>/dev/null || echo NotRegistered)"
+    if [[ "$state" != "Registered" ]]; then
+        info "  登録中: $provider"
+        az provider register -n "$provider" --wait
+    else
+        info "  登録済み: $provider"
+    fi
+done
+
+# リージョン可用性チェック (Azure Search)
+info "=== リージョン可用性チェック ($LOCATION) ==="
+SEARCH_AVAIL="$(az provider show -n Microsoft.Search --query "resourceTypes[?resourceType=='searchServices'].locations" -o tsv 2>/dev/null | tr '[:upper:]' '[:lower:]' | tr -d ' ' || true)"
+if [[ -n "$SEARCH_AVAIL" ]] && ! echo "$SEARCH_AVAIL" | grep -qi "$(echo "$LOCATION" | tr -d ' ')"; then
+    warn "リージョン '$LOCATION' で Azure AI Search が利用できない可能性があります"
+fi
+
+# リソースグループ作成 (なければ)
+info "=== リソースグループ: $RESOURCE_GROUP ==="
+if ! az group show -n "$RESOURCE_GROUP" >/dev/null 2>&1; then
+    info "  リソースグループを作成します"
+    az group create -n "$RESOURCE_GROUP" -l "$LOCATION" -o none
+else
+    info "  既存のリソースグループを使用します"
+fi
+
+# ────────────────────────────────────────────
+# コスト・容量確認
+# ────────────────────────────────────────────
+info "=== デプロイ概要 ==="
+info "  リソースグループ : $RESOURCE_GROUP"
+info "  リージョン       : $LOCATION"
+info "  Search SKU       : $SEARCH_SKU (1 replica, 1 partition)"
+info "  Azure OpenAI     : Standard S0 + text-embedding-3-large"
+echo ""
+echo "【コスト目安】"
+echo "  Azure AI Search Basic:      ~$75/月 (1 SU)"
+echo "  Azure OpenAI text-embedding-3-large: $0.13/1M tokens (従量)"
+echo ""
+if [[ "${SKIP_CONFIRM:-no}" != "yes" ]]; then
+    read -r -p "続行しますか? [y/N] " answer
+    [[ "${answer:-N}" =~ ^[Yy]$ ]] || { info "中断しました"; exit 0; }
+fi
+
+# ────────────────────────────────────────────
+# Bicep デプロイ (冪等)
+# ────────────────────────────────────────────
+info "=== Bicep デプロイ ==="
+DEPLOY_OUTPUT="$(az deployment group create \
+    --resource-group "$RESOURCE_GROUP" \
+    --template-file "$BICEP_FILE" \
+    --parameters \
+        namePrefix="$NAME_PREFIX" \
+        location="$LOCATION" \
+        searchSku="$SEARCH_SKU" \
+        deployerObjectId="$DEPLOYER_OBJECT_ID" \
+    --query properties.outputs \
+    -o json)"
+
+SEARCH_ENDPOINT="$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['searchEndpoint']['value'])")"
+SEARCH_NAME="$(echo "$DEPLOY_OUTPUT"     | python3 -c "import sys,json; print(json.load(sys.stdin)['searchName']['value'])")"
+AOAI_ENDPOINT="$(echo "$DEPLOY_OUTPUT"   | python3 -c "import sys,json; print(json.load(sys.stdin)['aoaiEndpoint']['value'])")"
+AOAI_EMBED_DEPLOYMENT="$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['aoaiEmbedDeployment']['value'])")"
+AOAI_EMBED_DIM="$(echo "$DEPLOY_OUTPUT"  | python3 -c "import sys,json; print(json.load(sys.stdin)['aoaiEmbedDim']['value'])")"
+
+info "デプロイ完了:"
+info "  Search Endpoint : $SEARCH_ENDPOINT"
+info "  AOAI Endpoint   : $AOAI_ENDPOINT"
+info "  Embed Deployment: $AOAI_EMBED_DEPLOYMENT (dim=$AOAI_EMBED_DIM)"
+
+# ────────────────────────────────────────────
+# .env 書き出し (chmod 600)
+# ────────────────────────────────────────────
+info "=== .env 書き出し: $ENV_OUT ==="
+cat > "$ENV_OUT" << ENVEOF
+# Generated by infra/deploy.sh — do not commit to git
+AZURE_SEARCH_ENDPOINT=$SEARCH_ENDPOINT
+AZURE_SEARCH_INDEX_NAME=multilingual-docs
+AZURE_SEARCH_NAME=$SEARCH_NAME
+AZURE_OPENAI_ENDPOINT=$AOAI_ENDPOINT
+AZURE_OPENAI_EMBED_DEPLOYMENT=$AOAI_EMBED_DEPLOYMENT
+AZURE_OPENAI_EMBED_DIM=$AOAI_EMBED_DIM
+AZURE_OPENAI_API_VERSION=2024-10-21
+RG_NAME=$RESOURCE_GROUP
+LOCATION=$LOCATION
+ENVEOF
+chmod 600 "$ENV_OUT"
+info ".env を書き出しました (権限: 600)"
+info ""
+info "次のステップ:"
+info "  source .env"
+info "  python src/build_index.py --search-endpoint \$AZURE_SEARCH_ENDPOINT"
+info "  python src/search.py --query '紫式部の物語'"

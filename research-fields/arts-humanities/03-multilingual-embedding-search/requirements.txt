@@ -1,4 +1,13 @@
-openai==2.1.0
-faiss-cpu==1.9.0.post1
+# Azure AI Search + Identity (BLOCKING 1, 2)
+azure-search-documents>=11.6.0
+azure-identity>=1.19.0
+
+# Azure OpenAI
+openai>=1.55.0
+
+# Optional: FAISS local fallback (--fallback-faiss)
+faiss-cpu>=1.9.0
 numpy>=1.24
+
+# Utilities
 python-dotenv>=1.0

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "value": "multil"
+    },
+    "location": {
+      "value": "japaneast"
+    },
+    "searchSku": {
+      "value": "basic"
+    },
+    "deployerObjectId": {
+      "value": "<YOUR_AZURE_AD_OBJECT_ID>"
+    },
+    "aoaiEmbedDeploymentName": {
+      "value": "text-embedding-3-large"
+    },
+    "aoaiEmbedDim": {
+      "value": 3072
+    }
+  }
+}

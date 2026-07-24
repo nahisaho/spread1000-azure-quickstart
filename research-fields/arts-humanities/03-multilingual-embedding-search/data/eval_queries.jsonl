@@ -1,0 +1,18 @@
+{"query": "紫式部の書いた物語", "lang": "ja", "relevant_ids": ["ja01", "en01", "fr01", "zh01"]}
+{"query": "The Tale of Genji author and period", "lang": "en", "relevant_ids": ["ja01", "en01", "fr01", "zh01"]}
+{"query": "L'auteur du Genji Monogatari", "lang": "fr", "relevant_ids": ["ja01", "en01", "fr01", "zh01"]}
+{"query": "俳句の構造と季語", "lang": "ja", "relevant_ids": ["ja03", "en02", "zh02"]}
+{"query": "Japanese haiku syllable structure", "lang": "en", "relevant_ids": ["ja03", "en02", "zh02"]}
+{"query": "Impressionism light and brushstroke", "lang": "en", "relevant_ids": ["en04", "fr02", "de02", "zh03"]}
+{"query": "印象派の特徴", "lang": "ja", "relevant_ids": ["en04", "fr02", "de02", "zh03"]}
+{"query": "Goethe Faust Themen", "lang": "de", "relevant_ids": ["de01"]}
+{"query": "夏目漱石の風刺小説", "lang": "ja", "relevant_ids": ["ja04"]}
+{"query": "Shakespeare revenge and madness", "lang": "en", "relevant_ids": ["en03"]}
+// TODO: 低リソース言語 — 実際の relevance judgments を追加
+// {"query": "...", "lang": "yo", "relevant_ids": [...]}  // Yoruba
+// {"query": "...", "lang": "wo", "relevant_ids": [...]}  // Wolof
+// {"query": "...", "lang": "ug", "relevant_ids": [...]}  // Uyghur
+// {"query": "...", "lang": "ain", "relevant_ids": [...]} // Ainu
+// TODO: 方言・翻字揺れのテストケース
+// {"query": "Murasaki Shikibu", "lang": "en", "relevant_ids": ["ja01", "en01", "fr01", "zh01"]}
+// {"query": "紫式部 (むらさきしきぶ)", "lang": "ja", "relevant_ids": ["ja01", "en01", "fr01", "zh01"]}
