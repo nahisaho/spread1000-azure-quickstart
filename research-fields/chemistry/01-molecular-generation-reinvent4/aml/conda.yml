@@ -8,9 +8,12 @@ dependencies:
       # Force CPU-only PyTorch wheels FIRST so REINVENT's own torch pin resolves to CPU
       # (default PyPI torch pulls CUDA wheels which are ~2 GB and unused on D4as_v5).
       - --extra-index-url https://download.pytorch.org/whl/cpu
-      # REINVENT4 v4.8 (Apache-2.0) — install from GitHub tag (not on PyPI).
-      # This drags in torch (CPU wheel via the index above), rdkit, pandas, etc.
-      - "reinvent @ git+https://github.com/MolecularAI/REINVENT4.git@v4.8"
+      # REINVENT4 v4.8 (Apache-2.0) — pinned by commit SHA (immutable), not by
+      # tag. Git tags can be moved/deleted after publication; the commit hash
+      # for v4.8 was 80a8d21aefd9c0d3ec806377522effb30cfca12a at time of
+      # writing. This drags in torch (CPU wheel via the index above), rdkit,
+      # pandas, etc.
+      - "reinvent @ git+https://github.com/MolecularAI/REINVENT4.git@80a8d21aefd9c0d3ec806377522effb30cfca12a"
       # AML MLflow plugin. Pin an explicit version to avoid transitive mlflow-skinny drift.
       - azureml-mlflow==1.62.0
       - Pillow>=10.0

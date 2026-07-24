@@ -1,6 +1,9 @@
 # 分子生成 (REINVENT4) — SPReAD-1000 Azure Quickstart
 
-Azure ML v2 command job で **REINVENT4 v4.8** を実行し、**LibInvent scaffold decoration** を体験する **CPU で完結**する最短ルート。**Apache-2.0** で MolecularAI が公開している pretrained priors を用いるため、ライセンス面でも SPReAD-1000 の研究利用に安心です。
+Azure ML v2 command job で **REINVENT4 v4.8** を実行し、**LibInvent scaffold decoration** を体験する **CPU で完結**する最短ルート。
+
+> [!IMPORTANT]
+> **ライセンスの適用範囲について**: REINVENT4 コード、公開 prior、Azure Bicep テンプレート等は Apache-2.0 で提供されますが、これは**ソフトウェア/モデル成果物の利用条件**に限られます。生成された化学構造の**特許自由度 (Freedom-to-Operate)、化学的安全性、規制遵守 (医薬品医療機器法・PIC/S GMP・化管法など)、実験・治験での適法性**については一切保証されません。生成物を実物質として合成・使用する前に、必ず所属機関の**知財部門・EHS 部門・IRB 等**へ相談し、患者・環境への影響評価と関連法規のレビューを実施してください。
 
 ## 想定ユーザー
 
@@ -45,10 +48,10 @@ Azure ML v2 command job で **REINVENT4 v4.8** を実行し、**LibInvent scaffo
 
 ## 生成 = 何が得られるのか
 
-1. `outputs.molecules/sampled.csv` — REINVENT が生成した SMILES + NLL
-2. `outputs.molecules/scored.csv` — RDKit で MW / LogP / QED / TPSA / 有効性を付与
+1. `outputs.molecules/sampled.csv` — REINVENT が生成した SMILES + NLL (RAW; 無効/重複を含む)
+2. `outputs.molecules/scored.csv` — RDKit で MW / LogP / QED / TPSA を付与。**RDKit がパースできた有効分子のみ**。生成された全 SMILES 数 (`n_total`) と有効数 (`n_valid`) は MLflow メトリクスと `scored.csv` のヘッダで確認できます。
 3. `outputs.molecules/top20.png` — QED でソートした top-20 の 2D 分子構造画像
-4. MLflow メトリクス: `valid_ratio`, `unique_ratio`, `mean_qed`, `mean_mw`, `mean_logp`
+4. MLflow メトリクス: `n_total`, `n_valid`, `n_unique`, `valid_ratio`, `unique_ratio`, `mean_qed`, `mean_mw`, `mean_logp`
 
 ## データセット
 

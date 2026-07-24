@@ -28,7 +28,7 @@
 rm -f priors/*.prior && bash scripts/download-priors.sh
 ```
 
-`wc -c < priors/libinvent.prior` で各ファイルが 1 MB 以上あることを確認 (期待は ~40 MB)。
+`wc -c < priors/libinvent.prior` で各ファイルが 1 MB 以上あることを確認 (期待値は 約 95 MB decimal / 約 90 MiB — Zenodo record 20701824 で公開されている 94,756,131 バイト)。
 
 ## Blob アップロード
 
@@ -76,13 +76,14 @@ az ml job create -f aml/job-generate.yml \
 
 ### ジョブが `Failed` で `reinvent` CLI が exit code != 0
 
-**原因**: scaffold SMILES が LibInvent 要件を満たしていない ([*:1]/[*:2] 無し、3 点以上、不正 SMILES など)
+**原因**: scaffold SMILES が LibInvent 要件を満たしていない ([*:1]/[*:2] 無し、prior が受理する attachment 数を超えている、不正 SMILES など)
 
 **対処**: `outputs/user_logs/std_log.txt` の `reinvent.log` セクションを確認。scaffold は必ず以下の形式:
 
 - 2 attachment points: `Cc1ccc([*:1])cc1[*:2]`
 - attachment 記号は `[*:1]`, `[*:2]` の**番号付き**アスタリスク
-- 3 点以上必要な場合は LinkInvent (別 prior) を使用
+- 本チュートリアルは 2 attachment point で検証済み。attachment 数を増やす際は使用する LibInvent prior のドキュメントを確認してください
+- 「2 warhead を linker で結合したい」場合は LibInvent ではなく LinkInvent (別 prior、別ワークフロー) を使用。LinkInvent は多点 decoration の上位互換ではありません
 
 ### 生成されたが `valid_ratio` が極端に低い (< 0.3)
 

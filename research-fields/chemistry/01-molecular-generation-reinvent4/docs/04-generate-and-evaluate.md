@@ -71,7 +71,7 @@ REINVENT4 v4.8 LibInvent 100 SMILES サンプリング（デフォルト scaffol
 | Unique ratio | > 0.85 |
 | Mean QED | 0.4〜0.6 |
 
-数値は seed / scaffold / sample サイズに依存します。scaffold を変えて何度か回して結果を比較してみてください。
+数値は seed / scaffold / sample サイズに依存します。既定の `--seed 42` (job-generate.yml で指定) では同じスカフォールドを再実行すると同じサンプル群になります。異なる分子集合を得たい場合は seed を変更してください。
 
 ## 6. 自分の scaffold で試す
 
@@ -83,10 +83,11 @@ command: >-
     --prior ${{inputs.priors}}/libinvent.prior
     --scaffold "Nc1ccc([*:1])cc1[*:2]"   # ← 自分の scaffold に置き換え
     --num-smiles 200
+    --seed 42
     --output ${{outputs.molecules}}/sampled.csv &&
   ...
 ```
 
 - attachment point は必ず `[*:1]`, `[*:2]` のように **番号付き**で記述
-- LibInvent は 2 点結合まで対応。3 点以上は LinkInvent (別 prior) を使用
+- LibInvent scaffold decoration は本チュートリアルでは **2 attachment point (`[*:1]` + `[*:2]`) を検証済み**。REINVENT4 LibInvent prior が受理する attachment 数の上限を超える場合は、`reinvent` CLI が exit code!=0 で失敗し `reinvent.log` にエラーが記録されます。多重リンカー (2 warhead を linker で結合) が目的の場合は LibInvent ではなく **LinkInvent** (別 prior、別ワークフロー) を使用してください — LinkInvent は「多点 decoration」の上位互換ではないことに注意
 - サンプル数は `--num-smiles 200` のように大きくしても CPU で数分

@@ -1,13 +1,18 @@
 $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: reinvent4-cpu
-version: 1
+version: 2
 description: >
   REINVENT4 v4.8 + RDKit environment (CPU-only wheels) for chemistry molecular
   generation quickstart (SPReAD-1000).
-image: mcr.microsoft.com/azureml/openmpi5.0-ubuntu22.04:latest
+# Pinned to a dated MCR tag (not :latest) so environment version 2 is
+# reproducible across rebuilds. Verify pull with:
+#   docker pull mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:20260715.v1
+image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu22.04:20260715.v1
 conda_file: conda.yml
 tags:
   scenario: chem-molgen
   project: spread1000
   reinvent_version: "4.8"
-  rdkit_version: "2024.9.6"
+  # rdkit_version tag intentionally removed: the actual pinned RDKit version
+  # is resolved transitively by REINVENT4 v4.8 (requires rdkit>=2025.09.1) at
+  # install time. Recording a fixed value in tags creates false provenance.

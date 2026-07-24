@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 TOML_TEMPLATE = """\
 run_type = "sampling"
-
+{seed_line}
 [parameters]
 model_file = "{prior_path}"
 smiles_file = "{smiles_file}"
@@ -45,9 +45,11 @@ randomize_smiles = true
 
 
 def _build_toml(prior: Path, smiles_file: Path, num_smiles: int,
-                out_csv: Path) -> str:
+                out_csv: Path, seed: int | None) -> str:
     # Escape backslashes for TOML string literals (POSIX paths should be safe already).
+    seed_line = f"seed = {int(seed)}\n" if seed is not None else ""
     return TOML_TEMPLATE.format(
+        seed_line=seed_line,
         prior_path=str(prior.resolve()).replace("\\", "\\\\"),
         smiles_file=str(smiles_file.resolve()).replace("\\", "\\\\"),
         out_csv=str(out_csv.resolve()).replace("\\", "\\\\"),
@@ -60,6 +62,11 @@ def main() -> int:
     p.add_argument("--prior", required=True, type=Path)
     p.add_argument("--scaffold", required=True, help="Scaffold SMILES with [*:1]/[*:2]")
     p.add_argument("--num-smiles", type=int, default=100)
+    p.add_argument("--seed", type=int, default=42,
+                   help="RNG seed forwarded to REINVENT (top-level `seed=` in the "
+                        "sampling TOML AND `reinvent -s <seed>` on the CLI). Fixed "
+                        "default ensures reproducible tutorial runs; set to a "
+                        "different value to sample independent batches.")
     p.add_argument("--output", required=True, type=Path,
                    help="Where REINVENT should write the sampled CSV")
     args = p.parse_args()
@@ -77,11 +84,14 @@ def main() -> int:
 
         cfg = Path(td) / "sampling.toml"
         cfg.write_text(_build_toml(args.prior, smiles_file, args.num_smiles,
-                                   args.output))
+                                   args.output, args.seed))
         logger.info("Wrote sampling config: %s", cfg)
         logger.info("Config contents:\n%s", cfg.read_text())
 
-        cmd = ["reinvent", "-l", str(Path(td) / "reinvent.log"), str(cfg)]
+        # -s/--seed forces REINVENT to seed both its own RNG and any wrapped
+        # torch/numpy generators so batches are reproducible across runs.
+        cmd = ["reinvent", "-s", str(int(args.seed)),
+               "-l", str(Path(td) / "reinvent.log"), str(cfg)]
         logger.info("Running: %s", " ".join(cmd))
         rc = subprocess.call(cmd)
         if rc != 0:

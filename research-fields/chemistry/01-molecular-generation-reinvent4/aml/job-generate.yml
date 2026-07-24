@@ -15,6 +15,7 @@ command: >-
     --prior ${{inputs.priors}}/libinvent.prior
     --scaffold "Cc1ccc([*:1])cc1[*:2]"
     --num-smiles 100
+    --seed 42
     --output ${{outputs.molecules}}/sampled.csv &&
   python score_molecules.py
     --input ${{outputs.molecules}}/sampled.csv
@@ -23,7 +24,7 @@ command: >-
     --input ${{outputs.molecules}}/scored.csv
     --output ${{outputs.molecules}}/top20.png
     --top-k 20
-environment: azureml:reinvent4-cpu@latest
+environment: azureml:reinvent4-cpu:2
 compute: azureml:molgen-cpu
 # credentialless workspaceblobstore を submitter の Azure AD 認証で読むため user_identity を使用
 # (Bicep で deployer に Storage Blob Data Contributor を付与済み)
@@ -32,7 +33,7 @@ identity:
 inputs:
   priors:
     type: uri_folder
-    path: azureml:reinvent4-priors@latest
+    path: azureml:reinvent4-priors:1
     mode: ro_mount
 outputs:
   molecules:
