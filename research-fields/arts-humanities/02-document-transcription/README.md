@@ -13,35 +13,52 @@
 
 ## リソース準備
 
-Azure Portal で 2 リソース作成:
+`infra/deploy.sh` で Bicep デプロイ (Entra 認証、キー不要):
 
-1. **Document Intelligence** (旧 Form Recognizer) — Standard S0, japaneast
-2. **Azure OpenAI** — `gpt-4o-mini` デプロイメントを作成 (利用申請必要)
+```bash
+SCENARIO_DIR=$(git rev-parse --show-toplevel)/research-fields/arts-humanities/02-document-transcription
+bash "$SCENARIO_DIR/infra/deploy.sh" \
+  --resource-group rg-arts02-demo \
+  --location eastus
+```
 
-`.env` を作成:
+または Azure Portal で 2 リソースを手動作成し `.env` を設定:
+1. **Document Intelligence** (旧 Form Recognizer) — Standard S0
+2. **Azure OpenAI** — `gpt-4o-mini` デプロイメントを作成
+
 ```bash
 cp .env.example .env
-# .env を編集
+# .env を編集 (キーは不要; DefaultAzureCredential を使用)
 ```
 
 ## 使い方
 
 ```bash
+SCENARIO_DIR=$(git rev-parse --show-toplevel)/research-fields/arts-humanities/02-document-transcription
+cd "$SCENARIO_DIR"
 python -m venv .venv && source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-# 手持ちの古文書 PDF/画像を指定
-python src/extract.py --input data/sample_kobunsho.pdf
+# PDF メタデータをクリア (任意だが推奨)
+bash scripts/sanitize_pdf.sh <path-to-your-document.pdf> data/input_clean.pdf
+
+# 書誌情報を抽出
+python src/extract.py --input data/input_clean.pdf
 ```
 
-## コスト
+## コスト (参考値 2026-07 時点、eastus S0)
 
 | 項目 | 単価 | 本デモ (5 ページ) |
 |---|---|---|
 | Document Intelligence Layout | $10 / 1000 pages | **$0.05** |
 | Azure OpenAI gpt-4o-mini | $0.15/1M input, $0.60/1M output | **~$0.01** |
 | **合計** | — | **~$0.06** |
+
+> 料金は変更される場合があります。最新値は
+> [Azure AI Document Intelligence 料金](https://azure.microsoft.com/pricing/details/ai-document-intelligence/)
+> と [Azure OpenAI 料金](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) で確認し、
+> [Azure 料金計算ツール](https://azure.microsoft.com/pricing/calculator/) で見積もってください。
 
 ## ドキュメント
 

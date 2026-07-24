@@ -20,14 +20,19 @@ Structured Outputs は Pydantic モデルを直接受け取るので、フィー
 
 ## バッチ処理 (数百点の資料)
 
-```python
-from pathlib import Path
-for pdf in Path("archive/").glob("*.pdf"):
-    # extract.py の main() を関数化して呼び出す
-    ...
+```bash
+SCENARIO_DIR=$(git rev-parse --show-toplevel)/research-fields/arts-humanities/02-document-transcription
+cd "$SCENARIO_DIR"
+
+for pdf in archive/*.pdf; do
+    python src/extract.py --input "$pdf" --yes
+done
 ```
 
-コストは 1 点あたり ~$0.06 なので、1000 点で $60 程度。
+コストは 1 点あたり **参考値 (2026-07 時点、eastus S0) ~$0.06** なので、1000 点で ~$60 程度。
+最新料金は [Azure AI Document Intelligence 料金](https://azure.microsoft.com/pricing/details/ai-document-intelligence/) と
+[Azure OpenAI 料金](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) で確認し、
+[Azure 料金計算ツール](https://azure.microsoft.com/pricing/calculator/) で見積もってください。
 
 ## 崩し字資料の場合
 
