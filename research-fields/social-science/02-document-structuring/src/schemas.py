@@ -3,6 +3,10 @@
 All fields are required + nullable (str | None) rather than optional
 (Optional[str] = None) because Azure OpenAI Structured Outputs strict mode
 requires every property in `required` with `additionalProperties: false`.
+
+Note on pattern/length constraints: Structured Outputs strict mode does NOT
+enforce regex patterns or string lengths server-side. Enforcement happens on
+the Pydantic parse step after the model response is received.
 """
 from __future__ import annotations
 
@@ -12,14 +16,27 @@ from pydantic import BaseModel, Field
 class CourtDecision(BaseModel):
     """判決文の主要フィールド。"""
 
-    case_number: str | None = Field(..., description="事件番号 (例: 令和8年(ワ)第12345号)")
+    case_number: str | None = Field(
+        ...,
+        max_length=200,
+        description="事件番号 (例: 令和8年(ワ)第12345号)",
+    )
     court: str | None = Field(..., description="裁判所名 (例: 東京地方裁判所民事第32部)")
     date: str | None = Field(..., description="判決日 (ISO 8601, 例: 2026-05-15)")
     judges: list[str] = Field(..., description="裁判官氏名の配列")
     parties: list[str] = Field(..., description="当事者 (原告・被告) の配列")
     holding: str | None = Field(..., description="主文")
-    reasoning_summary: str | None = Field(..., description="理由の要旨 (200-500 字)")
-    source_page_range: str = Field(..., description="抽出元ページ範囲 (例: 1-2)")
+    reasoning_summary: str | None = Field(
+        ...,
+        min_length=200,
+        max_length=500,
+        description="理由の要旨 (200-500 字)",
+    )
+    source_page_range: str = Field(
+        ...,
+        pattern=r"^\d+(-\d+)?$",
+        description="抽出元ページ範囲 (例: 1-2)",
+    )
 
 
 class FactoryRecord(BaseModel):
@@ -27,10 +44,23 @@ class FactoryRecord(BaseModel):
 
     factory_name: str | None
     address: str | None
-    industry_code: str | None = Field(..., description="日本標準産業分類コード (4桁)")
-    employees: int | None = Field(..., description="従業員数")
+    industry_code: str | None = Field(
+        ...,
+        pattern=r"^\d{4}$",
+        description="日本標準産業分類コード (4桁)",
+    )
+    employees: int | None = Field(
+        ...,
+        ge=0,
+        le=1_000_000,
+        description="従業員数",
+    )
     established: str | None = Field(..., description="設立年月 (YYYY または YYYY-MM)")
-    source_page_range: str = Field(..., description="このレコードの抽出元ページ範囲 (例: 2 または 2-3)")
+    source_page_range: str = Field(
+        ...,
+        pattern=r"^\d+(-\d+)?$",
+        description="このレコードの抽出元ページ範囲 (例: 2 または 2-3)",
+    )
 
 
 class FactoryRegistry(BaseModel):

@@ -3,11 +3,13 @@
 All content is entirely fabricated — no real persons, cases, companies, or addresses.
 
 Usage:
-  python scripts/generate_demo_pdfs.py --output-dir data/
+  python scripts/generate_demo_pdfs.py --output-dir data/ [--font-path /path/to/NotoSansJP-Regular.ttf]
+  python scripts/generate_demo_pdfs.py --output-dir data/ --skip-scanned
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import sys
@@ -17,21 +19,74 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 
-# ReportLab's HeiseiKakuGo-W5 is a bundled CID font that supports Japanese
-# without requiring OS fonts. It renders as an outline-based CJK font.
-JP_FONT = "HeiseiKakuGo-W5"
+# Default: use ReportLab's bundled CID font (no OS font required).
+_BUNDLED_CID_FONT = "HeiseiKakuGo-W5"
+JP_FONT: str = _BUNDLED_CID_FONT  # may be overridden by --font-path
 
 
-def _register_font() -> None:
+_SYSTEM_FONT_DIRS = [
+    "/usr/share/fonts",
+    "/usr/local/share/fonts",
+    "/System/Library/Fonts",
+    "/Library/Fonts",
+    "C:/Windows/Fonts",
+]
+_NOTO_CANDIDATES = [
+    "NotoSansJP-Regular.ttf",
+    "NotoSansCJKjp-Regular.otf",
+    "NotoSans-Regular.ttf",
+]
+
+
+def _find_system_font() -> Path | None:
+    for font_dir in _SYSTEM_FONT_DIRS:
+        base = Path(font_dir)
+        if not base.exists():
+            continue
+        for name in _NOTO_CANDIDATES:
+            for p in base.rglob(name):
+                return p
+    return None
+
+
+def _register_font(font_path: str | None) -> None:
+    """Register the Japanese font. Prefers TTFont when --font-path is given or a
+    system Noto font is found; falls back to the bundled CID font."""
+    global JP_FONT
+
+    ttf: Path | None = None
+    if font_path:
+        ttf = Path(font_path)
+        if not ttf.exists():
+            raise SystemExit(f"ERROR: --font-path '{font_path}' does not exist.")
+    else:
+        ttf = _find_system_font()
+
+    if ttf is not None:
+        # Record font SHA-256 for reproducibility.
+        digest = hashlib.sha256(ttf.read_bytes()).hexdigest()
+        font_name = f"NotoJP-{digest[:8]}"
+        try:
+            pdfmetrics.registerFont(TTFont(font_name, str(ttf)))
+            JP_FONT = font_name
+            print(f"[gen] font: {ttf}  sha256={digest}")
+            return
+        except Exception as e:
+            print(f"[warn] TTFont registration failed: {e}; falling back to CID font.", file=sys.stderr)
+
+    # Fall back to bundled CID font.
     try:
-        pdfmetrics.registerFont(UnicodeCIDFont(JP_FONT))
+        pdfmetrics.registerFont(UnicodeCIDFont(_BUNDLED_CID_FONT))
+        JP_FONT = _BUNDLED_CID_FONT
+        print(f"[gen] font: {_BUNDLED_CID_FONT} (bundled CID; some glyphs may differ)")
     except Exception as e:
         raise SystemExit(
-            f"ERROR: could not register CJK font '{JP_FONT}': {e}\n"
-            "Ensure 'reportlab>=4.0.0' is installed."
+            f"ERROR: could not register CJK font '{_BUNDLED_CID_FONT}': {e}\n"
+            "Ensure 'reportlab>=5.0.0' is installed."
         )
 
 
@@ -98,7 +153,6 @@ COURT_TEXT_P2 = (
 
 
 def make_court_pdf(path: Path) -> dict:
-    _register_font()
     c = canvas.Canvas(str(path), pagesize=A4)
     w, h = A4
 
@@ -144,7 +198,6 @@ FACTORY_ROWS = [
 
 
 def make_factory_pdf(path: Path) -> dict:
-    _register_font()
     c = canvas.Canvas(str(path), pagesize=A4)
     w, h = A4
 
@@ -220,8 +273,9 @@ def make_scanned_pdf(source_pdf: Path, out_pdf: Path, dpi: int = 200) -> None:
     try:
         pages = convert_from_path(str(source_pdf), dpi=dpi)
     except Exception as e:
-        print(f"[warn] pdf2image failed: {e}; skipping scanned PDF.", file=sys.stderr)
-        return
+        # Finding 23: raise SystemExit(1) instead of silently continuing.
+        print(f"[error] pdf2image failed: {e}", file=sys.stderr)
+        raise SystemExit(1)
 
     c = canvas.Canvas(str(out_pdf), pagesize=A4)
     w, h = A4
@@ -239,7 +293,26 @@ def make_scanned_pdf(source_pdf: Path, out_pdf: Path, dpi: int = 200) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--output-dir", default="data")
+    # Finding 22: --font-path for pinned OFL Japanese font.
+    ap.add_argument(
+        "--font-path",
+        default=None,
+        help=(
+            "Path to a TTF/OTF Japanese font (e.g. NotoSansJP-Regular.ttf). "
+            "If omitted, auto-detected from system font directories. "
+            "Falls back to ReportLab's bundled CID font."
+        ),
+    )
+    # Finding 23: --skip-scanned for CI without Poppler.
+    ap.add_argument(
+        "--skip-scanned",
+        action="store_true",
+        help="Skip generation of demo-factory-scanned.pdf (CI without Poppler).",
+    )
     args = ap.parse_args()
+
+    # Register font once; after this, JP_FONT global is set.
+    _register_font(args.font_path)
 
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -260,8 +333,11 @@ def main() -> int:
     factory_answer.write_text(json.dumps(factory, ensure_ascii=False, indent=2))
     print(f"[gen] {factory_answer}")
 
-    print(f"[gen] {scanned_pdf} (rasterizing factory PDF)")
-    make_scanned_pdf(factory_pdf, scanned_pdf)
+    if not args.skip_scanned:
+        print(f"[gen] {scanned_pdf} (rasterizing factory PDF)")
+        make_scanned_pdf(factory_pdf, scanned_pdf)
+    else:
+        print("[gen] skipping demo-factory-scanned.pdf (--skip-scanned)")
 
     print("[gen] done.")
     return 0

@@ -5,7 +5,8 @@ Bicep で **Document Intelligence** + **Azure OpenAI アカウント + gpt-5.4-m
 ## パラメータファイル
 
 ```bash
-cd research-fields/social-science/02-document-structuring
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/social-science/02-document-structuring"
+cd "$SCENARIO_DIR"
 cp infra/parameters.example.json infra/parameters.json
 ```
 
@@ -16,8 +17,7 @@ cp infra/parameters.example.json infra/parameters.json
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "docIntelName":           { "value": "docintel-spread-social-02" },
-    "aoaiAccountName":        { "value": "aoai-spread-social-02" },
+    "namePrefix":             { "value": "spr-soc02" },
     "location":               { "value": "japaneast" },
     "aoaiDeploymentName":     { "value": "extract-gpt54mini" },
     "aoaiModelName":          { "value": "gpt-5.4-mini" },
@@ -28,14 +28,15 @@ cp infra/parameters.example.json infra/parameters.json
 ```
 
 > [!NOTE]
-> `docIntelName` と `aoaiAccountName` は Azure グローバルで一意（小文字英数字 + ハイフン、2-24 文字）。衝突したら任意の接尾辞を付けて、以下の環境変数もそれに合わせてください。
+> リソース名は `namePrefix` + `uniqueString(subscription().id, resourceGroup().id)` で自動生成され、グローバル一意性を保ちます。デプロイを繰り返しても同じ名前が使われます。
 
 環境変数：
 
 ```bash
 export DOC_RG="spread-social-doc-rg"
-export DOC_INTEL_NAME="docintel-spread-social-02"   # ← parameters.json と一致
-export AOAI_ACCOUNT_NAME="aoai-spread-social-02"    # ← parameters.json と一致
+# リソース名は deploy.sh が .env に書き出します。手動で確認したい場合:
+# export DOC_INTEL_NAME="spr-soc02-di-<suffix>"  # ← Bicep outputs.docIntelName を参照
+# export AOAI_ACCOUNT_NAME="spr-soc02-oai-<suffix>"
 export AOAI_DEPLOYMENT_NAME="extract-gpt54mini"     # ← parameters.json と一致
 ```
 
@@ -44,54 +45,22 @@ export AOAI_DEPLOYMENT_NAME="extract-gpt54mini"     # ← parameters.json と一
 ```bash
 az account show --query "{name:name, id:id}" -o table
 
-az group create -n "$DOC_RG" -l japaneast
-
 ./infra/deploy.sh "$DOC_RG" infra/parameters.json
 ```
 
 `deploy.sh` の動作：
+- Microsoft.CognitiveServices プロバイダーを確認・登録
+- リソースグループが無ければ自動作成
 - 現ユーザーの Object ID を取得
 - `az deployment group create` で Bicep 適用 (3〜5 分)
-- 出力: `docIntelEndpoint`, `aoaiEndpoint`, `aoaiDeploymentName` など
+- 出力から `.env` を自動生成 (`chmod 600`)
 
 ## 環境変数として保存
 
-以降の抽出スクリプトで使うため、実リソースから取得します：
+`deploy.sh` が `.env` を書き出すため、以降は以下で読み込むだけです：
 
 ```bash
-export DOCUMENT_INTELLIGENCE_ENDPOINT="$(az cognitiveservices account show \
-  -g "$DOC_RG" -n "$DOC_INTEL_NAME" \
-  --query properties.endpoint -o tsv)"
-
-export AZURE_OPENAI_ENDPOINT="$(az cognitiveservices account show \
-  -g "$DOC_RG" -n "$AOAI_ACCOUNT_NAME" \
-  --query properties.endpoint -o tsv)"
-
-export AZURE_OPENAI_DEPLOYMENT="$AOAI_DEPLOYMENT_NAME"
-
-AOAI_LOCATION="$(az cognitiveservices account show \
-  -g "$DOC_RG" -n "$AOAI_ACCOUNT_NAME" --query location -o tsv)"
-
-AOAI_DEPLOYMENT_TYPE="$(az cognitiveservices account deployment show \
-  -g "$DOC_RG" -n "$AOAI_ACCOUNT_NAME" \
-  --deployment-name "$AOAI_DEPLOYMENT_NAME" \
-  --query sku.name -o tsv)"
-```
-
-`.env` ファイル：
-
-```bash
-cat > .env <<EOF
-DOC_RG=$DOC_RG
-DOC_INTEL_NAME=$DOC_INTEL_NAME
-AOAI_ACCOUNT_NAME=$AOAI_ACCOUNT_NAME
-AOAI_DEPLOYMENT_NAME=$AOAI_DEPLOYMENT_NAME
-DOCUMENT_INTELLIGENCE_ENDPOINT=$DOCUMENT_INTELLIGENCE_ENDPOINT
-AZURE_OPENAI_ENDPOINT=$AZURE_OPENAI_ENDPOINT
-AZURE_OPENAI_DEPLOYMENT=$AZURE_OPENAI_DEPLOYMENT
-AZURE_OPENAI_LOCATION=$AOAI_LOCATION
-AZURE_OPENAI_DEPLOYMENT_TYPE=$AOAI_DEPLOYMENT_TYPE
-EOF
+set -a; source .env; set +a
 ```
 
 > [!WARNING]
@@ -103,7 +72,18 @@ EOF
 az cognitiveservices account list -g "$DOC_RG" -o table
 
 az account get-access-token --resource https://cognitiveservices.azure.com \
-  --query accessToken -o tsv | head -c 40; echo
+  --query "{expiresOn:expiresOn,tenant:tenant}" -o table
 ```
+
+## パブリックネットワークアクセスと Private Endpoint
+
+`infra/parameters.json` に `enablePublicNetworkAccess: false` を設定すると、パブリックアクセスを無効にできます：
+
+```json
+"enablePublicNetworkAccess": { "value": false }
+```
+
+> [!WARNING]
+> `enablePublicNetworkAccess=false` を使う場合は Private Endpoint と VNet 構成が別途必要です（本クイックスタートには実装されていません）。実際の研究データを扱う場合は、このオプションと Private Endpoint の設定を強く推奨します。
 
 次: [`03-prepare-documents.md`](03-prepare-documents.md)

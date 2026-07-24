@@ -5,7 +5,8 @@ Document Intelligence (`prebuilt-layout`) で PDF → Markdown、Azure OpenAI St
 ## 抽出
 
 ```bash
-cd research-fields/social-science/02-document-structuring
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/social-science/02-document-structuring"
+cd "$SCENARIO_DIR"
 source .venv/bin/activate
 set -a; source .env; set +a
 
@@ -35,30 +36,27 @@ fi
 `data/output/` の中身：
 
 - `demo-court.json` — 抽出結果 JSON
-- `demo-court.markdown.txt` — Doc Intelligence の Markdown 中間出力 (デバッグ用)
-- `demo-court.manifest.json` — メタデータ (モデル、fingerprint、ページ数、コスト、実行日時)
-
-## 期待される出力
-
-```jsonc
-// demo-court.json (例)
-{
-  "case_number": "令和8年 (ワ) 第12345号",
-  "court": "東京地方裁判所民事第32部",
-  "date": "2026-05-15",
-  "judges": ["山田太郎", "佐藤花子", "鈴木一郎"],
-  "parties": ["原告 株式会社サンプル商事", "被告 架空製造株式会社"],
-  "holding": "被告は原告に対し金3000万円及びこれに対する令和8年1月1日から支払済みまで年6分の割合による金員を支払え。",
-  "reasoning_summary": "…",
-  "source_page_range": "1-2"
-}
-```
+- `demo-court.evidence.json` — Doc Intelligence の段落・表スパン (ベストエフォート)
+- `demo-court.manifest.json` — メタデータ (モデル、fingerprint、ページ数、コスト、実行日時、git commit, pip freeze)
 
 ## 抽出結果の検証
 
 ```bash
+# scripts/verify-output.py で全出力を一括検証
+python scripts/verify-output.py --output-dir data/output --markdown-dir data/output
+```
+
+`verify-output.py` が確認する内容:
+- 必須フィールドの存在
+- 日付の ISO 8601 正規化
+- `industry_code` が `^\d{4}$` に一致
+- `judges` が 1 件以上 (court のみ)
+- `source_page_range` が `^\d+(-\d+)?$` に一致
+- `reasoning_summary` が 200-500 字 (court のみ)
+- `evidence.json` の引用テキストが `markdown.txt` に存在
+
+```bash
 # 生成された answer.json と比較 (正解データ付き PDF のみ)
-# 構造化フィールド (完全一致想定) と、要約など LLM 表現が揺れるフィールド (存在確認 + 長さ範囲)
 python -c "
 import json
 a = json.load(open('data/demo-court.answer.json'))
@@ -88,9 +86,11 @@ cat data/output/demo-court.manifest.json | python -m json.tool | grep -E '(pages
 
 ## デバッグ
 
-Markdown 中間出力を見ると、Doc Intelligence が実際に何を認識したか確認できます：
+Markdown 中間出力を保存するには `--save-markdown` を付けてください：
 
 ```bash
+python src/extract.py --input data/demo-court.pdf --schema court \
+  --output data/output/demo-court.json --save-markdown
 head -50 data/output/demo-court.markdown.txt
 ```
 

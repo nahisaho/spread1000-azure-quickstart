@@ -2,8 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "docIntelName":           { "value": "docintel-spread-social-02" },
-    "aoaiAccountName":        { "value": "aoai-spread-social-02" },
+    "namePrefix":             { "value": "spr-soc02" },
     "location":               { "value": "japaneast" },
     "aoaiDeploymentName":     { "value": "extract-gpt54mini" },
     "aoaiModelName":          { "value": "gpt-5.4-mini" },

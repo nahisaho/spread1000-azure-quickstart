@@ -5,13 +5,9 @@
 新しいシェルで作業する場合：
 
 ```bash
-cd research-fields/social-science/02-document-structuring
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/social-science/02-document-structuring"
+cd "$SCENARIO_DIR"
 set -a; source .env; set +a
-# .env が無い場合は手動で:
-# export DOC_RG=spread-social-doc-rg
-# export DOC_INTEL_NAME=docintel-spread-social-02
-# export AOAI_ACCOUNT_NAME=aoai-spread-social-02
-# export AOAI_DEPLOYMENT_NAME=extract-gpt54mini
 ```
 
 ## Doc Intelligence / AOAI は「起動中課金」がありません
@@ -27,7 +23,7 @@ az group delete -n "$DOC_RG" --yes --no-wait
 ```
 
 - 完全削除まで **5〜10 分**
-- Document Intelligence アカウント / Azure OpenAI / Log Analytics / App Insights が消えます
+- Document Intelligence アカウント / Azure OpenAI が消えます
 
 ## AOAI モデルデプロイのみ削除したい場合
 
@@ -67,6 +63,24 @@ az group show -n "$DOC_RG" 2>&1 | grep -i "not found" && \
 - `data/*.pdf` (実文書を使った場合)
 - `data/output/*` (抽出結果と Markdown 中間出力)
 
+## コスト予算アラート (ワークショップ前の推奨)
+
+ワークショップ開始前に $10 の予算アラートを設定しておくと安心です：
+
+```bash
+az consumption budget create \
+  --budget-name "spread-social-02-workshop" \
+  --amount 10 \
+  --time-grain Monthly \
+  --resource-group "$DOC_RG" \
+  --category Cost \
+  --start-date "$(date +%Y-%m-01)" \
+  --end-date "$(date -d '+6 months' +%Y-%m-01)"
+```
+
 ## コストの最終確認
 
-Azure Portal → **Cost Management** → **コスト分析** → リソースグループ = `$DOC_RG` で $0.15 以下に収まっていれば想定通り。
+Azure Portal → **Cost Management** → **コスト分析** → リソースグループ = `$DOC_RG`
+
+> [!NOTE]
+> コスト分析への反映は最大 8-24 時間遅延します。ワークショップ終了直後にコストが $0 に見えても正常です。

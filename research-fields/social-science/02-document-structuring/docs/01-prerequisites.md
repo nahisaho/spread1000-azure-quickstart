@@ -22,16 +22,14 @@ az account show -o table
 
 このシナリオは **`japaneast`** を既定にしています。Document Intelligence と Azure OpenAI (Regional) の両方が利用可能です。
 
-## Azure OpenAI 利用登録
+## Azure OpenAI 利用について
 
-登録が必要な場合は <https://aka.ms/oai/access> から申請してください（通常は自動承認）。
+`gpt-5.4-mini` は GA モデルであり、追加の申請は不要です。Limited Access モデル (o1-preview ファミリー等) を使う場合は <https://aka.ms/oai/access> から申請してください。
 
 ## Resource Provider の登録
 
 ```bash
 az provider register --namespace Microsoft.CognitiveServices --wait
-az provider register --namespace Microsoft.Insights --wait
-az provider register --namespace Microsoft.OperationalInsights --wait
 ```
 
 ## Python 環境
@@ -41,18 +39,11 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 
-pip install \
-  "azure-ai-documentintelligence==1.0.2" \
-  "openai>=1.106.0" \
-  "azure-identity>=1.17.0" \
-  "pydantic>=2.7.0" \
-  "python-dotenv>=1.0.0" \
-  "reportlab>=4.0.0" \
-  "Pillow>=10.0.0"
+pip install -r requirements.txt
 ```
 
 > [!NOTE]
-> `azure-ai-documentintelligence==1.0.2` に固定しています。旧 SDK (`azure-ai-formrecognizer`) とは API が異なるため混在させないでください。
+> `requirements.txt` のバージョンに固定しています。旧 SDK (`azure-ai-formrecognizer`) とは API が異なるため混在させないでください。
 
 ### スキャン PDF デモ (任意)
 

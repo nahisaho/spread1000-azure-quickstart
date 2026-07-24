@@ -1,5 +1,9 @@
 # Local artifacts (do not commit)
 .env
 .venv/
+data/**/*.[pP][dD][fF]
+data/**/*.markdown.txt
+data/**/*.manifest.json
+data/**/*.evidence.json
 data/output/
-data/*.pdf
+__pycache__/

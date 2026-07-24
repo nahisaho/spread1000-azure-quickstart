@@ -6,13 +6,13 @@
 Bicep が RoleAssignment を作成する権限は **Owner** または **User Access Administrator** が必要です。
 
 ### `SpecialFeatureOrQuotaIdRequired` (AOAI 未申請)
-<https://aka.ms/oai/access> で利用申請してください。
+`gpt-5.4-mini` は GA モデルであり申請不要です。Limited Access モデル (o1-preview 等) を使う場合は <https://aka.ms/oai/access> で申請してください。
 
 ### `The subresource 'FormRecognizer' is not available in region 'japaneast'`
 Document Intelligence は `kind: FormRecognizer` として内部管理されていますが、Japan East で利用可能です。エラーが出た場合は Provider 登録漏れの可能性: `az provider register --namespace Microsoft.CognitiveServices --wait`
 
 ### `Model 'gpt-5.4-mini' version '2026-03-17' is not available`
-[モデル利用可能性マトリックス](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability?pivots=standard) を確認し、`parameters.json` の `modelVersion` を更新してください。
+[モデル利用可能性マトリックス](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability?pivots=standard) を確認し、`parameters.json` の `aoaiModelVersion` を更新してください。
 
 ## 認証
 
@@ -39,11 +39,11 @@ Pydantic モデルの全フィールドを **required + nullable** で定義し�
 公式判例など内容によっては Azure OpenAI コンテンツフィルタが反応することがあります。ログの `refusal` フィールドを確認してください。
 
 ### `429 Too Many Requests`
-gpt-5.4-mini Standard の TPM/RPM 上限に達しています。`--concurrency` を減らすか、`infra/parameters.json` の `aoaiDeploymentCapacity` を上げてください（既定 10 → 30 等）。
+gpt-5.4-mini Standard の TPM/RPM 上限に達しています。`infra/parameters.json` の `aoaiDeploymentCapacity` を上げてください（既定 10 → 30 等）。
 
 ### 抽出結果が空 / null が多い
-- 元 PDF の OCR 品質が悪い可能性 → `data/output/*.markdown.txt` を目視確認
-- LLM に渡した Markdown 全文をログに残す (`--debug` オプション)
+- 元 PDF の OCR 品質が悪い可能性 → `python src/extract.py ... --save-markdown` で `data/output/*.markdown.txt` を目視確認
+- 詳細ログは `--verbose` を付けてください
 - スキーマが実文書と合っていない可能性
 
 ### 表が分割されて抽出される
@@ -57,7 +57,12 @@ pip install "reportlab>=4.0.0"
 ```
 
 ### 日本語が □□□ になる (tofu)
-本スクリプトは Noto Sans JP CJK フォント (matplotlib 同梱) を利用します。`pip install matplotlib>=3.8.0` を確認してください。それでも欠ける場合は `--font-path` で OS フォントを指定してください。
+`--font-path` で NotoSansJP-Regular.ttf 等の OFL フォントを指定してください:
+```bash
+python scripts/generate_demo_pdfs.py --output-dir data/ \
+  --font-path /usr/share/fonts/truetype/noto/NotoSansJP-Regular.ttf
+```
+フォントが見つからない場合は `sudo apt-get install -y fonts-noto-cjk` でインストールしてください。
 
 ## クリーンアップ
 

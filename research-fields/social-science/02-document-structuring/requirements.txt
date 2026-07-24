@@ -1,0 +1,18 @@
+# Pinned requirements for the document-structuring quickstart.
+#
+# To regenerate a lock file with hash verification, run:
+#   pip install pip-tools
+#   pip-compile --generate-hashes requirements.txt -o requirements.lock
+#
+# Then install with:
+#   pip install -r requirements.lock
+
+azure-ai-documentintelligence==1.0.2
+openai==2.48.0
+azure-identity==1.25.3
+pydantic==2.13.4
+python-dotenv==1.2.2
+reportlab==5.0.0
+Pillow==12.3.0
+pdf2image==1.17.0
+pypdf==5.5.0

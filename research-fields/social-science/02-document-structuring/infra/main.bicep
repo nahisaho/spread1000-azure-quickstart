@@ -4,14 +4,9 @@
 targetScope = 'resourceGroup'
 
 @minLength(2)
-@maxLength(64)
-@description('Document Intelligence account name (globally unique, lowercase alphanumeric + hyphen, 2-64 chars).')
-param docIntelName string = 'docintel-spread-social-02'
-
-@minLength(2)
-@maxLength(64)
-@description('Azure OpenAI account name (globally unique, 2-64 chars).')
-param aoaiAccountName string = 'aoai-spread-social-02'
+@maxLength(20)
+@description('Short prefix used to build globally-unique resource names. Must be lowercase alphanumeric + hyphen.')
+param namePrefix string = 'spr-soc02'
 
 @description('Azure region.')
 param location string = resourceGroup().location
@@ -30,6 +25,9 @@ param aoaiModelVersion string = '2026-03-17'
 @description('AOAI deployment capacity in K TPM.')
 param aoaiDeploymentCapacity int = 10
 
+@description('Set to false to disable public network access for real research data.')
+param enablePublicNetworkAccess bool = true
+
 @description('Object ID of the deployer (auto-populated by deploy.sh).')
 param deployerObjectId string = ''
 
@@ -40,6 +38,12 @@ param deployerObjectId string = ''
 ])
 param deployerPrincipalType string = 'User'
 
+// Derive unique, stable suffixes so that re-deployments reuse the same names.
+var uniqueSuffix = take(uniqueString(subscription().id, resourceGroup().id), 8)
+var docIntelName  = take('${namePrefix}-di-${uniqueSuffix}', 64)
+var aoaiName      = take('${namePrefix}-oai-${uniqueSuffix}', 64)
+var pnaValue      = enablePublicNetworkAccess ? 'Enabled' : 'Disabled'
+
 // ------------- Document Intelligence -------------
 resource docIntel 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   name: docIntelName
@@ -48,31 +52,33 @@ resource docIntel 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   sku: {
     name: 'S0'
   }
+  // Present for future service-to-service scenarios; not used by this quickstart.
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     customSubDomainName: docIntelName
     disableLocalAuth: true
-    publicNetworkAccess: 'Enabled'
+    publicNetworkAccess: pnaValue
   }
 }
 
 // ------------- Azure OpenAI -------------
 resource aoai 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
-  name: aoaiAccountName
+  name: aoaiName
   location: location
   kind: 'OpenAI'
   sku: {
     name: 'S0'
   }
+  // Present for future service-to-service scenarios; not used by this quickstart.
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
-    customSubDomainName: aoaiAccountName
+    customSubDomainName: aoaiName
     disableLocalAuth: true
-    publicNetworkAccess: 'Enabled'
+    publicNetworkAccess: pnaValue
   }
 }
 
@@ -118,8 +124,12 @@ resource aoaiUserRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if 
   }
 }
 
-output docIntelEndpoint string = docIntel.properties.endpoint
-output docIntelName string     = docIntel.name
-output aoaiEndpoint string     = aoai.properties.endpoint
-output aoaiAccountName string  = aoai.name
+// Outputs — consumed by deploy.sh to write .env
+output docIntelEndpoint   string = docIntel.properties.endpoint
+output docIntelName       string = docIntel.name
+output aoaiEndpoint       string = aoai.properties.endpoint
+output aoaiAccountName    string = aoai.name
 output aoaiDeploymentName string = aoaiDeployment.name
+output aoaiModelName      string = aoaiModelName
+output aoaiModelVersion   string = aoaiModelVersion
+output location           string = location

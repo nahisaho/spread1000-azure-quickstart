@@ -72,8 +72,46 @@ LLM は **もっともらしい JSON** を返しますが、**元文書に無い
 | Regional Standard でデータ主権確保 | Global で個人情報を送る |
 | Structured Outputs で型を強制 | JSON モードなしで自由記述させる |
 
-## 8. 追加参考文献
+## 8. Azure OpenAI 濫用モニタリング (Abuse Monitoring)
 
-- [『AI 事業者ガイドライン（第1.0版）』総務省・経済産業省 (2024)](https://www.meti.go.jp/press/2024/04/20240419004/20240419004.html)
+Azure OpenAI サービスは既定で **30 日間のサービス側コンテンツログ** を保持します。
+
+- **自動システム + 一部の Microsoft 担当者** が限定的な状況下でログを閲覧する場合があります
+- これは Azure の利用規約に基づく濫用対策であり、デフォルトで有効です
+- 詳細: [Azure OpenAI Data Privacy](https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy)
+
+### 修正済み濫用モニタリングの申請
+
+個人情報・PHI (Protected Health Information) を含む文書を処理する場合は、可能であれば次の方法で対応してください：
+
+1. **修正済み濫用モニタリングを申請**: <https://aka.ms/oai/modifiedaccess>  
+   承認後はサービス側ログが無効化または制限されます
+2. **または、アップロード前に匿名化・仮名化** を徹底する (`docs/03-prepare-documents.md` の不可逆的マスキング手順を参照)
+
+### モニタリング状態の確認
+
+```bash
+az cognitiveservices account show \
+  -g "$DOC_RG" \
+  -n "$AOAI_ACCOUNT_NAME" \
+  --query "properties.abuseMonitoring"
+```
+
+## 9. APPI・インフォームドコンセント チェックリスト
+
+実在人物のデータ (判例の当事者、アンケート回答等) を処理する際は、以下をすべて確認してください：
+
+- [ ] **同意または法的例外**: 個人情報保護法の利用目的に沿った同意取得済み、または同法 16 条の例外 (学術研究目的等) に該当
+- [ ] **目的適合性**: 当初の収集目的の範囲内での利用であること
+- [ ] **クラウド・AI 利用の開示**: 同意書または参加者への説明文書に「クラウドサービス (Azure) および AI モデル (Azure OpenAI) で処理する」旨を明記
+- [ ] **保管期間と削除**: 保管期限を定め、`.env` / `data/output/` の削除スケジュールを研究計画に記載
+- [ ] **撤回対応**: 参加者が同意を撤回した場合の削除手順を研究計画に記載
+- [ ] **機関 DPA (Data Processing Agreement)**: 所属機関と Microsoft の間の DPA が締結済みか確認
+- [ ] **倫理委員会承認**: 機関の倫理委員会 (IRB 相当) の承認を取得  
+  ※ IRB 承認はインフォームドコンセントの代替にはなりません
+
+
+
+- [『AI 事業者ガイドライン（第1.2版）』経済産業省 (2026-03-31)](https://www.meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/index.html)
 - [個人情報保護法 (e-Gov)](https://laws.e-gov.go.jp/law/415AC0000000057)
 - [著作権法 (e-Gov)](https://laws.e-gov.go.jp/law/345AC0000000048)
