@@ -10,7 +10,14 @@
 ## loss_curve.png
 
 - MSE loss は typically 0.3 → 0.1 に減衰
-- 停滞したら `--lr 1e-4` に落として続行
+- グラフには **train loss** と **val_denoising_mse** の両方が表示される
+  - `val_denoising_mse`: サブセット 10% の検証セットで毎 epoch 計測 (決定論的ノイズ)
+- 停滞したら `--lr 1e-4` に落として **`--resume outputs/ddpm_model.pt`** で再開
+
+> **⚠️ FashionMNIST テストセット (test split) は使用しない**
+> 学習にも検証にも FashionMNIST の `train=False` テストセットは使用しません。
+> 公正な評価のために温存してください。本教材のサブセット分割と val 評価は
+> `train=True` 側の 90/10 分割で完結します。
 
 ## 品質の限界
 

@@ -9,7 +9,7 @@
 ## EDM / DDIM
 
 - **DDIM** (Song 2021): 決定的サンプリングで T を 50 程度まで削減しても品質維持
-- **EDM** (Karras 2022): 分散保存 SDE 形式、より安定した学習
+- **EDM** (Karras et al. 2022): ノイズレベルに直接パラメタライズされた設計空間 + preconditioning + 学習重み設計 + サンプラー設計のフレームワーク. VP/VE SDE と直交する切り口
 
 ## Latent Diffusion (Stable Diffusion)
 

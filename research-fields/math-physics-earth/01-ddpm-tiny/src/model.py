@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import math
+import warnings
 import torch
 import torch.nn as nn
 
@@ -38,13 +39,14 @@ class ResBlock(nn.Module):
 
 class TinyUNet(nn.Module):
     """
-    16x16 grayscale U-Net. ~40K params.
+    16x16 grayscale U-Net. ~495K params (default architecture).
     down: 16 -> 8 -> 4  (with 32, 64 channels)
     up:   4 -> 8 -> 16
     """
 
     def __init__(self, base_ch: int = 32, t_dim: int = 64):
         super().__init__()
+        self.base_ch = base_ch
         self.t_dim = t_dim
         self.t_mlp = nn.Sequential(
             nn.Linear(t_dim, t_dim), nn.SiLU(), nn.Linear(t_dim, t_dim)
@@ -79,15 +81,50 @@ class TinyUNet(nn.Module):
         return self.out_conv(u2)
 
 
-class DDPMScheduler:
-    """Linear beta schedule, precomputed alphas."""
+def cosine_beta_schedule(T: int, s: float = 0.008) -> torch.Tensor:
+    """Cosine noise schedule (Nichol & Dhariwal 2021)."""
+    steps = torch.arange(T + 1, dtype=torch.float64)
+    f = torch.cos(((steps / T + s) / (1 + s)) * math.pi / 2) ** 2
+    alpha_bars = f / f[0]
+    betas = 1 - alpha_bars[1:] / alpha_bars[:-1]
+    return betas.clamp(min=1e-8, max=0.999).float()
 
-    def __init__(self, T: int = 200, beta_start: float = 1e-4, beta_end: float = 0.02,
-                 device: torch.device = torch.device("cpu")):
+
+class NoiseSchedule:
+    """Noise schedule for DDPM.
+
+    Supports ``schedule="cosine"`` (default, Nichol & Dhariwal 2021)
+    and ``schedule="linear"`` (Ho et al. 2020).
+    """
+
+    def __init__(
+        self,
+        T: int = 200,
+        schedule: str = "cosine",
+        beta_start: float = 1e-4,
+        beta_end: float = 0.02,
+        device: torch.device = torch.device("cpu"),
+    ):
         self.T = T
-        self.betas = torch.linspace(beta_start, beta_end, T, device=device)
+        self.schedule = schedule
+        if schedule == "cosine":
+            self.betas = cosine_beta_schedule(T).to(device)
+        elif schedule == "linear":
+            self.betas = torch.linspace(beta_start, beta_end, T, device=device)
+        else:
+            raise ValueError(f"Unknown schedule: {schedule!r}. Choose 'cosine' or 'linear'.")
+
         self.alphas = 1.0 - self.betas
         self.alpha_bars = torch.cumprod(self.alphas, dim=0)
+
+        if schedule == "linear" and self.alpha_bars[-1] >= 1e-3:
+            warnings.warn(
+                f"Linear schedule: alpha_bars[-1]={self.alpha_bars[-1]:.4f} >= 1e-3. "
+                "Terminal distribution is NOT approximately Gaussian — generation quality "
+                "will be degraded. Consider using --schedule cosine or increasing beta_end.",
+                stacklevel=2,
+            )
+
         self.sqrt_alpha_bars = torch.sqrt(self.alpha_bars)
         self.sqrt_one_minus_alpha_bars = torch.sqrt(1.0 - self.alpha_bars)
 
@@ -115,3 +152,7 @@ class DDPMScheduler:
             else:
                 x = mean
         return x
+
+
+# Backward-compatible alias
+DDPMScheduler = NoiseSchedule

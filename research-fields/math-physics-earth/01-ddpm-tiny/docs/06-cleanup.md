@@ -4,5 +4,13 @@
 
 ```bash
 rm -rf data/ outputs/*.pt outputs/*.png outputs/*.json
-deactivate && rm -rf .venv
+deactivate 2>/dev/null || true
+rm -rf .venv
+```
+
+PowerShell (Windows):
+
+```powershell
+Remove-Item -Recurse -Force data, outputs\*.pt, outputs\*.png, outputs\*.json -ErrorAction SilentlyContinue
+deactivate; Remove-Item -Recurse -Force .venv
 ```

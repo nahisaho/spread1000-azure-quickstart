@@ -27,18 +27,20 @@ src/train.py --epochs 10 --device cpu
 ## クイックスタート
 
 ```bash
+cd research-fields/math-physics-earth/01-ddpm-tiny
+
 python -m pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -r requirements.txt
+python -m pip install -r requirements.in
 
 python src/train.py --epochs 10 --device cpu --seed 42
-python src/sample.py --model outputs/ddpm_model.pt --n-samples 16
+python src/sample.py --model outputs/ddpm_model.pt --n-samples 16 --seed 42
 ```
 
 ## タスク
 
 - **元データ**: Fashion-MNIST 28×28 グレースケール → 16×16 にリサイズ
 - **時間ステップ**: T = 200
-- **ノイズスケジューラ**: linear β_t ∈ [1e-4, 0.02]
+- **ノイズスケジューラ**: cosine schedule (Nichol & Dhariwal 2021, T=200, 末端 SNR ≈ 0)
 - **モデル**: Tiny U-Net (~500K params) with sinusoidal timestep embedding
 
 ## ドキュメント

@@ -1,0 +1,12 @@
+# Direct (unpinned) dependencies — compile with:
+#   pip install pip-tools
+#   pip-compile requirements.in --generate-hashes -o requirements-lock/requirements.txt
+#
+# torch / torchvision must be installed first (CPU wheel):
+#   pip install torch==2.7.1 torchvision==0.22.1 \
+#       --index-url https://download.pytorch.org/whl/cpu
+#
+# See requirements-lock/README.md for full lock-file regeneration instructions.
+
+numpy>=1.26,<3
+matplotlib>=3.9
