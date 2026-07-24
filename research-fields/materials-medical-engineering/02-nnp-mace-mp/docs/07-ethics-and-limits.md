@@ -12,18 +12,26 @@
 | ASE | LGPL v2.1+ | Larsen et al. 2017 (10.1088/1361-648X/aa680e) |
 | PyTorch | BSD | — |
 
-### ⚠️ 使ってはいけないモデル (ASL: Academic Software License)
+### ⚠️ 使ってはいけない (商用/共同研究では要注意) モデル (ASL: Academic Software License)
 
 以下のモデルは **非商用限定**。商用利用や、営利組織との共同研究では別途契約が必要:
 - `medium-omat-0` (MACE-OMAT)
-- `mh-0` / `mh-1` (MACE-MH)
-- `matpes-pbe` (MACE-MATPES)
+- `mh-0` (MACE-MH)
+- `mace-matpes-pbe-0` / `mace-matpes-r2scan-0` (MACE-MATPES)
 
-本クイックスタートのスクリプトは **MIT モデル (medium-mpa-0 が既定)** のみを推奨します。
+本クイックスタートのスクリプトは **MIT モデル (medium-mpa-0 が既定)** のみを許可します。ASL モデルを試したい場合は `--accept-asl-license` を明示的に指定する必要があり、その事実は `relax_metrics.json` / `md_metrics.json` に記録されます。ASL 上の遵守義務はユーザ自身の責任です。
 
 ### 学習データのライセンス
 
-MACE-MPA-0 の学習に使われた **MPtrj** データセット (Materials Project trajectories) は **CC BY 4.0** です。**GNoME 構造 (Google DeepMind) は CC BY-NC 4.0** なので、本クイックスタートでは意図的に使用していません。
+**MACE-MPA-0** は **MPtrj + sAlex** の 2 種類のデータで学習されています:
+
+| 学習データ | 出典 | 再配布ライセンス | 備考 |
+|---|---|---|---|
+| **MPtrj** | Materials Project (via Figshare, Deng et al. 2023) | Figshare 上の記録は MIT。ただし原データの Materials Project は Attribution 要件があるため引用が必要 | CHGNet 論文で公開されたトラジェクトリセット |
+| **sAlex** | Alexandria サブセット (Schmidt et al.) | 元データの Alexandria DB は CC BY 4.0 | 拡張トレーニングセット |
+| Materials Project (上流) | LBNL | Attribution 要件あり | https://next-gen.materialsproject.org/about/terms |
+
+**GNoME 構造 (Google DeepMind, CC BY-NC 4.0)** は本クイックスタートでは使用していません。もし別途参照する場合は非商用条項に注意してください。
 
 ### 引用義務
 
@@ -55,9 +63,15 @@ MACE-MPA-0 は **PBE / PBE+U 汎関数のデータで学習** されています
 
 ### 2. 元素・化学環境のカバレッジ
 
-- MACE-MPA-0 が学習済み: **89 元素**（原子番号 1〜83、希ガス除く）
-- **非対応**: 超ウラン元素（Th, U 以上）、ランタノイド系はデータが少ない
-- **注意**: 非対応元素を含む系を入力すると、`Element X not in model` の例外が出ます
+- MACE-MPA-0 が学習済み: 原子番号 **1〜89** から **希ガス (He, Ne, Ar, Kr, Xe, Rn) と Po, At, Fr, Ra** を除いた元素セット (Materials Project 上でトラジェクトリが十分に存在するもの)
+- Th (Z=90) / U (Z=92) は**アクチノイド (超ウラン ≠ 相当)** で、MPtrj 上のカバレッジが少ないため精度が保証されません
+- 本 quickstart の `src/relax.py` は上記の対応元素セットで自動チェックし、範囲外なら `--allow-elements-outside-domain` を要求します
+- 厳密な対応元素リストはチェックポイントのメタデータから直接取得するのが最も確実です:
+  ```python
+  from mace.calculators import mace_mp
+  calc = mace_mp("medium-mpa-0", device="cpu")
+  print(sorted(set(calc.models[0].atomic_numbers.tolist())))
+  ```
 
 ### 3. 磁性・励起状態は扱えない
 
@@ -89,6 +103,21 @@ MACE-MPA-0 は **PBE / PBE+U 汎関数のデータで学習** されています
 - **未検証の予測を材料設計の唯一の根拠にしない**。実験または DFT の直接計算で必ず検証してください
 - 論文発表時は使用した MACE のバージョン (`pip show mace-torch`)・モデル・dtype・PyTorch バージョンを Methods に明記してください
 - **AI モデルの出力を人間の判断なしに製造・臨床応用に転用してはいけません**
+
+### 高エネルギー物質・爆薬・武器転用のリスク
+
+MACE-MP-0 系は periodic な**任意の無機/金属間化合物系**を扱えるため、同じワークフローで:
+
+- **エネルギー材料 (爆薬・推進剤)** のポテンシャル面探索
+- **兵器転用可能な物質** (核物質・化学兵器前駆体) の DFT 代替スクリーニング
+
+なども原理的に可能です。これらの用途は:
+
+- 所属機関の **安全審査・輸出管理 (Export Control) 委員会** に事前照会
+- 米国 EAR / 日本外為法・貨物輸出令などの規制の対象になり得る
+- 結果の**流通・共有は制限**すべき
+
+を必ず確認してください。教育・研究の名目でも、**dual-use** の判断責任は研究者側にあります。
 
 ## 参考文献
 

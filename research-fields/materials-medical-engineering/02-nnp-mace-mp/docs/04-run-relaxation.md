@@ -59,10 +59,10 @@
 CIF / POSCAR / extxyz を `--input` で渡せます:
 
 ```bash
-python src/relax.py --input my_zeolite.cif --fmax 0.02 --max-steps 500 --device cpu
+python src/relax.py --input my_zeolite.cif --fmax 0.02 --max-steps 500 --device auto
 ```
 
-**元素カバレッジ**: MACE-MPA-0 は **89 元素**（原子番号 1〜83、希ガス除く）を学習済み。**Th, U など超ウラン元素は非対応**。
+**元素カバレッジ**: MACE-MPA-0 は Materials Project 上でトラジェクトリが十分に存在する主要元素セットを学習しています。厳密な対応リストとチェック方法は [07-ethics-and-limits.md § 2 元素・化学環境のカバレッジ](07-ethics-and-limits.md#2-元素化学環境のカバレッジ) を参照。範囲外の元素を投入すると `src/relax.py` は `--allow-elements-outside-domain` を要求して停止します。
 
 ## パラメータ調整 tips
 

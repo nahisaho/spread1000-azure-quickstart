@@ -1,0 +1,7 @@
+# pip-compile input (requirements-gpu.in). Run:
+#   pip install pip-tools
+#   pip-compile --generate-hashes --output-file=requirements-gpu.lock requirements-gpu.in
+# and commit requirements-gpu.lock so AML environments install byte-identical wheels.
+mace-torch>=0.3.16,<0.4
+ase>=3.23,<4
+numpy>=1.26,<3

@@ -25,13 +25,20 @@ PRESETS: dict[str, tuple[str, float, bool]] = {
 }
 
 
+def _positive_int(value: str) -> int:
+    v = int(value)
+    if not (v > 0):
+        raise argparse.ArgumentTypeError(f"must be > 0, got {value}")
+    return v
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--system", default="Si", choices=list(PRESETS.keys()),
                    help="Preset crystal system (default: Si)")
-    p.add_argument("--supercell", nargs=3, type=int, default=[1, 1, 1],
+    p.add_argument("--supercell", nargs=3, type=_positive_int, default=[1, 1, 1],
                    metavar=("NX", "NY", "NZ"),
-                   help="Supercell multipliers (default: 1 1 1)")
+                   help="Supercell multipliers (positive integers, default: 1 1 1)")
     p.add_argument("--output", type=Path, default=Path("data/initial.extxyz"))
     return p.parse_args()
 

@@ -2,13 +2,16 @@
 
 `src/run_md.py` の内部動作とパラメータチューニングを解説します。
 
+> ⚠️ **本 quickstart の MD は fixed-cell NVT (セル固定 + Langevin thermostat)** です。NPT や柔らかいマトリクスでの熱膨張、液体の密度緩和には向きません。Langevin は温度追従には優れますが、**動力学的性質 (拡散係数・振動スペクトル・粘性など) は摩擦係数の分だけ歪む** ので、そうした物性を求める場合は Nosé-Hoover や NVE を検討してください。
+
 ## パイプライン
 
 ```
 [緩和済み構造] → [MACE-MPA-0 calculator を割り当て]
    → [MaxwellBoltzmannDistribution で初速度を目標温度に設定]
-   → [Langevin thermostat (NVT) で 5 ps 実行 (dt=1 fs)]
-   → [10 ステップごとに md.traj に保存, 温度/エネルギーを記録]
+   → [Langevin thermostat (fixed-cell NVT) で --equilibration-steps だけ熱化]
+   → [残りの --steps を本計算として記録]
+   → [--save-every ステップごとに md.traj に保存, 温度/エネルギーを毎ステップ NaN チェック]
    → [md.traj / md_metrics.json を保存]
 ```
 
@@ -19,10 +22,12 @@
 | `--input` | `data/relaxed.extxyz` | 初期構造 (通常は緩和後のもの) |
 | `--temperature` | `300.0` | 目標温度 (K) |
 | `--timestep-fs` | `1.0` | MD 時間刻み (fs)。1 fs は軽元素系で無難 |
-| `--friction-inv-fs` | `0.01` | Langevin 摩擦係数 (1/fs)。大きくすると温度追随が速くなり保存量が壊れる |
-| `--steps` | `5000` | 総ステップ数（dt=1 fs なら 5000 = 5 ps） |
+| `--friction-inv-fs` | `0.01` | Langevin 摩擦係数 (1/fs)。大きくすると温度追随が速くなり動力学が歪む |
+| `--steps` | `5000` | 本計算のステップ数（dt=1 fs なら 5000 = 5 ps）。equilibration とは別カウント |
+| `--equilibration-steps` | `1000` | 本計算前に熱化に使うステップ数。この間は md.traj に記録されない |
 | `--save-every` | `10` | トラジェクトリ保存間隔 |
 | `--seed` | `42` | 初速度乱数シード |
+| `--allow-long-run` | オフ | `--steps × --timestep-fs > 100 ps` を許可 (コスト暴走ガード) |
 
 ## 各パラメータの選び方
 
@@ -64,11 +69,14 @@ python src/run_md.py --input data/relaxed.extxyz --steps 5000
 python src/run_md.py --input data/relaxed.extxyz --temperature 1000 --steps 10000
 ```
 
-### 大きな系で長時間
+### 大きな系で長時間 (100 ps 超はガード解除が必要)
 ```bash
 python src/run_md.py --input data/big_supercell.extxyz \
-  --temperature 500 --steps 50000 --device cuda --dtype float32
+  --temperature 500 --steps 50000 --equilibration-steps 5000 \
+  --device auto --dtype float32
 ```
+
+10 ns 級 (`--steps 10000000`) を回すには **`--allow-long-run`** を明示してください。CPU では非現実的、T4 で 80 時間 (~$60) を超える見積もりです。
 
 ## 出力ファイル
 

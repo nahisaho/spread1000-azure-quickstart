@@ -10,8 +10,8 @@
 
 | ソフト | バージョン | 備考 |
 |---|---|---|
-| **Python** | **3.10 / 3.11 / 3.12** | ⚠️ 3.13 は mace-torch 未対応 |
-| **PyTorch** | **2.4.0**（推奨） | 2.4.1 は blacklisted、2.6+ は `weights_only` 問題あり |
+| **Python** | **3.10 / 3.11 / 3.12** | mace-torch 自体は 3.13 もサポートしていますが、本 quickstart が固定する **PyTorch 2.4.0** の公式 wheel は 3.10-3.12 のみ提供されています |
+| **PyTorch** | **2.4.0** (固定) | 2.4.1 は mace-torch が明示的に拒否、2.6+ は `torch.load` の weights_only 変更あり |
 | pip | 24.x 以降 | |
 | Git | 任意 | 本リポジトリを clone する場合 |
 

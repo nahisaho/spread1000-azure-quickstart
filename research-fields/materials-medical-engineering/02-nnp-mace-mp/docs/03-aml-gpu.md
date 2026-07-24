@@ -15,89 +15,150 @@
 
 参考: https://learn.microsoft.com/ja-jp/azure/machine-learning/how-to-manage-quotas
 
-代替 SKU: `Standard_NC8as_T4_v3`（同じ T4、8 vCPU）や `Standard_NC24ads_A100_v4`（より高性能）も同時申請しておくと通りやすい場合があります。
+代替 SKU: `Standard_NC8as_T4_v3`, `Standard_NC24ads_A100_v4`, および NCads H100 v5 系（キャパシティに空きがある場合のフォールバック）も同時申請しておくと通りやすいことがあります。**リージョンの実在 SKU は必ず現地確認**してください:
 
-## Azure ML ワークスペース + Compute Instance の作成
+```bash
+az vm list-skus --location japaneast --all \
+  --query "[?contains(name,'NC') || contains(name,'ND')].[name, restrictions]" -o table
+```
 
-**Azure ML ワークスペースが未作成の場合**、`life-pharma-science/01-molecular-generation-tamgen/infra/` の Bicep が同等の構成（ワークスペース + Compute Instance）を提供しています。それを参考にしてください。
+> 💡 **T4 / L4 は推論・小規模ジョブ向け、A100 / H100 はモデル学習用**。本クイックスタートは推論のみなので T4 で十分です。
 
-**Azure Portal / Studio UI から手動作成する場合**:
+### AML と Compute の両クォータを両方確認する
 
-1. Azure ML Studio → 「Compute」→ 「Compute instances」→ 「+ New」
-2. **VM size**: `Standard_NC4as_T4_v3`
-3. **Idle shutdown**: ⚠️ **必ず「Enable idle shutdown」にチェック**し、`60 minutes` を設定（デフォルトは無効で、放置すると課金され続けます）
-4. **Image**: 最新の `AzureML pytorch cuda12` 系イメージを選択
-5. Create → 起動まで 3〜5 分
+AML の workspace-scoped 割当と、`Microsoft.Compute` の core クォータは**別枠**です。両方確認してください:
 
-> 💡 **`idleTimeBeforeShutdown="PT60M"` の設定は最重要です。** 忘れると 1 日で $17 の課金が発生します。
+```bash
+set -a && source .env && set +a
+az ml compute list-usage -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME" -l "$AZURE_LOCATION" -o table
+az vm list-usage --location "$AZURE_LOCATION" -o table
+az quota list --scope "/subscriptions/$(az account show --query id -o tsv)/providers/Microsoft.Compute/locations/$AZURE_LOCATION" -o table
+```
+
+## Azure ML ワークスペースの作成 (Bicep)
+
+本シナリオはワークスペース・Key Vault・Storage・ACR・RBAC を自動作成する Bicep を同梱しています。
+
+```bash
+cd research-fields/materials-medical-engineering/02-nnp-mace-mp
+./infra/deploy.sh          # rg-spread-materials-02 を japaneast に作成
+set -a && source .env && set +a
+```
+
+`.env` にワークスペース名 (`AML_WORKSPACE_NAME`) が書き出されます。以降のコマンドはこれを参照します。
+
+## Compute Instance の作成 (CLI)
+
+```bash
+az ml compute create --type computeinstance \
+  --name "ci-mace-${USER}" \
+  --size Standard_NC4as_T4_v3 \
+  --workspace-name "$AML_WORKSPACE_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --idle-time-before-shutdown PT60M
+```
+
+> 💡 **`--idle-time-before-shutdown PT60M` は必須**。忘れると 1 日で $17 の課金が発生します。
 
 ## セットアップと実行（Compute Instance 上の Jupyter または SSH）
 
+Compute Instance には既定で curated conda/venv 環境が用意されています。以下では追加の pinned venv を作ります (**AzureML Studio 作成 UI に「curated base image を選ぶ」項目はありません** — 現在の CI は managed base image を使い、ジョブ側でカスタム/キュレーテッド環境を指定します)。
+
 ```bash
-# 1. Python 3.10 の venv (Compute Instance のデフォルト Python)
 python3.10 -m venv ~/mace-env
 source ~/mace-env/bin/activate
 
-# 2. PyTorch 2.4.0 CUDA 12.1 版を先にインストール
 pip install --upgrade pip
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
 
-# 3. GPU が見えているか確認
 python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))"
 # → True Tesla T4
 
-# 4. 本リポジトリを clone
 git clone https://github.com/<your-fork>/spread1000-azure-quickstart.git
 cd spread1000-azure-quickstart/research-fields/materials-medical-engineering/02-nnp-mace-mp
 pip install -r requirements.txt
 
-# 5. GPU で緩和 + MD
-python src/relax.py --system Si --supercell 2 2 2 --device cuda --dtype float32
-python src/run_md.py --input data/relaxed.extxyz --steps 10000 --device cuda --dtype float32
+# --device auto は CUDA が使えれば自動で cuda を選びます。
+python src/relax.py --system Si --supercell 2 2 2 --device auto --dtype float32
+python src/run_md.py --input data/relaxed.extxyz --steps 10000 --device auto --dtype float32 \
+  --equilibration-steps 1000
+
+# 検証 (fail-fast)
+python src/verify.py --relax data/relax_metrics.json --md data/md_metrics.json \
+  --expected-lattice-a-Ang 5.43
 ```
 
 ## GPU での期待時間（T4, 64 原子 Si）
 
 | ステップ | 時間 |
 |---|---:|
-| モデルダウンロード（初回） | 30 秒 |
+| モデルダウンロード（初回, GitHub Releases） | 30 秒 |
 | 構造緩和（BFGS 収束まで） | 10〜30 秒 |
 | MD 10000 ステップ (10 ps) | 5〜10 分 |
 | MD 100000 ステップ (100 ps) | 50〜100 分 |
 
+> ⚠️ **MD の物理時間と GPU 時間の関係を必ず把握してから `--steps` を増やしてください。** 本スクリプトは `--steps × --timestep-fs` が 100 ps を超える場合、`--allow-long-run` なしでは実行を拒否します。10 ns (10,000,000 steps) は T4 で概算 83–167 GPU-hours = **$59–$119** です。
+
 ## Azure ML CommandJob 版（バッチ実行）
 
-インタラクティブでなく、**ジョブとして submit** したい場合。まず **Compute Cluster** を別途作成する必要があります（Compute Instance はインタラクティブ用で、CommandJob からは使えません）:
+Compute Instance も CommandJob の compute ターゲットとして利用できます（開発・小規模ジョブ向け）。スケーラビリティ・Spot が必要な場合は **Compute Cluster** を作成し、Spot 相当の低優先度を使うために **`--tier low_priority`** を指定してください:
 
 ```bash
+# Compute Cluster (Spot / low-priority)
 az ml compute create --type amlcompute --name gpu-cluster-nc4t4 \
   --size Standard_NC4as_T4_v3 --min-instances 0 --max-instances 1 \
+  --tier low_priority \
   --idle-time-before-scale-down 300 \
-  --workspace-name <ws-name> --resource-group <rg-name>
+  --workspace-name "$AML_WORKSPACE_NAME" --resource-group "$AZURE_RESOURCE_GROUP"
 ```
 
-その後 SDK で submit（出力を Azure ML の Blob ストレージに永続化する `Output` を必ず指定）:
+> ⚠️ Spot / low-priority は**Compute Cluster でのみ利用可能**です。Compute Instance には Spot 相当のオプションはありません (本 README のコスト表を参照)。Spot はプリエンプション時にジョブが強制終了されるため、`Output(mode="rw_mount")` で結果を Blob に永続化し、コード側で checkpoint / resume に対応してください。
+
+### AML SDK でのジョブ投入
+
+```bash
+# ローカルで依存を入れておく
+python -m pip install azure-ai-ml==1.19.0 azure-identity==1.17.1
+```
 
 ```python
+import os
 from azure.ai.ml import MLClient, command, Output
 from azure.ai.ml.constants import AssetTypes
+from azure.ai.ml.entities import Environment, BuildContext
 from azure.identity import DefaultAzureCredential
 
-ml_client = MLClient.from_config(credential=DefaultAzureCredential())
+ml_client = MLClient(
+    DefaultAzureCredential(),
+    subscription_id=os.environ["AZURE_SUBSCRIPTION_ID"],
+    resource_group_name=os.environ["AZURE_RESOURCE_GROUP"],
+    workspace_name=os.environ["AML_WORKSPACE_NAME"],
+)
 
+# 1) Register the pinned custom environment (built from infra/environments/gpu/).
+env = Environment(
+    name="macemp02-gpu",
+    version="1",
+    build=BuildContext(path="infra/environments/gpu"),
+)
+ml_client.environments.create_or_update(env)
+
+# 2) Submit the job. Use the CI as the compute target for quick dev runs.
 job = command(
     code="./",
     command=(
-        "pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121 && "
-        "pip install -r requirements.txt && "
-        "python src/relax.py --system Si --supercell 2 2 2 --device cuda --output ${{outputs.results}} && "
-        "python src/run_md.py --input ${{outputs.results}}/relaxed.extxyz --output ${{outputs.results}} --steps 10000 --device cuda"
+        "python src/relax.py --system Si --supercell 2 2 2 --device auto "
+        "--output ${{outputs.results}} && "
+        "python src/run_md.py --input ${{outputs.results}}/relaxed.extxyz "
+        "--output ${{outputs.results}} --steps 10000 --equilibration-steps 1000 --device auto && "
+        "python src/verify.py --relax ${{outputs.results}}/relax_metrics.json "
+        "--md ${{outputs.results}}/md_metrics.json --expected-lattice-a-Ang 5.43"
     ),
     outputs={
         "results": Output(type=AssetTypes.URI_FOLDER, mode="rw_mount"),
     },
-    environment="AzureML-pytorch-2.2-ubuntu22.04-py310-cuda12@latest",
-    compute="gpu-cluster-nc4t4",   # 上で作成したクラスタ名
+    environment=f"macemp02-gpu@1",
+    compute=os.environ.get("AML_COMPUTE", "ci-mace-" + os.environ.get("USER", "me")),
     display_name="mace-mp-si-demo",
     experiment_name="mace-quickstart",
 )
@@ -105,18 +166,30 @@ returned_job = ml_client.jobs.create_or_update(job)
 print(returned_job.studio_url)
 ```
 
-> ⚠️ **outputs を指定しないと**、コンピュートが解放された時点で `data/` に書いた結果が消えます。上記のように `Output(type=URI_FOLDER)` を宣言し、`${{outputs.results}}` を `--output` に渡してください。ジョブ完了後 Studio の Job details → Outputs から結果をダウンロードできます。
+> ⚠️ **outputs を指定しないと**、コンピュートが解放された時点で `data/` に書いた結果が消えます。上記のように `Output(type=URI_FOLDER)` を宣言し、`${{outputs.results}}` を `--output` に渡してください。
 
-> ⚠️ **キュレーテッド環境の PyTorch バージョンに注意。** 環境によっては PyTorch 2.4.1（mace 非対応）が含まれます。上のように `command` の中で明示的に 2.4.0 を再インストールしてください。
+### 出力のダウンロード
+
+Studio UI だけでなく CLI からも取得できます:
+
+```bash
+JOB=$(az ml job list -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME" \
+  --query "[?display_name=='mace-mp-si-demo'].name | [0]" -o tsv)
+az ml job download -n "$JOB" -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME" \
+  --output-name results --download-path ./downloaded-results
+az ml job download -n "$JOB" -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME" \
+  --all --download-path ./job-artifacts
+```
 
 ## コスト目安（Japan East）
 
-| 項目 | PAYG | Spot |
+| 項目 | PAYG | Low-priority (Cluster のみ) |
 |---|---:|---:|
 | `NC4as_T4_v3` VM | $0.71/hr | ~$0.21/hr |
 | OS ディスク (128 GB Std SSD) | $0.009/hr | 同左 |
-| **1 時間セッション合計** | **~$0.72** | **~$0.22** |
-| 1 日放置（自動停止忘れ） | **$17.28** ⚠️ | **~$5** |
+| 停止中の CI (OS ディスク + LB) | ~$0.32/day | — |
+| **1 時間セッション合計** | **~$0.72** | **~$0.22** (Cluster) |
+| 1 日放置（自動停止忘れ） | **$17.28** ⚠️ | — |
 
 ## 後片付け
 

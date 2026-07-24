@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": { "value": "macemp02" },
+    "logRetentionDays": { "value": 30 },
+    "kvEnablePurgeProtection": { "value": false },
+    "kvSoftDeleteRetentionDays": { "value": 7 }
+  }
+}

@@ -29,7 +29,8 @@ python src/build_structure.py --system Si --supercell 1 1 1 --output data/initia
 ## Step 2: 構造緩和（BFGS + 全セル + イオン）
 
 ```bash
-python src/relax.py --system Si --supercell 1 1 1 --device cpu --dtype float32 --output data/
+# --device auto は CPU / CUDA を自動判定。CPU 固定なら --device cpu を明示。
+python src/relax.py --system Si --supercell 1 1 1 --device auto --dtype float32 --output data/
 ```
 
 **期待される出力**:
@@ -55,10 +56,12 @@ BFGS:    1   ...        -34.8215       0.0028
 > # 続けて data/initial.extxyz を --input に渡し歪みを付与する
 > ```
 
-## Step 3: 5 ps NVT MD (Langevin, 300 K)
+## Step 3: 5 ps NVT MD (fixed-cell Langevin, 300 K)
 
 ```bash
-python src/run_md.py --input data/relaxed.extxyz --steps 5000 --temperature 300 --device cpu --dtype float32
+# --equilibration-steps 1000 : 最初の 1000 step は熱化中扱いとして md.traj に含めない
+python src/run_md.py --input data/relaxed.extxyz --steps 5000 --equilibration-steps 1000 \
+  --temperature 300 --device auto --dtype float32
 ```
 
 **期待される出力**:
@@ -68,13 +71,22 @@ python src/run_md.py --input data/relaxed.extxyz --steps 5000 --temperature 300 
 [md] step    200 (  0.20 ps) T= 285.3 K  E_pot=-34.7912  E_kin=0.1096
 [md] step    400 (  0.40 ps) T= 312.7 K  E_pot=-34.7823  E_kin=0.1201
 ...
-[md] wrote data/md.traj (500 frames), md_metrics.json
-[md] ⟨T⟩ = 302.4 ± 45.1 K (target 300 K)
+[md] wrote data/md.traj (401 frames after equilibration), md_metrics.json
+[md] ⟨T⟩ = 302.4 ± 45.1 K (target 300 K, equilibration steps discarded)
 ```
 
-**成功基準**:
-- 平均温度 `⟨T⟩` が目標温度 ±30 K に収まる（Langevin の摩擦定数と系のサイズに依存）
-- ポテンシャルエネルギーが発散していない（10 eV 以上の突発的な跳ね上がりが無い）
+> ⚠️ **本 quickstart の `run_md.py` は fixed-cell NVT**（セル固定・Langevin thermostat）です。液体・ソフトマターの熱膨張や NPT 計算には向きません。
+>
+> Langevin の摩擦係数は温度追従を改善する反面、**動力学的性質 (拡散係数・振動スペクトル・粘性など) を歪めます**。物性計算には既定の弱結合 (`--friction-inv-fs 0.01`) を維持し、統計量には十分な系サイズと時間を確保してください。
+
+## Step 4: fail-fast 検証
+
+```bash
+python src/verify.py --relax data/relax_metrics.json --md data/md_metrics.json \
+  --expected-lattice-a-Ang 5.43
+```
+
+`verify.py` は relax/MD の metrics.json を読み、有限性 (NaN/Inf)、収束、格子定数許容範囲、応力許容範囲、温度追従、平均ポテンシャル/atom のドリフト、再現性メタ (mace/torch/CUDA/git commit/model SHA-256) の存在まで exit code で判定します。合格 = `exit 0`。
 
 ## Step 4: 結果の可視化
 
@@ -99,6 +111,8 @@ plt.plot(energies, "o-")
 plt.xlabel("BFGS step"); plt.ylabel("Energy (eV)")
 plt.tight_layout(); plt.savefig("data/relax_energy.png", dpi=120)
 ```
+
+生成した `data/*.png` は `.gitignore` 済みなので、[06-cleanup.md](06-cleanup.md) に従って一括削除できます。
 
 ## 実行時間の目安（CPU, 4 コア、8 原子 Si）
 

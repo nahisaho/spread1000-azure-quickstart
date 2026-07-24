@@ -29,10 +29,21 @@ pip install --upgrade "mace-torch>=0.3.16"
 ## モデルのロード
 
 ### `mace_mp()` が固まる / タイムアウト
-初回は ~80 MB のチェックポイントを Hugging Face から自動ダウンロードします。ネットワーク・プロキシ設定を確認。プロキシ環境では:
+初回は ~80 MB のチェックポイントを **GitHub Releases** (`ACEsuit/mace-foundations`) から自動ダウンロードします (**Hugging Face ではありません**)。ネットワーク・プロキシ設定を確認:
 ```bash
 export HTTPS_PROXY=http://your-proxy:8080
 export HTTP_PROXY=http://your-proxy:8080
+```
+
+事前ダウンロードして SHA-256 で検証したい場合:
+```bash
+mkdir -p ~/.cache/mace/
+curl -L -o ~/.cache/mace/mace-mpa-0-medium.model \
+  https://github.com/ACEsuit/mace-foundations/releases/download/mace_mpa_0/mace-mpa-0-medium.model
+sha256sum ~/.cache/mace/mace-mpa-0-medium.model
+# 期待値: 75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638
+python src/relax.py --system Si --model-path ~/.cache/mace/mace-mpa-0-medium.model \
+  --model-sha256 75428afe3a1d7d8062e19bcaabd5c433623cabf308242ec9fb493e38604fb638
 ```
 
 ### `FileNotFoundError: mace-mpa-0-medium.model`
@@ -42,7 +53,7 @@ calc = mace_mp(model="/absolute/path/to/mace-mpa-0-medium.model", device="cpu")
 ```
 
 ### `KeyError: 'element X not in model'`
-入力構造に MACE-MPA-0 が学習していない元素が含まれています。対応元素は 89 種（Z=1〜83、希ガス除く）。超ウラン元素などは非対応。
+入力構造に MACE-MPA-0 の学習分布外の元素が含まれています。対応元素は Materials Project 上でトラジェクトリが十分ある主要元素セットに限られ、超ウラン元素などは非対応です。厳密なリスト取得方法は `docs/07-ethics-and-limits.md` を参照。本 quickstart の `src/relax.py` は範囲外なら `--allow-elements-outside-domain` を要求します。
 
 ## 実行時エラー
 

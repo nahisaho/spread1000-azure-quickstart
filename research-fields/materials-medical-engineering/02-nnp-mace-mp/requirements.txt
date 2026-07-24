@@ -1,14 +1,26 @@
 # requirements.txt for MACE-MP-0 NNP quickstart
 #
 # IMPORTANT: install PyTorch 2.4.0 FIRST, from the official wheel index.
-# mace-torch does NOT support PyTorch 2.4.1 or older 2.1.x.
+# mace-torch 0.3.x explicitly rejects PyTorch 2.4.1 and requires the 2.4.x
+# wheels available for Python 3.10-3.12.
 #
 #   CPU:  pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
 #   CUDA: pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cu121
 #
 # Then:
 #   pip install -r requirements.txt
+#
+# For reproducible byte-identical installs (recommended for Azure ML jobs),
+# use pip-tools to generate a locked file with hashes:
+#
+#   pip install pip-tools
+#   pip-compile --generate-hashes --output-file=requirements.lock requirements.txt
+#   pip install --require-hashes -r requirements.lock
+#
+# The AML environment under infra/environments/gpu/ follows this pattern
+# (see requirements-gpu.in / requirements-gpu.lock).
 
 mace-torch>=0.3.16,<0.4
 ase>=3.23,<4
 numpy>=1.26,<3
+

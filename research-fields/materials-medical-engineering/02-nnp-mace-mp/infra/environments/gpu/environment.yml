@@ -1,0 +1,10 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: macemp02-gpu
+version: '1'
+description: |
+  MACE-MP D-2 quickstart environment. PyTorch 2.4.0 + CUDA 12.1, mace-torch >=0.3.16,<0.4.
+  Base image verified in MCR as of 2026-07:
+    mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
+build:
+  path: .
+  dockerfile_path: Dockerfile

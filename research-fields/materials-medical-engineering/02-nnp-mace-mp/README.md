@@ -14,7 +14,7 @@
 
 | コンポーネント | 用途 | ライセンス |
 |---|---|---|
-| **MACE-MPA-0** (`mace-torch>=0.3.16`) | 汎用 NNP 基盤モデル（89 元素対応） | MIT |
+| **MACE-MPA-0** (`mace-torch>=0.3.16,<0.4`) | 汎用 NNP 基盤モデル (Materials Project 上の主要元素をカバー、詳細は [docs/07-ethics-and-limits.md](docs/07-ethics-and-limits.md#2-元素化学環境のカバレッジ)) | MIT (重み + コード) |
 | ASE (`ase`) | 構造構築・オプティマイザ・MD ドライバ | LGPL |
 | PyTorch **2.4.0** | NNP 実行 | BSD |
 
@@ -23,34 +23,44 @@
 ## クイックスタート (CPU / ローカル)
 
 ```bash
-# 1. Python 3.10〜3.12 の仮想環境を作る（3.13 は未対応）
+# 1. Python 3.10〜3.12 の仮想環境を作る
+#    (mace-torch 0.3.x は Python 3.10-3.13 をサポートしていますが、
+#     本 quickstart は PyTorch 2.4.0 の wheel が入手できる 3.10-3.12 で検証しています)
 python3.12 -m venv .venv
 source .venv/bin/activate
 
 # 2. PyTorch 2.4.0 を先に固定インストール（重要）
 pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
 
-# 3. mace-torch とその他
+# 3. mace-torch とその他 (requirements.lock 生成方法は requirements.txt を参照)
 pip install -r requirements.txt
 
-# 4. Si ダイヤモンド 8 原子の構造緩和
-python src/relax.py --system Si --supercell 1 1 1 --output data/
+# 4. Si ダイヤモンド 8 原子の構造緩和 (--device auto は CPU/GPU を自動判定)
+python src/relax.py --system Si --supercell 1 1 1 --output data/ --device auto
 
-# 5. 5 ps NVT-MD（Langevin, 300 K）
-python src/run_md.py --input data/relaxed.extxyz --output data/ --steps 5000
+# 5. 5 ps NVT-MD (fixed-cell Langevin, 300 K, 最初の 1000 step は equilibration)
+python src/run_md.py --input data/relaxed.extxyz --output data/ --steps 5000 \
+  --equilibration-steps 1000 --device auto
+
+# 6. fail-fast 検証 (Si の実験格子定数 5.431 Å の周辺かをチェック)
+python src/verify.py --relax data/relax_metrics.json --md data/md_metrics.json \
+  --expected-lattice-a-Ang 5.43
 ```
 
 **期待される出力**:
-- `data/relaxed.extxyz` — 緩和後構造 (Ovito/VESTA で表示可能)
+- `data/relaxed.extxyz` / `data/relaxed.cif` — 緩和後構造 (Ovito/VESTA で表示可能)
 - `data/relaxation.traj` — ASE トラジェクトリ
-- `data/relax_metrics.json` — 最終エネルギー・F_max・格子定数
-- `data/md.traj` — MD トラジェクトリ
-- `data/md_metrics.json` — 温度・エネルギーの統計
+- `data/relax_metrics.json` — 最終エネルギー・F_max・格子定数・応力・再現性メタ (mace/torch/CUDA/git commit/model SHA-256)
+- `data/md.traj` — MD トラジェクトリ (equilibration 後のみ)
+- `data/md_metrics.json` — 温度・エネルギー統計・NaN チェック結果
+- `data/*.png` — (任意) 可視化画像 (`--plot` オプション時のみ)
 
 **成功基準 (Si ダイヤモンド)**:
-- `F_max < 0.05 eV/Å` （BFGS 収束）
+- `F_max < 0.05 eV/Å` (BFGS 収束)
 - 緩和後の格子定数 5.43〜5.47 Å (実験値 5.431 Å の DFT-PBE 近傍)
-- 収束ステップ数 < 100
+- 応力の絶対値 < 0.1 GPa
+- MD 中 NaN/Inf なし、平均温度が 300 ± 30 K
+- 上記を `src/verify.py` が exit 0 で確認
 
 ## ディレクトリ構成
 
@@ -80,7 +90,9 @@ python src/run_md.py --input data/relaxed.extxyz --output data/ --steps 5000
 |---|---:|---:|
 | **ローカル / WSL2 (CPU)** | 5〜10 分 | **$0** |
 | Azure ML CI (`NC4as_T4_v3`, PAYG) | 30 分 (セットアップ込み) | ~$0.50 |
-| Azure ML CI (`NC4as_T4_v3`, Spot) | 30 分 | ~$0.22 |
+| Azure ML Cluster (`NC4as_T4_v3`, low-priority) | 30 分 | ~$0.22 |
+
+> ⚠️ **Compute Instance に Spot/low-priority 相当はありません**。低単価が欲しい場合は Compute Cluster に切り替える必要があります (詳細は [docs/03-aml-gpu.md](docs/03-aml-gpu.md))。
 
 ## 参考文献
 
