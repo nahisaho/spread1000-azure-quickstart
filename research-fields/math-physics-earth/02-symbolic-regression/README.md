@@ -5,34 +5,45 @@
 **手法**: gplearn `SymbolicRegressor` (遺伝的プログラミング、+, -, ×, /, sqrt, log 等の演算子ツリー探索)
 
 > [!NOTE]
-> 完全にローカル CPU 完結。gplearn は pure Python で追加バイナリ依存なし (Julia を必要とする PySR とは違って軽量)。
+> 完全にローカル CPU 完結。gplearn 本体は pure Python (numpy/sklearn/matplotlib はビルド済みホイールを利用)。Julia を必要とする PySR とは違って軽量。
 
 ## 全体像
 
 ```
-src/generate_data.py    # 合成観測データ: y = 2 x_0 * sin(x_1) + 0.5 x_0² + ノイズ
+src/generate_data.py    # 合成観測データ: y = x_0 * sin(x_1) + x_0² + ノイズ
+src/_argtypes.py        # argparse バリデータ
 src/train.py            # SymbolicRegressor(population=2000, generations=30)
    ├→ 遺伝的アルゴリズムで数式木を進化
    ├→ 各世代で最良個体を報告
    └→ outputs/
        ├── best_program.txt     # 発見された最良数式
-       ├── fitness_curve.png    # 世代 vs fitness
-       └── metrics.json         # R², MSE, プログラム長
+       ├── fitness_curve.png    # 世代 vs raw fitness (MAE)
+       ├── pred_vs_true.png     # 予測 vs 真値散布図
+       └── metrics.json         # R², MSE, プログラム長, バージョン情報
 ```
 
 ## クイックスタート
 
 ```bash
+cd research-fields/math-physics-earth/02-symbolic-regression
 python -m pip install -r requirements.txt
 
 python src/generate_data.py --out data/obs.npz --seed 42
 python src/train.py --data data/obs.npz --generations 30 --seed 42
 ```
 
+## リグレッションテスト
+
+```bash
+cd research-fields/math-physics-earth/02-symbolic-regression
+python -m pip install pytest
+python -m pytest tests/test_regression.py -v
+```
+
 ## タスク
 
 生成する真の関係:
-$$y = 2 x_0 \sin(x_1) + 0.5 x_0^2 + \epsilon$$
+$$y = x_0 \sin(x_1) + x_0^2 + \epsilon$$
 - $x_0, x_1 \in [-3, 3]$ ランダム 200 点
 - $\epsilon \sim \mathcal{N}(0, 0.1)$
 
@@ -40,7 +51,7 @@ $$y = 2 x_0 \sin(x_1) + 0.5 x_0^2 + \epsilon$$
 
 | 種別 | 選定 | 理由 |
 |---|---|---|
-| ライブラリ | `gplearn==0.4.3` | pure Python, sklearn 互換 API, MIT ライセンス |
+| ライブラリ | `gplearn==0.4.3` | pure Python, sklearn 互換 API, BSD-3-Clause ライセンス |
 | 演算子集合 | +, -, ×, ÷, √, sin, cos, log | 物理法則で頻出 |
 | 探索 | population=2000, generations=30 | CPU 3 分程度 |
 | 選択 | tournament (default) | GP の標準 |

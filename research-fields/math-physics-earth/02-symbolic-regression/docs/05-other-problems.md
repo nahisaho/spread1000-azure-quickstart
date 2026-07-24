@@ -2,24 +2,67 @@
 
 ## ケプラー第3法則: T² ∝ a³
 
-太陽系惑星の (半長軸 a, 公転周期 T) データから:
+太陽系惑星の (半長軸 a, 公転周期 T) データから対数変換を用いて線形回帰で検証する方法:
 
 ```python
-# a: AU, T: 年
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# データ源: NASA Planetary Fact Sheet
+# https://nssdc.gsfc.nasa.gov/planetary/factsheet/
+# a: AU (天文単位), T: 年
 a = np.array([0.387, 0.723, 1.0, 1.524, 5.203, 9.537, 19.19, 30.07])
 T = np.array([0.241, 0.615, 1.0, 1.881, 11.86, 29.46, 84.02, 164.8])
-# X = a.reshape(-1, 1), y = T
+
+# log(T) = 1.5 * log(a) + const → 傾き 1.5 を回収する
+log_a = np.log(a).reshape(-1, 1)
+log_T = np.log(T)
+model = LinearRegression().fit(log_a, log_T)
+print(f"slope = {model.coef_[0]:.4f}  (理論値 1.5)")
 ```
 
-`function_set` に `pow` を含めれば `T = a^(3/2)` を発見できる。
+gplearn で非線形探索をしたい場合は、べき乗演算を **カスタム保護関数** として定義する:
+
+```python
+import numpy as np
+from gplearn.functions import make_function
+from gplearn.genetic import SymbolicRegressor
+
+def _protected_pow(x1, x2):
+    with np.errstate(over="ignore", invalid="ignore"):
+        result = np.where(
+            np.abs(x1) < 1e-12,
+            1.0,
+            np.sign(x1) * np.abs(x1) ** np.clip(x2, -3, 3),
+        )
+    return np.where(np.isfinite(result), result, 1.0)
+
+protected_pow = make_function(function=_protected_pow, name="pow", arity=2)
+
+est = SymbolicRegressor(
+    function_set=("add", "mul", "div", protected_pow),
+    population_size=500,
+    generations=20,
+    random_state=42,
+    verbose=1,
+)
+# X = log_a, y = log_T  (または生データで直接)
+est.fit(log_a, log_T)
+print(est._program)
+```
+
+> **注意**: gplearn の組み込み `function_set` に文字列 `"pow"` は存在しない。必ず上記のように `make_function` でカスタム定義すること。
 
 ## フックの法則: F = k x
 
 線形 → 極めて簡単。線形回帰と GP を比較する良い教材。
 
-## PS-B benchmark
+## 実際のベンチマーク
 
-`gplearn` 公式サンプル (`gplearn.tests`) にケプラー・振り子・その他物理法則の合成データがある。
+記号回帰の網羅的ベンチマークは **SRBench** を参照:
+- https://github.com/cavalab/srbench
+
+物理・生物・経済など多様な実データセットで各アルゴリズムを比較している。
 
 ## 実データへの適用
 

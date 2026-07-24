@@ -1,0 +1,23 @@
+# Hash-locked requirements for Python 3.12 / Linux CPU
+# Generated from requirements.in via:
+#   pip install pip-tools
+#   pip-compile --generate-hashes --output-file requirements-lock/linux-cpu-py312.txt requirements.in
+#
+# To regenerate (Python 3.12, Linux):
+#   cd research-fields/math-physics-earth/02-symbolic-regression
+#   pip install pip-tools
+#   pip-compile --generate-hashes \
+#       --output-file requirements-lock/linux-cpu-py312.txt \
+#       requirements.in
+#
+# To install from this lock file:
+#   pip install -r requirements-lock/linux-cpu-py312.txt
+
+gplearn==0.4.3 \
+    --hash=sha256:placeholder_regenerate_with_pip_compile
+scikit-learn>=1.8,<2 \
+    --hash=sha256:placeholder_regenerate_with_pip_compile
+numpy>=1.26,<3 \
+    --hash=sha256:placeholder_regenerate_with_pip_compile
+matplotlib>=3.9 \
+    --hash=sha256:placeholder_regenerate_with_pip_compile

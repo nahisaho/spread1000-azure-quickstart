@@ -6,6 +6,7 @@ This quickstart collection references and depends on the following third-party c
 
 | Package | License | Upstream |
 |---|---|---|
+| `gplearn` | BSD-3-Clause | https://gplearn.readthedocs.io/ |
 | `openai` | Apache-2.0 | https://github.com/openai/openai-python |
 | `azure-identity` | MIT | https://github.com/Azure/azure-sdk-for-python |
 | `azure-ai-documentintelligence` | MIT | https://github.com/Azure/azure-sdk-for-python |
@@ -35,6 +36,9 @@ Exact versions used per scenario are pinned in each scenario's `requirements-loc
 
 Third-party models and datasets referenced by individual scenarios (each carries its own license — verify before redistribution):
 
+- **PBMC3k dataset (10x Genomics)** — CC BY 4.0; Zheng et al. (2017) Nat Commun DOI 10.1038/ncomms14049; source page https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/pbmc3k; Scanpy 1.10+ fetches converted H5AD from falexwolf.de.
+- **scanpy** — see https://github.com/scverse/scanpy (BSD-3-Clause).
+- **python-igraph** — see https://igraph.org/python/ (GPL-2.0).
 - **Azure OpenAI hosted models** — subject to the Microsoft Product Terms and Azure OpenAI Service terms.
 - **BioEmu** — see https://github.com/microsoft/bioemu (MIT).
 - **ESMFold / ESM-2** — see https://github.com/facebookresearch/esm (MIT).
