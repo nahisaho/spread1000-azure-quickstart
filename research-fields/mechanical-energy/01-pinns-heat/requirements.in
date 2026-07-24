@@ -1,0 +1,15 @@
+# requirements for F-1 PINNs quickstart.
+#
+# torch はプラットフォーム別に先にインストール:
+#   Windows/Linux (CPU):
+#     pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
+#   macOS (universal2, native pytorch install):
+#     pip install torch==2.7.1
+#   Linux + CUDA 12.x (optional, for --device cuda):
+#     pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu121
+#
+# ロックファイルを再生成:
+#   pip-compile --generate-hashes --output-file requirements-lock/<platform>-cpu-py312.txt requirements.in
+
+numpy>=1.26,<3
+matplotlib>=3.9

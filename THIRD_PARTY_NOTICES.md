@@ -22,13 +22,14 @@ This quickstart collection references and depends on the following third-party c
 | `matminer` | BSD-3-Clause | https://hackingmaterials.lbl.gov/matminer/ |
 | `mp-api` (Materials Project) | BSD-3-Clause | https://github.com/materialsproject/api |
 | `torch` | BSD-3-Clause | https://pytorch.org/ |
+| `matplotlib` | PSF-based | https://matplotlib.org/ |
 | `biopython` | BSD-3-Clause-like | https://biopython.org/ |
 | `rdkit` | BSD-3-Clause | https://www.rdkit.org/ |
 | `SudachiPy` / `SudachiDict-core` | Apache-2.0 | https://github.com/WorksApplications/SudachiPy |
 | `reportlab` | BSD-3-Clause | https://www.reportlab.com/ |
 | `Pillow` | HPND | https://python-pillow.org/ |
 
-Exact versions used per scenario are pinned in each scenario's `requirements.txt`.
+Exact versions used per scenario are pinned in each scenario's `requirements-lock` directory.
 
 ## Models and datasets
 

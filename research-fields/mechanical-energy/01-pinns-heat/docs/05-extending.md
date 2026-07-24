@@ -29,12 +29,15 @@ $$u_{tt} = c^2 u_{xx}$$
 「観測データから熱拡散係数 α を推定する」
 
 ```python
-alpha = nn.Parameter(torch.tensor(0.1))  # 学習可能パラメータに
-optimizer = torch.optim.Adam(list(model.parameters()) + [alpha], lr=1e-3)
+import torch.nn.functional as F
+raw_alpha = nn.Parameter(torch.log(torch.expm1(torch.tensor(0.1))))
+def positive_alpha() -> torch.Tensor:
+    return F.softplus(raw_alpha) + 1e-8
+optimizer = torch.optim.Adam(list(model.parameters()) + [raw_alpha], lr=1e-3)
 ```
 
-観測損失 (実測点で $u(x_i, t_i) - u_i^{\mathrm{obs}}$) を追加すれば、
-**モデル + α を同時に最適化**できます。
+`raw_alpha` を softplus で変換することで α が必ず正になり、逆向き熱方程式 (α < 0)
+への偶発的な発散を防ぎます。
 
 ## 実データフィッティング
 

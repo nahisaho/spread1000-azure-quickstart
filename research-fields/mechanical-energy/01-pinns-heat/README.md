@@ -1,11 +1,11 @@
 # 01 — PINNs で 1D 熱伝導方程式を解く
 
 **対象**: PINNs (Physics-Informed Neural Networks) を試してみたい機械・構造・エネルギー系研究者
-**目標**: PyTorch だけで **物理制約を組み込んだニューラルネット** を実装し、1D 熱伝導方程式 $u_t = \alpha u_{xx}$ の解を **境界条件・初期条件・PDE 残差** から同時に学習する体験を、ノートPCで ≤ 10 分で得る
+**目標**: PyTorch だけで **物理制約を組み込んだニューラルネット** を実装し、1D 熱伝導方程式 $u_t = \alpha u_{xx}$ の解を **境界条件・初期条件・PDE 残差** から同時に学習する体験を、ノートPCで おおむね 7〜12 分で得る
 **手法**: 座標入力の MLP + Autograd による偏微分 + 3 種類の損失 (PDE 残差 + IC + BC) の合算
 
 > [!NOTE]
-> 完全にローカル CPU 完結。追加のライブラリは PyTorch と matplotlib のみ (deepxde 不要)。
+> 完全にローカル CPU 完結。追加のライブラリは PyTorch, NumPy, matplotlib のみ (deepxde 不要)。
 
 ## 全体像
 
@@ -13,23 +13,35 @@
 src/train.py --device cpu --epochs 3000
 
    ├→ 3 損失の重み付き和を Adam で最小化
-   │    L = L_pde + L_ic + L_bc
+   │    L = L_pde + 10·L_ic + 10·L_bc
    │    L_pde = MSE(u_t - alpha * u_xx, 0)   ← Autograd で二階微分
    │    L_ic  = MSE(u(x, 0), sin(pi x))
    │    L_bc  = MSE(u(0, t), 0) + MSE(u(1, t), 0)
    │
    └→ outputs/
-       ├── best_model.pt
+       ├── final_model.pt
        ├── loss_curve.png
-       ├── solution.png          # (t, x) メッシュ上の予測 u と解析解
-       └── metrics.json          # L2 誤差 vs 解析解
+       ├── solution.png          # t=0, 0.25, 0.75 の断面比較
+       ├── metrics.json          # validation/test L2 誤差 vs 解析解
+       └── provenance.json       # 実行環境・再現性情報
 ```
 
 ## クイックスタート
 
 ```bash
+cd research-fields/mechanical-energy/01-pinns-heat
+
+# --- torch のインストール (プラットフォームごとに異なる) ---
+# Windows/Linux (CPU):
 python -m pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -r requirements.txt
+# macOS (universal2, native pytorch install):
+python -m pip install torch==2.7.1
+# Linux + CUDA 12.x (optional, for --device cuda):
+# python -m pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu121
+
+python -m pip install --require-hashes -r requirements-lock/linux-cpu-py312.txt
+# macOS: requirements-lock/macos-cpu-py312.txt
+# Windows: requirements-lock/windows-cpu-py312.txt
 
 python src/train.py --device cpu --epochs 3000 --seed 42
 ```
@@ -50,10 +62,10 @@ $$
 
 | 種別 | 選定 | 理由 |
 |---|---|---|
-| モデル | MLP (2→32→32→32→32→1, tanh) | ~2.4K params、PINN 定番 |
+| モデル | MLP (2→32→32→32→32→1, tanh) | 3,297 params、PINN 定番 |
 | 微分 | `torch.autograd.grad` で $u_x, u_{xx}, u_t$ を計算 | 自動微分の教科書例 |
 | 損失 | L_pde + 10·L_ic + 10·L_bc | IC/BC 重み付けは PINN 常套 |
-| 最適化 | Adam (lr=1e-3) → 最終 500 epoch を L-BFGS | 初期は Adam、収束時 L-BFGS で精度向上 |
+| 最適化 | Adam (lr=1e-3) → 最終 500 iter を L-BFGS | 初期は Adam、収束時 L-BFGS で精度向上 |
 | コロケーション点 | PDE 5000 + IC 200 + BC 200 (各 side) | 一度サンプル、全 epoch 固定 |
 
 ## ドキュメント
@@ -71,7 +83,7 @@ $$
 ## ライセンス
 
 - コード: リポジトリのライセンスに従う
-- データ: 完全合成 (解析解ベースの ground truth)、制約なし
+- データ: 完全合成 (解析解ベースの ground truth)、CC0-1.0 (`data/LICENSE` 参照)
 
 ## 免責
 
