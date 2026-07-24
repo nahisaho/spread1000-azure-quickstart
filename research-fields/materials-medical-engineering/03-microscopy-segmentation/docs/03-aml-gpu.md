@@ -55,55 +55,45 @@ python src/train.py --task grains --image-size 256 \
 
 ## Azure ML CommandJob 版 (バッチ実行)
 
-**Compute Cluster を先に作る** (Compute Instance は CommandJob に使えません):
+> **注**: スポットインスタンスは AML では `--tier low_priority` (Compute Cluster) で表現します。`job_tier: spot` は無効です。Compute Instance は CommandJob のターゲットとしても使用できますが、低優先度はクラスターのみです。
+
+**Compute Cluster を先に作る** (low_priority クラスター):
 ```bash
+source .env  # infra/deploy.sh が生成した .env を読み込む
+
 az ml compute create --type amlcompute --name gpu-cluster-nc4t4 \
   --size Standard_NC4as_T4_v3 --min-instances 0 --max-instances 1 \
+  --tier low_priority \
   --idle-time-before-scale-down 300 \
-  --workspace-name <ws-name> --resource-group <rg-name>
+  -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
 ```
 
-SDK で submit (出力を必ず `Output(type=URI_FOLDER)` にする):
-
-```python
-from azure.ai.ml import MLClient, command, Output
-from azure.ai.ml.constants import AssetTypes
-from azure.identity import DefaultAzureCredential
-
-ml_client = MLClient.from_config(credential=DefaultAzureCredential())
-
-job = command(
-    code="./",
-    command=(
-        "pip install torch==2.7.1 torchvision==0.22.1 "
-        "--index-url https://download.pytorch.org/whl/cu126 && "
-        "pip install -r requirements.txt && "
-        "python src/train.py --task grains --image-size 256 "
-        "--n-train 500 --n-val 100 --epochs 20 --batch-size 16 "
-        "--device cuda --output ${{outputs.results}}"
-    ),
-    outputs={
-        "results": Output(type=AssetTypes.URI_FOLDER, mode="rw_mount"),
-    },
-    environment="AzureML-pytorch-2.2-ubuntu22.04-py310-cuda12@latest",
-    compute="gpu-cluster-nc4t4",
-    display_name="microscopy-unet-demo",
-    experiment_name="microscopy-segmentation",
-)
-returned_job = ml_client.jobs.create_or_update(job)
-print(returned_job.studio_url)
+**環境を登録する** (カスタム Docker イメージ、浮動 `@latest` 不使用):
+```bash
+az ml environment create \
+  --file infra/environments/gpu/environment.yml \
+  -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
 ```
 
-> ⚠️ **outputs を指定しないと**、コンピュートが解放されると `data/` に書いた結果が消えます。上記のように `${{outputs.results}}` を `--output` に渡してください。ジョブ完了後 Studio の Job details → Outputs から結果をダウンロードできます。
+**ジョブを投入する** (YAML を使用):
+```bash
+az ml job create --file azureml/train_job.yml \
+  -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
+```
+
+> ⚠️ **outputs を指定しないと**、コンピュートが解放されると `data/` に書いた結果が消えます。`train_job.yml` では `${{outputs.results}}` を `--output` に渡しているので安全です。
 
 ## コスト目安 (Japan East)
 
-| 項目 | PAYG | Spot |
+| 項目 | Dedicated | Low-priority (クラスター) |
 |---|---:|---:|
 | `NC4as_T4_v3` VM | $0.71/hr | ~$0.21/hr |
 | OS ディスク (128 GB Std SSD) | $0.009/hr | 同左 |
 | **30 分セッション合計** | **~$0.36** | **~$0.11** |
 | 1 日放置 (自動停止忘れ) | **$17.28** ⚠️ | **~$5** |
+
+> ※ 低優先度ノードは AML が容量不足時に中断 (プリエンプション) する場合があります。重要な長時間実験には Dedicated を使用してください。  
+> ※ 価格は変動します。最新価格は [Azure Retail Prices API](https://prices.azure.com/api/retail/prices?$filter=armRegionName%20eq%20%27japaneast%27%20and%20serviceName%20eq%20%27Virtual%20Machines%27) で確認してください（取得日確認が必要）。
 
 ## 後片付け
 

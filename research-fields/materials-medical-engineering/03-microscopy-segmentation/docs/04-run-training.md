@@ -5,12 +5,13 @@
 ## パイプライン
 
 ```
-[generate_data.generate_batch()] → TensorDataset → DataLoader
-   → [MiniUNet forward → BCEWithLogitsLoss(pos_weight=9.0)]
+[generate_data.generate_batch()] → MONAI CacheDataset → MONAI DataLoader
+   → [MONAI UNet forward → DiceCELoss(sigmoid=True, ce_weight=pos_weight)]
    → Adam(lr=1e-3) で 10 epochs
-   → 毎エポック validation → IoU (BinaryJaccardIndex) & Dice (BinaryF1Score)
+   → 毎エポック validation → DiceMetric (MONAI) & IoU (torchmetrics)
    → best_val_iou を更新したエポックの重みを保存
    → 最終エポックで [入力 | 正解 | 予測] のモンタージュ生成
+   → metrics.json に再現性メタデータ・チェックポイント SHA-256 を記録
 ```
 
 ## 主要な CLI オプション
@@ -18,32 +19,28 @@
 | オプション | 既定 | 意味 |
 |---|---|---|
 | `--task` | `grains` | `grains` (Voronoi 粒界) / `particles` (円粒子) |
-| `--image-size` | `128` | 4 の倍数必須 (2 段の MaxPool のため) |
+| `--image-size` | `128` | 4 の倍数必須 (2 段の stride-2 conv のため) |
 | `--n-train` / `--n-val` | 200 / 50 | 生成する合成画像枚数 |
 | `--batch-size` | `8` | CPU では 4〜16 が目安 |
-| `--epochs` | `10` | 10 で十分学習曲線が見える。20〜30 まで伸ばすと改善 |
+| `--epochs` | `10` | 10 で十分学習曲線が見える。>50 には `--allow-long-run` が必要 |
 | `--lr` | `1e-3` | Adam の学習率 |
 | `--device` | `cpu` | `cpu` / `cuda` |
 | `--num-workers` | `0` | WSL2/Windows は 0 のまま、Linux/Compute Instance は 2〜4 |
-| `--pos-weight` | `9.0` | BCE の陽性クラス重み。境界ピクセルは全体の ~12% で `(1-p)/p ≈ 7.3` だが、細い境界の再現率を優先して 9.0 に設定 |
+| `--pos-weight` | `9.0` | BCE の陽性クラス重み。DiceCELoss の ce_weight として渡す |
+| `--max-training-hours` | `2.0` | ウォールクロック上限 (時間)。>4.0 h には `--allow-long-run` が必要 |
+| `--allow-long-run` | (flag) | `--epochs>50` または `--max-training-hours>4.0` を許可 |
 | `--n-montage` | `6` | 最終モンタージュに含める検証画像数 |
 | `--output` | `data/` | 出力先ディレクトリ |
 
 ## 損失関数のなぜ
 
-**BCEWithLogitsLoss(pos_weight=9.0)** を選んだ理由:
+**DiceCELoss(sigmoid=True, ce_weight=pos_weight)** を選んだ理由:
 - 粒界マスクは全ピクセルの ~12% しか陽性 (境界) が無い強い不均衡データ
-- 素の BCE では常にゼロ (背景) を予測する自明解に落ち込む
-- 陰性/陽性比 `(1-p)/p ≈ 7.3` に対し `pos_weight=9` と少し高めに設定し、細い境界を確実に検出させる
-- 実データで陽性率が違うなら `[data] boundary/positive pixel fraction (train)` の出力を見て `pos_weight = (1 - p) / p` に調整
+- Dice 項: 陽性・陰性ピクセルのオーバーラップを最大化（不均衡に頑健）
+- CE 項 + ce_weight=9.0: 細い境界の再現率を優先（陰性/陽性比 ~7.3 より少し高め）
+- MONAI の `DiceCELoss` はシグモイドを内部で適用し数値的に安定
 
-より強い代替: **Dice + BCE ハイブリッド** ([smp.losses.DiceLoss](https://smp.readthedocs.io/en/latest/losses.html))
-```python
-from segmentation_models_pytorch.losses import DiceLoss
-dice = DiceLoss(mode="binary")
-loss = 0.5 * bce(logits, y) + 0.5 * dice(logits, y)
-```
-本クイックスタートは追加依存を避けるため BCE のみで統一しています。
+実データで陽性率が違うなら `[data] positive pixel fraction (train)` の出力を見て `pos_weight = (1 - p) / p` に調整してください。
 
 ## 実データを使う場合
 
@@ -90,9 +87,20 @@ val_loader   = DataLoader(val_ds,   batch_size=args.batch_size, shuffle=False, .
 
 ## モデルを大きくする
 
-`src/model.py` の `MiniUNet(..., base=16)` を `base=32` にすると U-Net が 4 倍のパラメータになります (600K パラメータ)。実データで精度が足りない場合の第 1 手段。
+MONAI UNet のチャンネル数を変更することで大きくなります:
 
-より本格的には [`segmentation_models_pytorch`](https://smp.readthedocs.io/) の `Unet('resnet18', encoder_weights=None)` (11M パラメータ) に差し替えられます。
+```python
+from monai.networks.nets import UNet
+model = UNet(
+    spatial_dims=2, in_channels=1, out_channels=1,
+    channels=(32, 64, 128),  # 基本 16/32/64 → 32/64/128 で ~4 倍のパラメータ
+    strides=(2, 2),
+    num_res_units=2,
+)
+```
+
+より本格的には MONAI Model Zoo の事前学習モデルを活用できます:
+https://monai.io/model-zoo.html
 
 ## 参考リンク
 

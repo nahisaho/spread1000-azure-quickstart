@@ -1,0 +1,80 @@
+# azureml/train_job.yml
+# AML CommandJob — MONAI U-Net training on GPU cluster
+#
+# Prerequisites:
+#   1. Run infra/deploy.sh to provision the workspace
+#   2. Register the environment:
+#        az ml environment create \
+#          --file infra/environments/gpu/environment.yml \
+#          -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
+#   3. Create a low-priority GPU cluster (NOT Dedicated spot):
+#        az ml compute create --type amlcompute \
+#          --name gpu-cluster-nc4t4 \
+#          --size Standard_NC4as_T4_v3 \
+#          --min-instances 0 --max-instances 1 \
+#          --tier low_priority \
+#          --idle-time-before-scale-down 300 \
+#          -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
+#
+# Submit:
+#   source .env
+#   az ml job create --file azureml/train_job.yml \
+#     -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
+#
+# NOTE on tiers:
+#   low_priority (Compute Cluster)  — ~70% cheaper, may be preempted
+#   Dedicated    (Compute Cluster)  — full priority, no preemption
+#   Compute Instance               — also a valid CommandJob target, not a cluster
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: microscopy-segmentation-train
+experiment_name: microscopy-segmentation
+
+description: >
+  Train MONAI U-Net on synthetic Voronoi/particle segmentation data.
+  Uses DiceCELoss + DiceMetric, CacheDataset, and deterministic reproducibility flags.
+
+code: ../
+
+command: >-
+  python src/train.py
+  --task ${{inputs.task}}
+  --image-size ${{inputs.image_size}}
+  --n-train ${{inputs.n_train}}
+  --n-val ${{inputs.n_val}}
+  --epochs ${{inputs.epochs}}
+  --batch-size ${{inputs.batch_size}}
+  --lr ${{inputs.lr}}
+  --pos-weight ${{inputs.pos_weight}}
+  --seed ${{inputs.seed}}
+  --device cuda
+  --num-workers 2
+  --max-training-hours 3.5
+  --output ${{outputs.results}}
+
+inputs:
+  task: grains
+  image_size: 256
+  n_train: 500
+  n_val: 100
+  epochs: 20
+  batch_size: 16
+  lr: 0.001
+  pos_weight: 9.0
+  seed: 42
+
+outputs:
+  results:
+    type: uri_folder
+    mode: rw_mount
+
+environment: azureml:microseg-monai:1
+
+compute: azureml:gpu-cluster-nc4t4
+
+limits:
+  timeout: 14400   # 4 h hard wall (matches --max-training-hours 3.5 + overhead)
+
+resources:
+  instance_count: 1

@@ -1,0 +1,21 @@
+# requirements.in — top-level constraints for 03-microscopy-segmentation
+#
+# Install with pip-compile to generate a hash-pinned lockfile:
+#
+#   pip install pip-tools
+#   pip-compile --generate-hashes \
+#     --output-file=requirements.lock \
+#     requirements.in
+#   pip install --require-hashes -r requirements.lock
+#
+# For development without a lockfile (less reproducible):
+#   pip install torch==2.7.1 torchvision==0.22.1 \
+#     --index-url https://download.pytorch.org/whl/cpu
+#   pip install -r requirements.in
+
+monai==1.4.0
+scikit-image>=0.24,<1
+scipy>=1.13,<2
+numpy>=1.26,<3
+matplotlib>=3.9
+torchmetrics>=1.4,<2

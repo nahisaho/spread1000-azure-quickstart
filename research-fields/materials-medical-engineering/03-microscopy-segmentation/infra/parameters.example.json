@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "namePrefix": {
+      "value": "microseg"
+    },
+    "location": {
+      "value": "japaneast"
+    },
+    "logRetentionDays": {
+      "value": 30
+    },
+    "kvSoftDeleteDays": {
+      "value": 7
+    },
+    "deployerObjectId": {
+      "value": "<YOUR_AAD_OBJECT_ID>",
+      "_comment": "Run: az ad signed-in-user show --query id -o tsv"
+    },
+    "deployerPrincipalType": {
+      "value": "User",
+      "_comment": "User | ServicePrincipal | Group | ForeignGroup"
+    },
+    "enablePublicNetworkAccess": {
+      "value": true
+    }
+  }
+}

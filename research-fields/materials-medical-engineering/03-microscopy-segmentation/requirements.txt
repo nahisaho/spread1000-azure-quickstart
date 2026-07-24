@@ -1,13 +1,25 @@
-# requirements for D-3 microscopy segmentation quickstart.
+# requirements.txt — install instructions for 03-microscopy-segmentation
 #
-# IMPORTANT: install torch/torchvision from the official wheel index FIRST:
+# ⚠️  Install PyTorch FIRST (from the official wheel index), then this file:
 #
-#   CPU:  pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cpu
-#   CUDA: pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorch.org/whl/cu126
+#   CPU:
+#     pip install torch==2.7.1 torchvision==0.22.1 \
+#       --index-url https://download.pytorch.org/whl/cpu
+#
+#   CUDA 12.6 (GPU):
+#     pip install torch==2.7.1 torchvision==0.22.1 \
+#       --index-url https://download.pytorch.org/whl/cu126
 #
 # Then:
-#   pip install -r requirements.txt
+#     pip install -r requirements.txt
+#
+# For fully reproducible installs, generate a hash-pinned lockfile first:
+#     pip install pip-tools
+#     pip-compile --generate-hashes \
+#       --output-file=requirements.lock requirements.in
+#     pip install --require-hashes -r requirements.lock
 
+monai==1.4.0
 scikit-image>=0.24,<1
 scipy>=1.13,<2
 numpy>=1.26,<3

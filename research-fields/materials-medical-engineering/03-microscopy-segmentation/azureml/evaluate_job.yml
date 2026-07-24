@@ -1,0 +1,50 @@
+# azureml/evaluate_job.yml
+# AML CommandJob — evaluate trained checkpoint on test split
+#
+# Submit after train_job completes:
+#   source .env
+#   TRAIN_JOB_NAME="<job-name-from-train>"
+#   az ml job create --file azureml/evaluate_job.yml \
+#     --set inputs.checkpoint_path="azureml://jobs/${TRAIN_JOB_NAME}/outputs/results/checkpoints/best_model.pth" \
+#     -g "$AZURE_RESOURCE_GROUP" -w "$AML_WORKSPACE_NAME"
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: microscopy-segmentation-evaluate
+experiment_name: microscopy-segmentation
+
+description: >
+  Evaluate MONAI U-Net checkpoint on the held-out test split (seed+20000).
+  Reports per-image and aggregate Dice / IoU saved to test_metrics.json.
+
+code: ../
+
+command: >-
+  python src/evaluate.py
+  --checkpoint ${{inputs.checkpoint_path}}
+  --task ${{inputs.task}}
+  --image-size ${{inputs.image_size}}
+  --n-test ${{inputs.n_test}}
+  --seed ${{inputs.seed}}
+  --device cuda
+  --output ${{outputs.results}}
+
+inputs:
+  checkpoint_path:
+    type: uri_file
+  task: grains
+  image_size: 256
+  n_test: 100
+  seed: 42
+
+outputs:
+  results:
+    type: uri_folder
+    mode: rw_mount
+
+environment: azureml:microseg-monai:1
+
+compute: azureml:gpu-cluster-nc4t4
+
+limits:
+  timeout: 3600   # 1 h for evaluation

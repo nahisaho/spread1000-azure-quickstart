@@ -1,0 +1,13 @@
+# AML Environment definition for 03-microscopy-segmentation GPU training
+# Schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+
+name: microseg-monai
+version: "1"
+description: >
+  MONAI 1.4.0 + PyTorch 2.7.1 + CUDA 12.4 environment for
+  03-microscopy-segmentation quickstart.
+
+build:
+  path: .
+  dockerfile_path: Dockerfile

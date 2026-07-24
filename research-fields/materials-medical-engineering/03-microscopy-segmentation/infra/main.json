@@ -1,0 +1,226 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.41.2.15936",
+      "templateHash": "4275082219652474273"
+    }
+  },
+  "parameters": {
+    "namePrefix": {
+      "type": "string",
+      "defaultValue": "microseg",
+      "metadata": {
+        "description": "Short prefix for all resource names (3-10 lowercase alphanumeric)"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for all resources"
+      }
+    },
+    "logRetentionDays": {
+      "type": "int",
+      "defaultValue": 30,
+      "minValue": 7,
+      "maxValue": 730,
+      "metadata": {
+        "description": "Log Analytics retention in days (7–730)"
+      }
+    },
+    "kvSoftDeleteDays": {
+      "type": "int",
+      "defaultValue": 7,
+      "minValue": 7,
+      "maxValue": 90,
+      "metadata": {
+        "description": "Key Vault soft-delete retention in days (7–90)"
+      }
+    },
+    "deployerObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "Object ID of the deployer (user or service principal) for RBAC assignment"
+      }
+    },
+    "deployerPrincipalType": {
+      "type": "string",
+      "defaultValue": "User",
+      "allowedValues": [
+        "User",
+        "ServicePrincipal",
+        "Group",
+        "ForeignGroup"
+      ],
+      "metadata": {
+        "description": "Principal type of the deployer identity"
+      }
+    },
+    "enablePublicNetworkAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Allow public-network access to the AML workspace"
+      }
+    }
+  },
+  "variables": {
+    "suffix": "[uniqueString(subscription().subscriptionId, resourceGroup().id)]",
+    "storageName": "[take(format('st{0}{1}', parameters('namePrefix'), variables('suffix')), 24)]",
+    "keyVaultName": "[take(format('kv-{0}-{1}', parameters('namePrefix'), variables('suffix')), 24)]",
+    "acrName": "[take(format('acr{0}{1}', parameters('namePrefix'), variables('suffix')), 50)]",
+    "logName": "[format('log-{0}-{1}', parameters('namePrefix'), variables('suffix'))]",
+    "appiName": "[format('appi-{0}-{1}', parameters('namePrefix'), variables('suffix'))]",
+    "workspaceName": "[format('aml-{0}-{1}', parameters('namePrefix'), variables('suffix'))]",
+    "storageBlobDataContributorRoleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+    "amlDataScientistRoleId": "f6c7c914-8db3-469d-8ca1-694a8f32e121"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[variables('logName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "retentionInDays": "[parameters('logRetentionDays')]",
+        "sku": {
+          "name": "PerGB2018"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[variables('appiName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-05-01",
+      "name": "[variables('storageName')]",
+      "location": "[parameters('location')]",
+      "kind": "StorageV2",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "properties": {
+        "minimumTlsVersion": "TLS1_2",
+        "allowBlobPublicAccess": false,
+        "supportsHttpsTrafficOnly": true
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2023-07-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "tenantId": "[tenant().tenantId]",
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "enableRbacAuthorization": true,
+        "softDeleteRetentionInDays": "[parameters('kvSoftDeleteDays')]",
+        "enableSoftDelete": true,
+        "enablePurgeProtection": false
+      }
+    },
+    {
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2023-07-01",
+      "name": "[variables('acrName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.MachineLearningServices/workspaces",
+      "apiVersion": "2024-04-01",
+      "name": "[variables('workspaceName')]",
+      "location": "[parameters('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+        "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "applicationInsights": "[resourceId('Microsoft.Insights/components', variables('appiName'))]",
+        "containerRegistry": "[resourceId('Microsoft.ContainerRegistry/registries', variables('acrName'))]",
+        "publicNetworkAccess": "[if(parameters('enablePublicNetworkAccess'), 'Enabled', 'Disabled')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ContainerRegistry/registries', variables('acrName'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appiName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), parameters('deployerObjectId'), variables('storageBlobDataContributorRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('storageBlobDataContributorRoleId'))]",
+        "principalId": "[parameters('deployerObjectId')]",
+        "principalType": "[parameters('deployerPrincipalType')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]",
+      "name": "[guid(resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName')), parameters('deployerObjectId'), variables('amlDataScientistRoleId'))]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('amlDataScientistRoleId'))]",
+        "principalId": "[parameters('deployerObjectId')]",
+        "principalType": "[parameters('deployerPrincipalType')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('workspaceName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "workspaceName": {
+      "type": "string",
+      "value": "[variables('workspaceName')]"
+    },
+    "storageName": {
+      "type": "string",
+      "value": "[variables('storageName')]"
+    },
+    "keyVaultName": {
+      "type": "string",
+      "value": "[variables('keyVaultName')]"
+    },
+    "acrLoginServer": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', variables('acrName')), '2023-07-01').loginServer]"
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('logName'))]"
+    }
+  }
+}

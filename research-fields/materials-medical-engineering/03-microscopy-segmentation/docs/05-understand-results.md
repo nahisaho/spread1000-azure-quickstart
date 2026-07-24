@@ -91,13 +91,17 @@ print(f"IoU: mean={statistics.mean(ious):.3f}, "
 
 **ワースト画像を可視化してデバッグ**:
 ```python
-import torch, matplotlib.pyplot as plt
-from model import MiniUNet
+import sys, torch, matplotlib.pyplot as plt
+sys.path.insert(0, 'src')
+from model import build_model
 from generate_data import generate_batch
 
 # 検証データを再生成 (--seed と同じシード + 10000 で再現可能)
 imgs, masks = generate_batch("grains", 50, 128, seed=42 + 10000)
-model = MiniUNet(); model.load_state_dict(torch.load("data/checkpoints/best_model.pth", map_location="cpu"))
+model = build_model()
+model.load_state_dict(
+    torch.load("data/checkpoints/best_model.pth", weights_only=True, map_location="cpu")
+)
 model.eval()
 
 worst_idx = rows[0]["index"]
@@ -119,8 +123,9 @@ with torch.no_grad():
 
 論文に載せるなら以下を明記:
 1. 使用した合成データ生成手法 (Voronoi + Gaussian noise σ=0.05)
-2. モデル (MiniUNet 3-level, 117K params)
-3. 学習ハイパーパラメータ (Adam lr=1e-3, BCE pos_weight=9.0, batch=8, 10 epochs)
-4. データ分割 (200 train / 50 val, seed=42 / seed=10042)
-5. 最終指標 (IoU mean/std, Dice mean/std over 50 val images)
-6. 使用ライブラリのバージョン (PyTorch 2.7.1, torchmetrics x.x.x, scikit-image x.x.x)
+2. モデル (MONAI UNet, 3-level, channels 16/32/64, 2 res-units; `python -c "..."` で確認したパラメータ数)
+3. 学習ハイパーパラメータ (Adam lr=1e-3, DiceCELoss pos_weight=9.0, batch=8, epochs)
+4. データ分割 (200 train / 50 val / 50 test, seed=42 / seed=10042 / seed=20042)
+5. 最終指標 (**テストセット** IoU mean/std, Dice mean/std — `src/evaluate.py` の出力)
+6. 使用ライブラリのバージョン (MONAI x.x.x, PyTorch 2.7.1, torchmetrics x.x.x)
+7. チェックポイント SHA-256 (`data/metrics.json` の `checkpoint_sha256` フィールド)
