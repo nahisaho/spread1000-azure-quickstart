@@ -15,11 +15,19 @@ param location string = resourceGroup().location
 @description('Model deployment name (used as `model=` in API calls).')
 param deploymentName string = 'survey-gpt41mini'
 
-@description('Model to deploy.')
+@description('Model to deploy. Verify GA availability with `az cognitiveservices model list -l $LOCATION`.')
 param modelName string = 'gpt-4.1-mini'
 
-@description('Model version.')
-param modelVersion string = '2025-04-14'
+@description('''Model version. **REQUIRED — no default.** gpt-4.1-mini
+`2025-04-14` was marked Deprecated on Microsoft''s 2026-07-21 lifecycle
+list (retirement 2026-10-14) and new subscriptions cannot deploy it.
+Discover a currently GA version with:
+  az cognitiveservices model list -l $LOCATION \\
+    --query "[?model.name==''gpt-4.1-mini'' && model.lifecycleStatus==''generallyAvailable'' && (model.deprecation.inference==null || model.deprecation.inference > ''2026-12-31'')].model.version" \\
+    -o tsv | sort -r | head -1
+Set that value via .env `MODEL_VERSION=` before running deploy.sh.''')
+@minLength(1)
+param modelVersion string
 
 @description('Deployment capacity in K TPM (thousand tokens per minute).')
 @minValue(1)

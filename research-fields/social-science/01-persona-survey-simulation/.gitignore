@@ -3,3 +3,14 @@
 .venv/
 data/responses*.csv
 data/analysis/
+
+# Custom persona/question inputs may contain participant-derived personal data
+# (demographics, political views, free text). Only the two demo CSVs are
+# explicitly allowed; everything else under data/ is opt-in via `git add -f`.
+data/*.csv
+!data/personas-demo.csv
+!data/questions-demo.csv
+data/*.json
+data/*.jsonl
+data/*.parquet
+inputs/

@@ -6,7 +6,7 @@
     "location":           { "value": "japaneast" },
     "deploymentName":     { "value": "survey-gpt41mini" },
     "modelName":          { "value": "gpt-4.1-mini" },
-    "modelVersion":       { "value": "2025-04-14" },
+    "modelVersion":       { "value": "REPLACE_ME" },
     "deploymentCapacity": { "value": 10 }
   }
 }

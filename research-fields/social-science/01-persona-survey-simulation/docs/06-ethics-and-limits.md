@@ -45,10 +45,22 @@
 ## 6. IRB / 倫理審査
 
 - 実在被験者の回答パターン模倣、被験者データからのペルソナ生成、集めた回答を人間データとして扱う場合は、**必ず所属機関の IRB (倫理審査委員会)** を通してください
-- 個人情報保護法 (2022 改正) の要配慮個人情報 (思想・信条、健康、性的指向等) を扱う場合は特に注意
+- 個人情報保護法上の**要配慮個人情報**（APPI 第 2 条 3 項および施行令第 2 条で規定: 人種、信条、社会的身分、病歴、犯罪の経歴、犯罪被害、身体・知的・精神障害等、健康診断等の結果、医師等による指導・診療・調剤、逮捕等の刑事手続、少年保護手続）を扱う場合は特に注意してください
+  - **性的指向** は APPI の統計的な要配慮個人情報カテゴリには**含まれません**が、日本社会心理学会・APA 等の学会倫理規程では sensitive 属性として扱われるため、**機関ポリシー・学会倫理規程に基づき別途配慮**が必要です
 - 本シナリオの `data/personas-demo.csv` は完全に架空 (CC0) なので IRB 不要
 
-## 7. 公表時の記載事項 (推奨)
+## 7. Azure OpenAI abuse monitoring と実データの取り扱い
+
+> [!WARNING]
+> **本テンプレートで実在被験者データを扱わないでください。** リージョン指定 (Regional/Data Zone) は「推論ロケーション」を制限しますが、**Microsoft の abuse monitoring による自動判定・人手レビュー用ログ保管を無効化するわけではありません**。既定では 30 日間の abuse monitoring log が Azure OpenAI 側に保持され、フラグが立った場合 authorized な Microsoft 従業員がレビューする可能性があります。
+
+- 実データ (実在人物由来のペルソナ・自由記述など) を投入する場合は事前に:
+  1. **modified abuse monitoring** (Content logging を無効化する変更申請) を申請・承認取得: [フォーム](https://aka.ms/oai/modifiedaccess) の承認が下りるまで実データを送らない
+  2. 承認後、AOAI account の `properties.RaiPolicies` で `ContentLoggingEnabled=false` になっていることをポータル/CLI で検証
+  3. 参加者インフォームド・コンセントに「Microsoft の abuse monitoring は無効化申請中/承認済み」の状態を明記
+- 参考: [Azure OpenAI data privacy and abuse monitoring](https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy)
+
+## 8. 公表時の記載事項 (推奨)
 
 論文・レポートで LLM シミュレーションの結果を報告する場合、次を必ず記載してください：
 

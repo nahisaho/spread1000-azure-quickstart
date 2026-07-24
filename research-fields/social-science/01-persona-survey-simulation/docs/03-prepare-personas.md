@@ -48,6 +48,9 @@ Likert 5 段階アンカーは全質問共通で固定：
 
 ## 自分のペルソナ・質問を使う
 
+> [!CAUTION]
+> **カスタムペルソナ・質問 CSV は `.gitignore` で保護対象になっています** (`data/*.csv` は `data/personas-demo.csv` / `data/questions-demo.csv` を除いて Git 追跡から除外)。誤って公開リポジトリへ push されないよう、独自 CSV は `data/my-*.csv` パターンで保存するか、`.gitignore` 済みの `inputs/` ディレクトリを新規作成してそこに置いてください。実在被験者由来のデモグラフィック・政治的傾向・自由記述などが含まれる場合、`git add .` からの誤コミット防止は必須です。実データを扱う前に必ず `docs/06-ethics-and-limits.md §6-7` (IRB / abuse monitoring) を確認してください。
+
 CSV を `data/my-personas.csv` / `data/my-questions.csv` として保存し、次章のシミュレーション実行時に `--personas` / `--questions` オプションで指定します：
 
 ```bash

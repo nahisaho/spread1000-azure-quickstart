@@ -12,6 +12,38 @@ if [[ ! -f "$PARAMS" ]]; then
   exit 1
 fi
 
+# Model lifecycle preflight: reject deprecated/near-retirement models before
+# calling ARM. This catches the common case where a copied parameters file
+# still points at a retired version (e.g., gpt-4.1-mini 2025-04-14).
+MODEL_NAME="$(python3 -c "import json,sys;print(json.load(open('$PARAMS'))['parameters']['modelName']['value'])")"
+MODEL_VERSION="$(python3 -c "import json,sys;print(json.load(open('$PARAMS'))['parameters'].get('modelVersion',{}).get('value',''))")"
+LOCATION="$(python3 -c "import json,sys;print(json.load(open('$PARAMS'))['parameters']['location']['value'])")"
+if [[ -z "$MODEL_VERSION" || "$MODEL_VERSION" == "REPLACE_ME" ]]; then
+  echo "ERROR: modelVersion is unset in $PARAMS. Discover a currently GA version with:" >&2
+  echo "  az cognitiveservices model list -l $LOCATION \\" >&2
+  echo "    --query \"[?model.name=='$MODEL_NAME' && model.lifecycleStatus=='generallyAvailable' && (model.deprecation.inference==null || model.deprecation.inference > '2026-12-31')].{version:model.version, deprecation:model.deprecation.inference}\" \\" >&2
+  echo "    -o table" >&2
+  echo "Set the chosen value in $PARAMS." >&2
+  exit 1
+fi
+echo "==> Preflight: verifying $MODEL_NAME $MODEL_VERSION lifecycle in $LOCATION..."
+MODEL_META="$(az cognitiveservices model list -l "$LOCATION" \
+  --query "[?model.name=='$MODEL_NAME' && model.version=='$MODEL_VERSION']|[0].{status:model.lifecycleStatus, retire:model.deprecation.inference}" \
+  -o json 2>/dev/null || echo '{}')"
+LIFECYCLE="$(echo "$MODEL_META" | python3 -c "import json,sys;d=json.load(sys.stdin) or {};print(d.get('status') or '')")"
+RETIRE="$(echo "$MODEL_META" | python3 -c "import json,sys;d=json.load(sys.stdin) or {};print(d.get('retire') or '')")"
+if [[ "$LIFECYCLE" != "generallyAvailable" ]]; then
+  echo "ERROR: $MODEL_NAME $MODEL_VERSION is '$LIFECYCLE' (expected generallyAvailable) in $LOCATION." >&2
+  echo "  Deprecated versions cannot be newly deployed. Pick a currently GA version and update $PARAMS." >&2
+  exit 2
+fi
+if [[ -n "$RETIRE" && "$RETIRE" < "2026-12-31" ]]; then
+  echo "ERROR: $MODEL_NAME $MODEL_VERSION retires $RETIRE (< 2026-12-31 threshold)." >&2
+  echo "  Pick a version whose retirement is further out and update $PARAMS." >&2
+  exit 3
+fi
+echo "  [ok] $MODEL_NAME $MODEL_VERSION is GA${RETIRE:+ (retires $RETIRE)}."
+
 if ! az group show -n "$RG" >/dev/null 2>&1; then
   echo "ERROR: resource group '$RG' does not exist. Create it first:" >&2
   echo "       az group create -n $RG -l japaneast" >&2
