@@ -73,13 +73,30 @@ def main() -> int:
             print(f"  [uploaded] {blob_name} ({len(data)} bytes)")
             uploaded += 1
 
-    # Sync deletions: any blob in the container that is not in inputs/sample-notes/ is stale
-    # (soft-delete keeps them for 7 days per infra/main.bicep — recoverable via `az storage blob undelete`).
+    # Sync deletions: any blob in the container that is not in inputs/sample-notes/ is stale.
+    # OPT-IN ONLY: this is data-loss operation. In real PHI workflows, silently deleting server
+    # documents when a local file is renamed/moved will destroy audit trail. Guard with env var.
+    # Soft-delete keeps blobs for 7 days per infra/main.bicep (recoverable via `az storage blob undelete`).
     deleted = 0
-    for blob in container_client.list_blobs():
-        if blob.name.endswith(".md") and blob.name not in local_names:
-            container_client.delete_blob(blob.name)
-            print(f"  [deleted] {blob.name} (no longer present locally; recoverable for 7 days)")
+    sync_delete = os.environ.get("UPLOAD_DOCS_SYNC_DELETE", "").lower() in {"1", "true", "yes"}
+    stale = [b.name for b in container_client.list_blobs()
+             if b.name.endswith(".md") and b.name not in local_names]
+    if stale and not sync_delete:
+        print(
+            f"\n  [skip-delete] {len(stale)} remote blob(s) not present locally:",
+            file=sys.stderr,
+        )
+        for name in stale:
+            print(f"    - {name}", file=sys.stderr)
+        print(
+            "  → To delete them, re-run with UPLOAD_DOCS_SYNC_DELETE=1 "
+            "(soft-delete retains 7 days).",
+            file=sys.stderr,
+        )
+    elif stale:
+        for name in stale:
+            container_client.delete_blob(name)
+            print(f"  [deleted] {name} (no longer present locally; recoverable for 7 days)")
             deleted += 1
 
     print(f"\nDone. uploaded={uploaded}, updated={updated}, unchanged={unchanged}, deleted={deleted}, total_local={len(files)}")

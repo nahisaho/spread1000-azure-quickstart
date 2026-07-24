@@ -31,6 +31,18 @@ fi
 : "${SCENARIO_TAG:=ehr-nlp}"
 : "${PI_TAG:=unknown}"
 
+# CHAT_MODEL_VERSION is REQUIRED. Model retirements move fast; we no longer bake a
+# default into Bicep to prevent stale-version deployment failures.
+: "${CHAT_MODEL_NAME:=gpt-4o}"
+if [[ -z "${CHAT_MODEL_VERSION:-}" ]]; then
+  echo "ERROR: CHAT_MODEL_VERSION is required. Discover current GA version with:" >&2
+  echo "  az cognitiveservices model list -l \"$LOCATION\" \\" >&2
+  echo "    --query \"[?model.name=='${CHAT_MODEL_NAME}' && model.lifecycleStatus=='generallyAvailable' && (model.deprecation.inference==null || model.deprecation.inference > '2026-12-31')].model.version\" \\" >&2
+  echo "    -o tsv | sort -r | head -1" >&2
+  echo "Set CHAT_MODEL_VERSION in .env to that value." >&2
+  exit 1
+fi
+
 # Helper: assign role but only tolerate "already exists" (RoleAssignmentExists / already assigned).
 assign_role() {
   local principal_id="$1" principal_type="$2" role_name="$3" scope="$4"

@@ -45,7 +45,7 @@ az cognitiveservices account list-models \
 
 | モデル | 用途 | 想定リージョン | Fallback |
 |---|---|---|---|
-| `gpt-4o` (2024-11-20 以降) | 質問応答（generation） | Japan East | Sweden Central, East US 2 |
+| `gpt-4o` (**要事前確認**: 導入時点で GA & 2026-12-31 以降まで利用可能なバージョン) | 質問応答（generation） | Japan East | Sweden Central, East US 2 |
 | `text-embedding-3-large` | ベクトル化（embedding） | Japan East | Sweden Central |
 
 > [!IMPORTANT]

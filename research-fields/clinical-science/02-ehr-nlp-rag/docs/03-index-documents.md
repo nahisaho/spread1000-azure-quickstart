@@ -105,7 +105,7 @@ print(f'Total docs in index: {r.get_count()}')
 | `Forbidden`: `AuthorizationPermissionMismatch` (Blob) | Storage Blob Data Contributor が未付与 → `infra/deploy.sh` の RBAC 部分を再実行 |
 | `Unauthorized` on Search | Search Index Data Contributor 未付与 → 同上、または `az login` 後に権限伝播まで数分待つ |
 | `401 Unauthorized` on OpenAI embedding | Cognitive Services OpenAI User 未付与 → 同上。または AAD 認証エラーなら `az account get-access-token --resource https://cognitiveservices.azure.com` で確認 |
-| `The vector field 'content_vector' has dimensionality...` | 過去に別次元でインデックス作成済み → インデックスを削除して再作成: `az search index delete --service-name $SEARCH_NAME --name $SEARCH_INDEX`（Data Plane API を使うため extension が必要）または Portal から削除 |
+| `The vector field 'content_vector' has dimensionality...` | 過去に別次元でインデックス作成済み → インデックスを削除して再作成。`az search index delete` サブコマンドは存在しないため、次のいずれかを使用: (a) Python SDK: `python -c "import os; from azure.identity import DefaultAzureCredential; from azure.search.documents.indexes import SearchIndexClient; SearchIndexClient(endpoint=os.environ['SEARCH_ENDPOINT'], credential=DefaultAzureCredential()).delete_index(os.environ['SEARCH_INDEX'])"`、(b) REST: `az rest --method delete --url "$SEARCH_ENDPOINT/indexes/$SEARCH_INDEX?api-version=2024-07-01" --resource "https://search.azure.com"`、(c) Portal から削除 |
 | `HTTPSConnectionPool ... Read timed out` | ネットワーク不安定、または OpenAI で TPM 超過 → 数分待って再実行 |
 
 → **[04-query-rag.md](04-query-rag.md) に進む**

@@ -42,8 +42,16 @@ param gpt4oTpmCapacityK int = 30
 @description('Chat model name. Verify availability with: az cognitiveservices model list -l <region> --query "[?kind==\'OpenAI\' && model.name==\'gpt-4o\'].model.version" -o tsv')
 param chatModelName string = 'gpt-4o'
 
-@description('Chat model version. Set to a currently GA + regionally available version before deployment. Verify with `az cognitiveservices model list -l $LOCATION`. Default is the most recent broadly-available GA at time of writing (2026-08).')
-param chatModelVersion string = '2024-11-20'
+@description('''Chat model version. **YOU MUST verify the model+version is currently
+GA and available in your subscription/region BEFORE deployment.** Both 2024-08-06
+(retired 2026-03-31) and 2024-11-20 (retiring 2026-10-01) are past or near retirement.
+Preflight command:
+  az cognitiveservices model list -l $LOCATION \\
+    --query "[?model.name=='gpt-4o' && model.lifecycleStatus=='generallyAvailable' && (model.deprecation.inference==null || model.deprecation.inference > '2026-12-31')].model.version" \\
+    -o tsv | sort -r | head -1
+Set to that value. Leaving the placeholder will FAIL deployment (empty version is rejected below).''')
+@minLength(1)
+param chatModelVersion string
 
 @description('Chat deployment name (referenced by scripts). Keep stable.')
 param chatDeploymentName string = 'gpt-4o'
@@ -214,13 +222,21 @@ resource search 'Microsoft.Search/searchServices@2024-03-01-preview' = {
 }
 
 // ---------- Diagnostic settings ----------
+// AI Search の allLogs は Query.Search カテゴリを含み、生の検索クエリ (=臨床質問文)
+// が AzureDiagnostics.Query_s に 30 日間保持される。臨床データ相当の内容として
+// Log Analytics workspace の RBAC を扱う必要がある。
+// 本設定は監査 (audit) のみに絞り、Query 本体のログ化は既定で無効。
+// 実データ運用時は "OperationLogs" だけ有効にし、必要に応じて別の CMK 付き
+// workspace + 短期保持設定へ切り替えること。
 resource searchDiag 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   scope: search
   name: 'to-log-analytics'
   properties: {
     workspaceId: logAnalytics.id
     logs: [
-      { categoryGroup: 'allLogs', enabled: true }
+      { category: 'OperationLogs', enabled: true }
+      // 生のクエリを含む Query.Search カテゴリはデフォルト無効
+      // ({ category: 'QueryLogs', enabled: false } は互換のため明示不要)
     ]
     metrics: [
       { category: 'AllMetrics', enabled: true }

@@ -236,9 +236,11 @@ def main() -> int:
     stale_total = 0
     for blob_name in current_blob_names:
         indexed_ids: list[str] = []
+        # OData: escape single quotes by doubling them per OData v4 rules
+        odata_blob = blob_name.replace("'", "''")
         for hit in search_client.search(
             search_text="*",
-            filter=f"source_blob eq '{blob_name}'",
+            filter=f"source_blob eq '{odata_blob}'",
             select=["id"],
             top=1000,
             include_total_count=False,
@@ -269,9 +271,10 @@ def main() -> int:
     orphan_total = 0
     for blob_name in orphaned_blobs:
         orphan_ids: list[dict] = []
+        odata_blob = blob_name.replace("'", "''")
         for hit in search_client.search(
             search_text="*",
-            filter=f"source_blob eq '{blob_name}'",
+            filter=f"source_blob eq '{odata_blob}'",
             select=["id"],
             top=1000,
             include_total_count=False,

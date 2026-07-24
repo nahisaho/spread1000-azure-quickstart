@@ -280,23 +280,24 @@ PROTECT_JMESPATH=$(printf ",'%s'" $PROTECTED_OIDS); PROTECT_JMESPATH="[${PROTECT
 
 # 事前検証 (canary): 対応者が「実際に write/delete できる」ことを一時 blob で確認する
 # read/list だけの権限では Phase ② の削除が失敗するため、write/delete まで検証する
+# NOTE: CANARY_TMP は post-check (①-a-post) でも再利用するため、スクリプト終了時まで保持
+#       (trap でクリーンアップ)。以前は上書き前に rm していて post-check が --file 参照エラーになるバグがあった。
 CANARY_NAME=".phi-incident-canary-$(date -u +%Y%m%dT%H%M%SZ).txt"
 CANARY_TMP=$(mktemp)
+trap 'rm -f "$CANARY_TMP"' EXIT
 echo "canary" > "$CANARY_TMP"
 if ! az storage blob upload --account-name "$STORAGE_ACCOUNT" --container-name "$DOCS_CONTAINER" \
      --name "$CANARY_NAME" --file "$CANARY_TMP" --auth-mode login --overwrite -o none 2>/dev/null; then
-  rm -f "$CANARY_TMP"
   echo "🛑 STOP: 対応者は Blob write 権限がありません（Storage Blob Data Contributor 相当が必要）。" >&2
   echo "  上記コメントの一時ロール付与手順を実行し、~2 分待ってから再実行してください（exit 6）。" >&2
   exit 6
 fi
 if ! az storage blob delete --account-name "$STORAGE_ACCOUNT" --container-name "$DOCS_CONTAINER" \
      --name "$CANARY_NAME" --auth-mode login -o none 2>/dev/null; then
-  rm -f "$CANARY_TMP"
   echo "🛑 STOP: 対応者は Blob delete 権限がありません。exit 6" >&2
   exit 6
 fi
-rm -f "$CANARY_TMP"
+# 注意: CANARY_TMP は消さない (post-check で再利用)。trap EXIT で最後に削除される。
 
 # AI Search canary: index 作成/削除 (Service Contributor 相当) が実行可能か検証
 if ! python3 - <<'PY' 2>/dev/null; then
@@ -394,8 +395,13 @@ echo "=== 【監査 1b】非対応者への継承割当てのうち、データ/
 INHERITED_FOUND=0
 # 「未知の継承ロールは全て停止条件」= 既知の SAFE_ROLES 以外は全て危険扱い（fail-secure）
 # SAFE_ROLES は「PHI にも RBAC 再付与にもアクセスできないことが確定している組み込みロール」のみ
+# 注意: "Log Analytics Reader" / "Monitoring Reader" は本テンプレートでは SAFE 扱いしない。
+#       Search の QueryLogs (Query.Search) を診断で有効化すると生の臨床質問が
+#       AzureDiagnostics.Query_s に格納されうるため、Log Analytics 上の閲覧権限は
+#       PHI 閲覧権限として扱う必要がある (本テンプレートでは既定 QueryLogs 無効化済みだが、
+#       将来的に有効化する運用者に対して fail-secure を維持する)。
 SAFE_ROLES=(
-  "Reader" "Monitoring Reader" "Log Analytics Reader" "Security Reader"
+  "Reader" "Security Reader"
   "Cost Management Reader" "Cost Management Contributor"
   "Tag Contributor"
 )

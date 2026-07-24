@@ -46,9 +46,9 @@ echo "Deploying to: $LOCATION"
 > [!IMPORTANT]
 > 本 quickstart は**合成データ動作確認専用**です。**実患者データ（PHI）は投入しないでください**（[01-prerequisites.md §6](01-prerequisites.md) 参照）。動作確認先として推奨リージョンは Japan East、次点で Sweden Central / East US 2（在庫がある場合）。
 
-## 3. デプロイ前にモデルバージョン確認（新規サブスクは必須）
+## 3. デプロイ前にモデルバージョン確認（**必須**）
 
-`gpt-4o` `2024-11-20` は将来的に retirement されるため、**新規サブスクリプションでは対象リージョンで現時点の GA バージョンを確認**してください（既存サブスクで過去にデプロイ済みの場合は Bicep 既定値のまま進めて OK）。
+`gpt-4o` の主要バージョンは次々と retirement されているため（`2024-08-06` は 2026-03-31 retired、`2024-11-20` は 2026-10-01 retire 予定）、**本テンプレートは Bicep デフォルトを廃止**し、`CHAT_MODEL_VERSION` を .env で明示指定することを要求します。以下で GA バージョンを確認してください:
 
 ```bash
 # 対象リージョンで提供中の gpt-4o モデルバージョン一覧
@@ -56,30 +56,32 @@ az cognitiveservices model list --location "$LOCATION" \
   --query "[?kind=='OpenAI' && model.name=='gpt-4o'].{version:model.version, deprecation:model.deprecation}" \
   -o table
 
-# text-embedding-3-large も同様に確認
+# ワンライナー: GA かつ 2026-12-31 以降まで残る最新版を取得
+CHAT_MODEL_VERSION=$(az cognitiveservices model list -l "$LOCATION" \
+  --query "[?model.name=='gpt-4o' && model.lifecycleStatus=='generallyAvailable' && (model.deprecation.inference==null || model.deprecation.inference > '2026-12-31')].model.version" \
+  -o tsv | sort -r | head -1)
+echo "$CHAT_MODEL_VERSION"   # 例: 2025-XX-XX
+# → .env に CHAT_MODEL_VERSION=<出力値> を記載
+
+# text-embedding-3-large も同様に確認 (Bicep デフォルトは '1')
 az cognitiveservices model list --location "$LOCATION" \
   --query "[?kind=='OpenAI' && model.name=='text-embedding-3-large'].{version:model.version, deprecation:model.deprecation}" \
   -o table
 ```
 
-**デフォルト（`gpt-4o` 2024-11-20 / `text-embedding-3-large` 1）で問題があった場合**は、`deploy.sh` を実行する前に環境変数を上書きします:
+`.env` の必須設定例:
 
 ```bash
-# 例: gpt-4o の 2024-08-06 版に差し替えて deploy.sh を実行
-export CHAT_MODEL_VERSION=2024-08-06
-bash infra/deploy.sh
+# Chat model (REQUIRED — deploy.sh は未設定なら中断)
+CHAT_MODEL_NAME=gpt-4o
+CHAT_MODEL_VERSION=2025-XX-XX   # 上記コマンドの出力値
 
-# 別モデル（例: gpt-4o-mini 2024-07-18）に差し替え
-export CHAT_MODEL_NAME=gpt-4o-mini
-export CHAT_MODEL_VERSION=2024-07-18
-export CHAT_DEPLOYMENT_NAME=gpt-4o-mini
-bash infra/deploy.sh
+# Chat deployment name & その他は任意
+# CHAT_DEPLOYMENT_NAME=gpt-4o
 ```
 
-上書き可能な環境変数: `CHAT_MODEL_NAME`, `CHAT_MODEL_VERSION`, `CHAT_DEPLOYMENT_NAME`, `EMBEDDING_MODEL_NAME`, `EMBEDDING_MODEL_VERSION`, `EMBEDDING_DEPLOYMENT_NAME`。
-
 > [!WARNING]
-> `EMBEDDING_MODEL_NAME` を `text-embedding-3-large` 以外に変更すると、Bicep で作成される Search インデックスの vector 次元 (3072 固定) と埋め込みモデルの出力次元が一致しなくなり、`index_docs.py` の upload が失敗します。**現状の Bicep は `text-embedding-3-large` (3072-dim) 専用**です。他のモデルを使いたい場合は `main.bicep` の Search index vector `dimensions` を該当モデルの出力次元 (`text-embedding-3-small`=1536, `text-embedding-ada-002`=1536 等) に合わせて手動で修正してください。
+> `EMBEDDING_MODEL_NAME` を `text-embedding-3-large` 以外に変更してはいけません。Bicep で作成される Search インデックスの vector 次元 (3072 固定) と埋め込みモデルの出力次元が一致しなくなり、`index_docs.py` の upload が失敗します。**本テンプレートは `text-embedding-3-large` (3072-dim) 専用**です。他のモデルを使いたい場合は `main.bicep` の Search index vector `dimensions` と `EMBEDDING_MODEL_NAME` を両方合わせて手動修正してください。
 
 ## 4. デプロイ実行
 
@@ -138,7 +140,7 @@ set -a && source .env && set +a
 |---|---|
 | `SkuNotAvailable` (Azure OpenAI) | 対象リージョンで `gpt-4o` が未提供。`--location` を Sweden Central に変更、または [`../../../../docs/02-gpu-quota.md`](../../../../docs/02-gpu-quota.md) 参考に別リージョンを試す |
 | `InvalidTemplateDeployment: The subscription is not registered to use...` | `Microsoft.CognitiveServices` / `Microsoft.Search` 未登録 → `deploy.sh` 冒頭で自動登録。手動なら `az provider register --namespace Microsoft.CognitiveServices --wait` |
-| `Conflict: Model gpt-4o is unavailable in ...` | 選択したリージョンで gpt-4o (2024-11-20) が提供されていない → `az cognitiveservices model list --location $LOCATION` で提供モデル確認、必要なら Bicep パラメータ `deployGpt4o=false` にしてデプロイ後手動でモデルを選ぶ |
+| `Conflict: Model gpt-4o is unavailable in ...` | 選択したリージョンで `gpt-4o` の指定バージョンが提供されていない → §3 の `az cognitiveservices model list` で GA バージョンを再取得し `.env` の `CHAT_MODEL_VERSION` を更新、または `deployGpt4o=false` にしてデプロイ後手動でモデルを選ぶ |
 | `AuthorizationFailed` on role assignment | 呼び出し元に `User Access Administrator` が無い → 機関管理者に付与依頼 |
 | `Quota Exceeded: Cognitive Service tokens per minute` | TPM quota 不足 → Azure Portal → Azure OpenAI → Quotas から申請 |
 
