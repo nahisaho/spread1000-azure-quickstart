@@ -103,7 +103,7 @@ research-fields/
 | 03 | [多言語エンベディング検索](research-fields/arts-humanities/03-multilingual-embedding-search/) | text-embedding-3-large + Azure AI Search (HNSW ベクター + BM25 ハイブリッド) で日/英/仏/独/中 コーパスを言語横断検索、FAISS ローカルフォールバック対応 | Azure AI Search + AOAI Embeddings |
 | 04 | [GraphRAG ナレッジグラフ + QA](research-fields/arts-humanities/04-graphrag/) | Microsoft GraphRAG で史料/科学文献からエンティティ・関係抽出 → local/global search | AOAI GPT + Embeddings |
 
-以上で SPReAD-1000 採択 456 課題を 10 分野 × 3-6 シナリオ (計 36 クイックスタート) でカバーします。
+以上で SPReAD-1000 採択 456 課題を 10 分野 × 3-6 シナリオ (計 35 クイックスタート) でカバーします。
 
 ## 一次資料
 
