@@ -19,6 +19,7 @@
 ## `gymnasium.error.NamespaceNotFound` for LunarLander
 
 - `pip install "gymnasium[box2d]==1.3.0"` を追加してください
+- LunarLander の正しい ID は **`LunarLander-v3`** (Gymnasium 1.x 系; v2 は廃止)
 - Windows では swig が必要な場合あり: `pip install swig` を先に
 
 ## TensorBoard が起動しない
@@ -28,4 +29,4 @@
 
 ## macOS で `Segmentation fault`
 
-- Apple Silicon で稀に SubprocVecEnv がクラッシュ。`--n-envs 1` で直列実行に切り替えて回避。
+- Apple Silicon で稀に SubprocVecEnv がクラッシュ。`--n-envs 1` で直列実行 (DummyVecEnv) に切り替えて回避。

@@ -1,0 +1,10 @@
+# Windows / CPU / Python 3.12 — pip-compile lock
+#
+# このファイルは Windows 上で以下のコマンドで生成してください:
+#
+#   pip install pip-tools
+#   pip-compile --generate-hashes --allow-unsafe `
+#       --output-file requirements-lock/windows-cpu-py312.txt `
+#       requirements.in
+#
+# 生成後にこのコメントブロックを削除してコミットしてください。

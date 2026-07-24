@@ -1,37 +1,41 @@
 # 05 — 別環境で試す
 
+`train.py` と `evaluate.py` は `--env-id` 引数で任意の Gymnasium 環境に切り替えられます。  
+環境 ID は `eval_metrics.json` にも記録されるため、`evaluate.py` は自動でその環境を再現します。
+
 ## MountainCar-v0
 
-離散行動 3 択、報酬がスパース (山頂到達時のみ 0)。CartPole より難しい。
+各 step に -1 の時間最小化型報酬 (山頂到達まで step 数を最小にする)。CartPole より難しい。
 
-```python
-env = gym.make("MountainCar-v0")
-# train.py の "CartPole-v1" を書き換え
+```bash
+python src/train.py --env-id MountainCar-v0 --timesteps 200000 \
+    --allow-long-run --output-dir outputs/mountaincar
+python src/evaluate.py --model outputs/mountaincar/ppo_cartpole.zip
 ```
 
-- `--timesteps 200000` 程度必要
+- `--timesteps 200000` 程度必要 (PPO は探索が苦手なため解けないこともある)
 - `--gamma 0.99` を維持
 
-## LunarLander-v2
+## LunarLander-v3
 
 `pip install gymnasium[box2d]` が必要 (別途)。連続空間 8 次元、離散 4 行動 (左/右/メイン噴射/無)。
 
 ```bash
 pip install "gymnasium[box2d]==1.3.0"
-```
 
-```python
-env = gym.make("LunarLander-v2")
-# 200000 step あたりで 200+ を狙う
+python src/train.py --env-id LunarLander-v3 --timesteps 500000 \
+    --allow-long-run --output-dir outputs/lunar
+python src/evaluate.py --model outputs/lunar/ppo_cartpole.zip
 ```
 
 ## 連続行動空間 (Pendulum-v1)
 
 `Pendulum-v1` は行動が連続 1 次元 (-2 to 2 のトルク)。**PPO は連続行動もそのまま扱える**:
 
-```python
-env = gym.make("Pendulum-v1")
-# MlpPolicy は自動で連続 policy (Gaussian) を選ぶ
+```bash
+python src/train.py --env-id Pendulum-v1 --timesteps 100000 \
+    --output-dir outputs/pendulum
+python src/evaluate.py --model outputs/pendulum/ppo_cartpole.zip
 ```
 
 ## カスタム環境

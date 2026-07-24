@@ -14,29 +14,38 @@ src/train.py --timesteps 50000
 
    ├→ Vectorized Env (4 並列) で CartPole-v1 を回す
    ├→ MlpPolicy (2 層 64 unit) を PPO で更新
-   ├→ 500 step ごとに評価: 平均リターン
+   ├→ 5000 step ごとに評価: 平均リターン
    └→ outputs/
-        ├── ppo_cartpole.zip     # 学習済みモデル
+        ├── ppo_cartpole.zip     # 学習済みモデル (最終)
+        ├── best_model.zip       # EvalCallback が保存した最良モデル
+        ├── evaluations.npz      # EvalCallback の評価履歴 (timesteps, results, ep_lengths)
         ├── learning_curve.png   # 報酬 vs step
-        ├── eval_metrics.json    # 最終評価
-        └── episode_gif.gif      # (option) 1 エピソード可視化
+        └── eval_metrics.json    # 最終評価 + プロベナンス情報
 ```
 
 ## クイックスタート
 
 ```bash
+cd research-fields/mechanical-energy/02-rl-cartpole
 python -m pip install -r requirements.txt
 
 python src/train.py --timesteps 50000 --seed 42
 python src/evaluate.py --model outputs/ppo_cartpole.zip --episodes 20
 ```
 
+> **再現性重視の場合** — ハッシュ付きロックファイルを使う:
+> ```bash
+> # Linux + Python 3.12
+> pip install --require-hashes -r requirements-lock/linux-cpu-py312.txt
+> ```
+> macOS / Windows のロックファイルは `requirements-lock/` 内の手順で生成してください。
+
 ## タスク: CartPole-v1
 
 - **状態** (4 次元): カート位置、カート速度、ポール角度、ポール角速度
 - **行動** (2 択): 左に押す / 右に押す
-- **報酬**: 各 step で +1 (ポールが 15° 以内で立っている限り)
-- **エピソード終了**: ポール角度 > 15° or カート位置 > 2.4 or 500 step 到達
+- **報酬**: 各 step で +1 (ポールが ±12° 以内で立っている限り)
+- **エピソード終了**: ポール角度 > ±12° or カート位置 > ±2.4 or 500 step 到達 (観測空間の上限は ±24°)
 - **成功基準**: 100 エピソード平均リターン **≥ 475** (公式)
 
 ## スタック
