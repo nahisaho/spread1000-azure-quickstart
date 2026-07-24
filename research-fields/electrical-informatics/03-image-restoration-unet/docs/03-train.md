@@ -22,7 +22,8 @@ python src/train.py --device cpu --epochs 20 --batch-size 16 --seed 42
 
 ## モデル
 
-`src/model.py` の `MiniUNet` — 3 レベル U-Net、**約 117K パラメータ**。
+`src/model.py` の `MiniUNet` — 3 レベル U-Net、**117,073 パラメータ**
+(実行時: `python src/model.py` で確認可能)。
 
 ```
 入力 (B, 1, 128, 128)
@@ -64,13 +65,13 @@ Zhao et al. (2017) *"Loss Functions for Image Restoration with Neural Networks"*
 
 学習開始前に **noisy 自体を clean と比較した PSNR/SSIM** を測定し、`train_history.json` と学習曲線に記録します。これが「モデルなしで到達できる下限」です。**モデルは必ずこれを上回るはず** です。上回らない場合は実装バグを疑ってください。
 
-期待される baseline: σ=0.10 のノイズなら概ね **PSNR 20 dB, SSIM 0.55** 前後。復元後は **PSNR 30 dB 前後, SSIM 0.90 前後** を目安にしてください（データ・seed によって変動）。
+期待される baseline: σ=0.10 のノイズなら PSNR は信号依存 (クリーン画像の平均輝度に依存するため固定値ではありません)。概ね **PSNR 18〜22 dB, SSIM 0.50〜0.60** 前後が目安です。復元後は **PSNR 28〜33 dB 前後, SSIM 0.88〜0.93 前後** を目安にしてください（データ・seed によって変動）。
 
 ## 期待される出力
 
 ```
 [data] train=200, val=40
-[model] MiniUNet, trainable params = 117,681
+[model] MiniUNet, trainable params = 117,073
 [baseline] val noisy vs clean: PSNR=19.99 dB, SSIM=0.5xxx
 [epoch  1/20] train_loss=0.05xx val_loss=0.03xx val_PSNR=25.xx val_SSIM=0.8xxx  ★ (best, saved)
 ...

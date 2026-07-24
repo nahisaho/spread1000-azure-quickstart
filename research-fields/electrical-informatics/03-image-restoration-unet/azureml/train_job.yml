@@ -1,0 +1,46 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: image-restoration-unet-t4
+description: >
+  E-3 U-Net denoiser training on Azure ML T4.
+  Generates 500+100+50 train/val/test samples, trains 20 epochs,
+  then evaluates on the held-out test split.
+experiment_name: spread1000-image-restoration
+
+# Code root is the scenario directory (one level above azureml/)
+code: ..
+
+command: >-
+  python src/generate_data.py
+    --n-train 500 --n-val 100 --n-test 50 --seed 42 &&
+  python src/train.py
+    --device cuda --epochs 20 --batch-size 32 --seed 42
+    --output-dir ${{outputs.artifacts}} &&
+  python src/evaluate.py
+    --device cuda
+    --output-dir ${{outputs.artifacts}}
+
+# Pinned custom environment (registered from infra/environments/gpu/environment.yml)
+# Register once with: az ml environment create -f infra/environments/gpu/environment.yml
+#                                              -g $RG -w $WS
+environment: azureml:e3-unet-gpu:1
+
+# Compute cluster created with --tier low_priority (see docs/05-azure-ml-t4.md)
+compute: azureml:gpu-t4
+
+limits:
+  timeout: 3600
+
+resources:
+  instance_count: 1
+
+outputs:
+  artifacts:
+    type: uri_folder
+
+tags:
+  task: image-restoration
+  model: mini-unet
+  degradation: gaussian-noise-sigma-0.10
+  scenario: e3

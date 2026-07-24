@@ -1,0 +1,14 @@
+# requirements-gpu.in — top-level pinned GPU dependencies for AzureML environment
+# pip-compile note:
+#   Install pip-tools:  pip install pip-tools
+#   Generate lock file: pip-compile requirements-gpu.in \
+#                         --generate-hashes \
+#                         --output-file requirements-gpu.lock
+#
+# NOTE: torch/torchvision are installed via the MCR base image and should NOT
+# be re-installed here. Only supplementary packages are listed.
+scikit-image==0.24.0
+scipy==1.13.1
+numpy==1.26.4
+matplotlib==3.9.2
+torchmetrics==1.4.3

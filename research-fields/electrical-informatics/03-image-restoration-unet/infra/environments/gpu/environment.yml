@@ -1,0 +1,16 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+
+name: e3-unet-gpu
+version: "1"
+description: >
+  GPU environment for E-3 Image-Restoration U-Net.
+  Base: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
+  Extra packages: scikit-image 0.24, scipy 1.13, numpy 1.26, matplotlib 3.9, torchmetrics 1.4
+
+build:
+  path: .
+  dockerfile_path: Dockerfile
+
+tags:
+  base_image: openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
+  scenario: e3-image-restoration-unet

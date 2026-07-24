@@ -10,15 +10,93 @@ Azure リソースは一切作成していないので、**追加の料金は発
 rm -rf data/ outputs/ .venv/
 ```
 
-- `data/train/`, `data/val/`, `data/samples/`: `generate_data.py` の再実行で再生成
+- `data/train/`, `data/val/`, `data/test/`, `data/samples/`: `generate_data.py` の再実行で再生成
 - `outputs/`: 学習成果物。別途保存したい場合は先に別ディレクトリへ退避
 
 ## Azure ML を使った場合
 
-[docs/05-azure-ml-t4.md](05-azure-ml-t4.md) の compute cluster を放置しても `min-instances=0` なら料金は発生しません。完全削除:
+> [!WARNING]
+> **ゼロへのスケールダウン ≠ 完全無料**
+>
+> `min-instances=0` のコンピュートクラスターは VM ノード費用が 0 になりますが、
+> **以下の費用は継続して発生します**:
+> - AML ワークスペースのデフォルトストレージ (ジョブ出力・ログが残る)
+> - Log Analytics ワークスペースのデータ保持
+>
+> 完全にコスト 0 にするには RG ごと削除してください (下記参照)。
+
+> [!NOTE]
+> **停止済み Compute Instance の費用**
+> Compute Instance を停止 (stop) してもゼロにはなりません。
+> OS ディスク (P10: 約 $1.54/月) + Standard Load Balancer の費用が残ります。
+> 不要な場合は削除してください。
+
+### .env を読み込む
+
+cleanup コマンドはすべて `.env` の値を使います:
 
 ```bash
-az ml compute delete --name gpu-t4 --yes
+source .env
+# → AML_SUBSCRIPTION_ID, AML_RESOURCE_GROUP, AML_WORKSPACE_NAME,
+#    AML_KEY_VAULT_NAME, AML_LOCATION が設定される
+```
+
+### Compute cluster の削除
+
+```bash
+az ml compute delete \
+  --name gpu-t4 \
+  -g "$AML_RESOURCE_GROUP" \
+  -w "$AML_WORKSPACE_NAME" \
+  --yes
+```
+
+### Compute Instance の削除 (作成した場合)
+
+```bash
+az ml compute delete \
+  --name <インスタンス名> \
+  -g "$AML_RESOURCE_GROUP" \
+  -w "$AML_WORKSPACE_NAME" \
+  --yes
+```
+
+### インフラ全体の削除
+
+> [!DANGER]
+> **このシナリオの deploy.sh で作成した専用 RG のみ削除してください。**
+> 既存のワークスペース / リソースグループを流用した場合は `az group delete` を
+> **実行しないでください** — 無関係なリソースが全削除されます。
+
+```bash
+# Bicep で作成したデプロイを削除 (任意; RG 削除で代替可)
+az deployment group delete \
+  --name main \
+  -g "$AML_RESOURCE_GROUP"
+
+# リソースグループごと削除 (このシナリオ専用 RG の場合のみ)
+az group delete \
+  -n "$AML_RESOURCE_GROUP" \
+  --subscription "$AML_SUBSCRIPTION_ID" \
+  --yes --no-wait
+```
+
+### Key Vault のパージ (soft-delete 後の完全削除)
+
+soft-delete が有効な KV は削除後も保持期間中は残ります。完全に消すには:
+
+```bash
+# 名前を厳密に .env から取得 (手動タイプ不要)
+KV_NAME=$(az keyvault list-deleted \
+  --query "[?name=='${AML_KEY_VAULT_NAME}'].name | [0]" \
+  -o tsv 2>/dev/null || echo "")
+
+if [[ -n "$KV_NAME" ]]; then
+  az keyvault purge --name "$KV_NAME" --location "$AML_LOCATION"
+  echo "Purged: $KV_NAME"
+else
+  echo "Key Vault ${AML_KEY_VAULT_NAME} is not in deleted state or already purged."
+fi
 ```
 
 ## 応用のヒント
@@ -34,52 +112,27 @@ def add_poisson_gaussian(img, alpha, sigma_read, rng):
     shot = rng.poisson(lam=lam) / alpha
     read = rng.normal(0, sigma_read, size=img.shape)
     return np.clip(shot + read, 0, 1).astype(np.float32)
-
-
-def add_blur_and_noise(img, sigma_blur, sigma_noise, rng):
-    """ボケ + ノイズ (deblurring 課題)."""
-    from scipy.ndimage import gaussian_filter
-    blurred = gaussian_filter(img[0], sigma=sigma_blur)[None]
-    return np.clip(blurred + rng.normal(0, sigma_noise, size=img.shape), 0, 1).astype(np.float32)
-
-
-def add_downsample(img, factor, rng):
-    """低解像度 → 高解像度 (超解像)."""
-    from scipy.ndimage import zoom
-    low = zoom(img[0], 1/factor, order=1)
-    up  = zoom(low, factor, order=1)  # bicubic upsample
-    return up[None].astype(np.float32)
 ```
-
-学習側のコードは全く変える必要がありません。
 
 ### 実データに置き換える
 
-`NoisyCleanDataset` は `.npz` の `clean` / `noisy` キーを読むだけです。実データを `(1, H, W) float32 in [0, 1]` に前処理して同じ形式で保存すれば、そのまま学習できます。
+`NoisyCleanDataset` は `.npz` の `clean` / `noisy` キーを読むだけです。実データを
+`(1, H, W) float32 in [0, 1]` に前処理して同じ形式で保存すれば、そのまま学習できます。
 
 **実データ移行時の注意**:
 
 1. **正規化範囲**: 実 RAW は 12〜16 bit 整数。`float32 / (2**bits - 1)` で [0,1] に正規化
-2. **サイズ**: MiniUNet は 4 の倍数の入力を要求。必要ならクロップまたはパディング
+2. **サイズ**: MiniUNet は 4 の倍数の入力を要求
 3. **チャネル数**: 3ch RGB なら `MiniUNet(in_channels=3, out_channels=3)`
-4. **noisy/clean ペアが取れない場合**: Noise2Noise (Lehtinen et al. 2018) や Noise2Void (Krull et al. 2019) 系の自己教師あり手法を検討
+4. **データ分割**: パッチ抽出時は同一ソース画像が train/val/test に混在しないよう
+   `source_image_id` でグループ分割すること (generate_data.py のコメント参照)
+5. **医療データ**: 患者/被験者 ID でグループ分割してリーク防止
 
 ### 大規模化
 
-- **より深い U-Net**: `base=32` にすると ~470K params (D-3 と同じ trick)
+- **より深い U-Net**: `base=32` にすると ~470K params
 - **注意 (attention U-Net)**: skip connection に attention gate を追加
-- **拡散モデル**: DiT/Latent Diffusion で条件生成 (計算量は跳ね上がる)
-
-いずれも本教材の枠を超えるので、まずは baseline PSNR/SSIM を安定して超える MiniUNet で「復元学習の勘所」を掴んでから移行してください。
-
-## 医療・産業応用時に追加で必要なこと
-
-**本モデルは医療機器ではありません**（[docs/07-ethics-and-limits.md](07-ethics-and-limits.md) 参照）。研究として発展させる場合の追加検証:
-
-1. **合成 noisy と実 noisy の分布差** の定量評価
-2. **偽構造 (hallucination) 検出** — 復元結果を測定値として使う場合は死活問題
-3. **異常入力への挙動** — 学習分布外の入力に対する退化を確認
-4. **医療応用の場合**: 日本では SaMD、EU では MDR、米国では FDA の枠組みに従う
+- **拡散モデル**: DiT/Latent Diffusion で条件生成
 
 ## 次のステップ
 

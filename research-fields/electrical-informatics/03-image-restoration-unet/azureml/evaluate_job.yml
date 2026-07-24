@@ -1,0 +1,44 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: image-restoration-unet-evaluate
+description: >
+  E-3 U-Net denoiser evaluation on held-out test split.
+  Loads best_model.pt from a previous training job's output and evaluates
+  on data/test/ to report final PSNR/SSIM metrics.
+experiment_name: spread1000-image-restoration
+
+code: ..
+
+command: >-
+  python src/evaluate.py
+    --device cuda
+    --checkpoint ${{inputs.checkpoint}}/best_model.pt
+    --data-dir ${{inputs.data}}/test
+    --output-dir ${{outputs.results}}
+
+environment: azureml:e3-unet-gpu:1
+
+compute: azureml:gpu-t4
+
+limits:
+  timeout: 600
+
+resources:
+  instance_count: 1
+
+inputs:
+  checkpoint:
+    type: uri_folder
+  data:
+    type: uri_folder
+
+outputs:
+  results:
+    type: uri_folder
+
+tags:
+  task: image-restoration
+  model: mini-unet
+  split: test
+  scenario: e3

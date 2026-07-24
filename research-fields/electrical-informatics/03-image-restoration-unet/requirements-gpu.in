@@ -1,0 +1,14 @@
+# requirements-gpu.in — top-level GPU/AML dependencies for E-3 image-restoration U-Net
+# Generate locked file:
+#   pip install pip-tools
+#   pip-compile requirements-gpu.in --generate-hashes --output-file requirements-gpu.lock
+#
+# NOTE: torch/torchvision are already present in the MCR base image
+# (mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1)
+# and should NOT be reinstalled. Only supplementary packages are listed here.
+
+scikit-image==0.24.0
+scipy==1.13.1
+numpy==1.26.4
+matplotlib==3.9.2
+torchmetrics==1.4.3
