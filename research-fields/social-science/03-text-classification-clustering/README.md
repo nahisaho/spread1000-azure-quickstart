@@ -25,12 +25,12 @@ Azure OpenAI Embeddings + scikit-learn で日本語短文の**分類・クラス
 | `gpt-5.4-mini` v2026-03-17 | GlobalStandard | クラスタラベル生成 | $0.03 |
 
 > [!IMPORTANT]
-> ada-002 系は 2027-04-15 退役予定。新規実装は Embedding-3 系（small / large）を使ってください。
+> Embedding-3 系 (small / large) と ada-002 系はいずれも 2027-04-15 に retirement 予定です (2026-07 時点、Microsoft Learn の "model retirements" を都度確認してください)。ada-002 系は 2027-04-15 まで動作しますが、Embedding-3 系の方が精度・コスト面で優位のため、新規実装では small を推奨します。
 
 ## 主要な設計判断
 
 - **v1 API を採用**: `OpenAI(base_url="{endpoint}/openai/v1/")` により日付付き `api-version` 不要
-- **Managed Identity 認証**: `DefaultAzureCredential` + `get_bearer_token_provider("https://ai.azure.com/.default")`
+- **Azure CLI 認証 (ローカル) / Managed Identity (Azure 上で実行時)**: `DefaultAzureCredential` は `az login` トークン → Managed Identity → 他 credentials の順にフォールバックします。ローカル開発では Azure CLI credentials、Container Apps / AML 上で動かす場合は Managed Identity が使われます。トークンオーディエンスは `https://ai.azure.com/.default`。
 - **合成データのみ**: 実 SNS / ニュース / レビューは著作権・規約上の懸念があるため、AI 生成の CC0 データを同梱
 - **形態素解析は原則不要**: 埋め込み入力には Unicode 正規化のみ。SudachiPy は c-TF-IDF での説明用途に限定
 - **GPT-5 系は `temperature` 非対応**: `reasoning_effort=["low"|"medium"|"high"]` を使用（既定 `low`）
@@ -57,11 +57,11 @@ python src/embed.py --input data/synthetic_disinformation.csv \
 
 # 4. 分類器 (StratifiedKFold 5-fold)
 python src/classify.py --embeddings data/embeddings/sentiment.npy \
-  --labels data/synthetic_sentiment.csv --label-col label
+  --labels data/synthetic_sentiment.csv --id-col id --label-col label
 
 # 5. クラスタリング + 日本語ラベル生成
 python src/cluster.py --embeddings data/embeddings/topic.npy \
-  --texts data/synthetic_topic.csv --text-col text --k-range 2 6
+  --texts data/embeddings/topic.cleaned.csv --id-col id --text-col cleaned_text --k-range 2 6
 python src/label_clusters.py --clusters data/output/topic-clusters.json
 ```
 

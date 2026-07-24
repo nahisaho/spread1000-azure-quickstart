@@ -6,4 +6,5 @@ __pycache__/
 data/output/
 data/embeddings/*.npy
 data/embeddings/*.csv
+data/embeddings/*.manifest.json
 !data/embeddings/.gitkeep

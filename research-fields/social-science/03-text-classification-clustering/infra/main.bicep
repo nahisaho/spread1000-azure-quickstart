@@ -104,4 +104,10 @@ resource openAiUserAssignment 'Microsoft.Authorization/roleAssignments@2022-04-0
 output aoaiEndpoint string = aoai.properties.endpoint
 output aoaiName string = aoai.name
 output embedDeployment string = embedDeployment.name
+output embedDeploymentType string = embedDeployment.sku.name
+output embedModelName string = embedDeployment.properties.model.name
+output embedModelVersion string = embedDeployment.properties.model.version
 output labelDeployment string = labelDeployment.name
+output labelDeploymentType string = labelDeployment.sku.name
+output labelModelName string = labelDeployment.properties.model.name
+output labelModelVersion string = labelDeployment.properties.model.version

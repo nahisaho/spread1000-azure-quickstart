@@ -27,6 +27,8 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--embeddings", required=True, type=Path)
     p.add_argument("--labels", required=True, type=Path)
+    p.add_argument("--id-col", required=True,
+                   help="ID column that must match embed.py's --id-col to prevent silent misalignment.")
     p.add_argument("--label-col", default="label")
     p.add_argument("--n-splits", type=int, default=5)
     p.add_argument("--random-state", type=int, default=42)
@@ -45,6 +47,28 @@ def main() -> int:
     labels_df = pd.read_csv(args.labels)
     if args.label_col not in labels_df.columns:
         raise SystemExit(f"ERROR: --label-col {args.label_col!r} not in {list(labels_df.columns)}")
+    if args.id_col not in labels_df.columns:
+        raise SystemExit(f"ERROR: --id-col {args.id_col!r} not in {list(labels_df.columns)}")
+
+    # Enforce id alignment against embed.py's *.ids.csv artifact.
+    ids_csv = args.embeddings.with_suffix(".ids.csv")
+    if not ids_csv.exists():
+        raise SystemExit(f"ERROR: {ids_csv} not found. Re-run src/embed.py which produces it.")
+    embed_ids = pd.read_csv(ids_csv)["id"].astype(str).tolist()
+    # Strip formula-injection prefix that embed.py wrote for spreadsheet safety.
+    embed_ids = [s.lstrip("'") for s in embed_ids]
+    current_ids = labels_df[args.id_col].astype(str).tolist()
+    if embed_ids != current_ids:
+        raise SystemExit(
+            "ERROR: --labels CSV id column does not match embedding ids.csv (order or content differ). "
+            "Fix the CSV or re-run embed.py so that both share the same id_col ordering."
+        )
+
+    # Refuse NaN in the label column: astype(str) would produce the literal 'nan'.
+    if labels_df[args.label_col].isna().any():
+        n = int(labels_df[args.label_col].isna().sum())
+        raise SystemExit(f"ERROR: --label-col has {n} missing values. Fix the CSV.")
+
     y = labels_df[args.label_col].astype(str).to_numpy()
     if len(y) != X.shape[0]:
         raise SystemExit(f"ERROR: label rows ({len(y)}) != embedding rows ({X.shape[0]}). "

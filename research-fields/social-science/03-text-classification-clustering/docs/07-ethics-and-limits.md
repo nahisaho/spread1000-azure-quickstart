@@ -22,7 +22,39 @@
 - **第三者機関** (例: [IFCN 加盟団体](https://www.ifcncodeofprinciples.poynter.org/)) との連携
 - 判定結果の**説明責任**と**異議申し立て**手段
 
-## 個人情報保護
+## Azure OpenAI の abuse monitoring / データ地理
+
+Azure OpenAI Service では、既定で以下のログ保持・レビューが Microsoft 側で行われます:
+
+- **Prompt / Completion の 30 日保持**: コンテンツフィルタや利用規約違反検出のため、Microsoft が管理するストレージに 30 日間ログが保持されます (お客様のテナントとは分離)。
+- **自動 abuse monitoring**: すべての推論トラフィックが自動スキャンされます。
+- **限定的な human review**: 高スコアで自動検出された場合、Microsoft の許可された担当者がレビューする可能性があります。
+
+これを無効化するには **modified abuse monitoring** の承認が必要です:
+
+- 申請フォーム: [Modified content management for Azure OpenAI Service](https://aka.ms/oai/modifiedaccess) (2026-07 時点)
+- 承認には正当な利用理由 (法定守秘義務、機微研究データ等) の説明が必要
+- 個人情報 / 医療情報を扱う場合は、**申請前に自機関の IRB / ELSI 委員会** の助言を受けてください
+
+### Deployment SKU とデータ地理 (GlobalStandard vs Regional/DataZone)
+
+本 quickstart は簡便さのため `GlobalStandard` SKU (gpt-5.4-mini) を既定にしていますが、GlobalStandard は Microsoft が空きキャパのある任意の Azure geography に推論トラフィックをルーティングします。要件により以下を選択してください:
+
+| SKU | 推論処理地域 | 想定用途 |
+|---|---|---|
+| `GlobalStandard` | 全世界 (可用性優先) | 教材・PoC。個人情報を含まないデータ |
+| `DataZoneStandard` | 承認された data zone (例: APAC / EU) 内 | GDPR / APPI 越境制限がある場合 |
+| `Standard` (Regional) | 単一 Azure region (例: Japan East) | 完全に日本国内で処理を完結させたい場合 |
+
+Embedding (`text-embedding-3-small`) は Regional Standard で使用しています (`main.bicep` を参照)。
+
+### GDPR / APPI 越境データ移転
+
+- **APPI (個人情報保護法) 第 28 条**: 外国の第三者への提供は原則として本人同意が必要 (Azure は「取扱いを委託する場合」に該当し得るが、要件次第)。詳細は [PPC ガイドライン](https://www.ppc.go.jp/personalinfo/legal/guidelines_offshore/) を参照。
+- **EU 居住者データを扱う場合**: GDPR 上の SCC (Standard Contractual Clauses) が Microsoft の [DPA](https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA) にすでに含まれるが、越境移転の目的正当化 (Art. 45–49) を確認してください。
+- 本 quickstart の合成データ (`data/synthetic_*.csv`) は個人情報を含まないため、SKU 選択は原則自由です。
+
+
 
 実データを扱う際は **[個人情報保護法](https://laws.e-gov.go.jp/law/415AC0000000057)** の要件に従ってください。
 

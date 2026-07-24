@@ -6,3 +6,12 @@ pandas>=2.2
 pydantic>=2.8
 python-dotenv>=1.0.0
 umap-learn>=0.5.7
+
+# ---
+# Reproducible install (recommended):
+#   pip install pip-tools
+#   pip-compile --generate-hashes --output-file=requirements.lock requirements.txt
+#   pip install --require-hashes -r requirements.lock
+# The un-pinned ranges above define the *tested* compatibility range for
+# quickstart authors; ship the .lock file to workshop participants so all
+# students install identical versions and hashes.

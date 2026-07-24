@@ -23,7 +23,7 @@ python src/embed.py \
 python src/classify.py \
   --embeddings data/embeddings/sentiment.npy \
   --labels data/synthetic_sentiment.csv \
-  --label-col label
+  --id-col id --label-col label
 ```
 
 出力:
@@ -39,10 +39,17 @@ python src/embed.py --input data/synthetic_topic.csv \
   --output data/embeddings/topic.npy
 
 python src/classify.py --embeddings data/embeddings/topic.npy \
-  --labels data/synthetic_topic.csv --label-col label
+  --labels data/synthetic_topic.csv --id-col id --label-col label
 ```
 
-### 4. 偽情報の二値分類 (教育用途)
+### 4. 偽情報の二値分類 (教育用途 — 重要な注意)
+
+> [!WARNING]
+> このタスクは **文体分類 (style classification) に近く、真偽検証 (fact-checking) ではありません**。
+> 合成データは「陰謀論的な語彙」「根拠の無い断定」といった**表現スタイル**で `misinformation` を弁別するように作られています。
+> したがって、モデルが `misinformation` と判定した文の**真偽そのものは判定していません**。
+> 例:「昨日雨が降った」という命題は文脈により真偽が変わりますが、埋め込みベクトルは表現の類似性のみを捉えます。
+> 実運用では [docs/07-ethics-and-limits.md](07-ethics-and-limits.md) の偽情報検出の限界を必ず参照してください。
 
 ```bash
 python src/embed.py --input data/synthetic_disinformation.csv \
@@ -50,7 +57,7 @@ python src/embed.py --input data/synthetic_disinformation.csv \
   --output data/embeddings/disinfo.npy
 
 python src/classify.py --embeddings data/embeddings/disinfo.npy \
-  --labels data/synthetic_disinformation.csv --label-col label
+  --labels data/synthetic_disinformation.csv --id-col id --label-col label
 ```
 
 ## 期待される出力

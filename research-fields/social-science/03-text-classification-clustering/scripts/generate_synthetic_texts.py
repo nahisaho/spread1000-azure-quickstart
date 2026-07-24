@@ -57,25 +57,41 @@ TASKS: dict[str, dict] = {
 
 
 class SyntheticText(BaseModel):
-    text: str = Field(..., description="生成された日本語短文 (30〜80 字)")
+    # min/max length enforced server-side by Structured Outputs so out-of-spec
+    # generations are refused instead of silently polluting the dataset.
+    text: str = Field(..., description="生成された日本語短文 (30〜80 字)",
+                      min_length=30, max_length=80)
 
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--task", required=True, choices=list(TASKS.keys()))
     p.add_argument("--n-per-class", type=int, default=15)
+    p.add_argument("--max-n-per-class", type=int, default=100,
+                   help="Safety cap. Refuses to run above this without --yes.")
+    p.add_argument("--yes", action="store_true", help="Skip large-batch confirmation.")
+    p.add_argument("--allow-refusals", action="store_true",
+                   help="Skip refused generations instead of failing. Off by default so"
+                        " StratifiedKFold class balance is preserved.")
     p.add_argument("--out-dir", type=Path, default=Path("data"))
     return p.parse_args()
 
 
 def main() -> int:
     args = parse_args()
+    if args.n_per_class > args.max_n_per_class and not args.yes:
+        raise SystemExit(f"ERROR: --n-per-class {args.n_per_class} exceeds --max-n-per-class "
+                         f"{args.max_n_per_class}. Re-run with --yes to override.")
     deployment = require_env("AZURE_OPENAI_LABEL_DEPLOYMENT")
+    model_name = require_env("AZURE_OPENAI_LABEL_MODEL_NAME")
+    model_version = require_env("AZURE_OPENAI_LABEL_MODEL_VERSION")
     client = make_client()
     conf = TASKS[args.task]
 
     rows: list[dict] = []
+    per_class_counts: dict[str, int] = {}
     for label in conf["classes"]:
+        produced = 0
         for _ in range(args.n_per_class):
             prompt = conf["instruction"].format(label=label)
             completion = client.chat.completions.parse(
@@ -90,6 +106,12 @@ def main() -> int:
             )
             msg = completion.choices[0].message
             if msg.refusal:
+                if not args.allow_refusals:
+                    raise SystemExit(
+                        f"ERROR: refusal on class {label!r}: {msg.refusal}\n"
+                        "Silently dropping refusals breaks class balance for StratifiedKFold. "
+                        "Fix the prompt/instruction, or pass --allow-refusals if the imbalance is acceptable."
+                    )
                 print(f"[gen] refusal on {label}: {msg.refusal}", file=sys.stderr)
                 continue
             rows.append({
@@ -97,11 +119,21 @@ def main() -> int:
                 "label": label,
                 "text": msg.parsed.text.strip(),
                 "synthetic": True,
-                "generator_model": "gpt-5.4-mini",
-                "generator_version": "2026-03-17",
+                "generator_model": model_name,
+                "generator_version": model_version,
                 "generated_at": datetime.now(timezone.utc).isoformat(),
             })
+            produced += 1
             print(f"[gen] {label}: {rows[-1]['text']}")
+        per_class_counts[label] = produced
+
+    if not args.allow_refusals:
+        for label, produced in per_class_counts.items():
+            if produced != args.n_per_class:
+                raise SystemExit(
+                    f"ERROR: class {label!r} produced {produced} rows, expected {args.n_per_class}. "
+                    "Aborting to avoid corrupting downstream stratified splits."
+                )
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     out_csv = args.out_dir / f"synthetic_{args.task}.csv"
@@ -119,9 +151,12 @@ def main() -> int:
     manifest.setdefault("runs", []).append({
         "task": args.task,
         "n_new_rows": len(rows),
-        "generator_model": "gpt-5.4-mini",
-        "generator_version": "2026-03-17",
-        "csv_sha256_16": hashlib.sha256(out_csv.read_bytes()).hexdigest()[:16],
+        "n_per_class_requested": args.n_per_class,
+        "per_class_produced": per_class_counts,
+        "allow_refusals": args.allow_refusals,
+        "generator_model": model_name,
+        "generator_version": model_version,
+        "csv_sha256": hashlib.sha256(out_csv.read_bytes()).hexdigest(),
         "generated_at": datetime.now(timezone.utc).isoformat(),
     })
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2))

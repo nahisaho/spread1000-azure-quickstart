@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": { "value": "japaneast" },
-    "aoaiAccountName": { "value": "aoai-social-03-example" },
+    "_comment_aoaiAccountName": "Leave commented out to use the collision-safe default (aoai-social-03-<uniqueString(rg)>). Only set aoaiAccountName if you have a specific globally-unique name you own.",
     "embedDeploymentName": { "value": "embed-small" },
     "labelDeploymentName": { "value": "label-gpt54mini" },
     "embedCapacityK": { "value": 30 },

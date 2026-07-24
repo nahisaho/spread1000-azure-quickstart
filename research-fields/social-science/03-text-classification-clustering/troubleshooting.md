@@ -36,7 +36,16 @@
 
 - 応答ヘッダー `retry-after-ms` を確認
 - `src/embed.py` は 5 回まで指数バックオフ + jitter で再試行
-- 割当 TPM を確認: `az cognitiveservices account deployment show`
+- 割当 TPM を確認:
+
+```bash
+set -a && source .env && set +a
+az cognitiveservices account deployment show \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_OPENAI_ACCOUNT_NAME" \
+  --deployment-name "$AZURE_OPENAI_EMBED_DEPLOYMENT" \
+  --query "{sku:sku, capacity:sku.capacity, model:properties.model}"
+```
 
 ## 分類
 

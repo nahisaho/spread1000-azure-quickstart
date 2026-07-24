@@ -1,10 +1,10 @@
 {
-  "description": "Synthetic Japanese short-text datasets for classification/clustering education. All texts are hand-curated CC0 examples; no PII or real persons/places.",
+  "description": "Synthetic Japanese short-text datasets for classification/clustering education. All texts are hand-curated CC0 examples with no PII. See data/README.md for full provenance and known limitations.",
   "license": "CC0-1.0",
   "generator": {
     "hand_curated": true,
     "author": "SPReAD-1000 quickstart maintainers",
-    "note": "Intended for education only. Do NOT use as ground truth for real disinformation detection, real sentiment inference, or real topic modeling."
+    "note": "Intended for education only. Do NOT use as ground truth for real disinformation detection, real sentiment inference, or real topic modeling. The disinformation set discriminates by *stylistic* features (conspiratorial vocabulary, unsupported claims) and does NOT verify factual truth of any statement."
   },
   "files": {
     "synthetic_sentiment.csv": {"rows": 30, "classes": ["positive", "negative", "neutral"]},
