@@ -112,7 +112,8 @@ az ml job show --name "$JOB_NAME" \
 ## 6. 結果を手元にダウンロード
 
 ```bash
-az ml job download --name "$JOB_NAME" --download-path ./downloaded
+# --output-name ensemble を指定しないと code snapshot / logs も一緒に落ちる
+az ml job download --name "$JOB_NAME" --output-name ensemble --download-path ./downloaded
 ```
 
 ダウンロード後の構造:
@@ -139,8 +140,12 @@ python scripts/verify-output.py downloaded --min-frames 50
 ## 7. コスト確認
 
 ```bash
-az ml compute show --name gpu-a100 --query "current_node_count" -o tsv
-# 2 分アイドル後に 0 に戻ることを確認
+# current_node_count は amlCompute の JSON には無い。running_node_count /
+# scale_settings と、実際のノード一覧で確認する:
+az ml compute show --name gpu-a100 \
+  --query "{state:provisioning_state, min:scale_settings.min_instances, max:scale_settings.max_instances, running:current_node_count}" -o jsonc || true
+az ml compute list-nodes --name gpu-a100 -o table
+# 2 分アイドル後にノード一覧が空になることを確認
 ```
 
 **Spot で 20 分実行 → 約 ¥50。PAYG なら約 ¥270。**
@@ -167,7 +172,7 @@ merged[0].save_pdb("topology.pdb")
 - [ ] Job が `Completed` になった
 - [ ] `topology.pdb` + `samples.xtc` + `sequence.fasta` がダウンロードされた
 - [ ] `verify-output.py` が合格
-- [ ] `gpu-a100` の `current_node_count` が 0
+- [ ] `az ml compute list-nodes --name gpu-a100` が空
 
 ## 次のステップ
 

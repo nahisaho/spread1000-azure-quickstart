@@ -18,15 +18,25 @@ az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 
 **Standard NC A100 v4 Family vCPUs** の quota が **24 以上** 必要 (`NC24ads_A100_v4` = 24 vCPU)。
 
-確認:
+> [!IMPORTANT]
+> **AML compute の quota は VM の quota とは別枠**です (`Microsoft.MachineLearningServices` 側で管理)。`az vm list-usage` は Compute Provider の値しか返さないため、Job が Preparing で止まる原因になります。**必ず `az ml compute list-usage` (AML 側 quota) を確認してください**:
 
 ```bash
+# AML 側 quota (Job Preparing で止まる原因はこちら)
+az ml compute list-usage --location japaneast \
+  --query "[?contains(name.localizedValue,'NCADSA100v4') || contains(name.value,'NCADSA100v4')].{Name:name.localizedValue, Current:currentValue, Limit:limit, Unit:unit}" \
+  -o table
+
+# 参考: VM Compute Provider 側 quota (dedicated / low_priority 別)
 az vm list-usage --location japaneast \
-  --query "[?contains(name.value,'NCADSA100v4')].{Name:localName,Current:currentValue,Limit:limit}" \
+  --query "[?contains(name.value,'NCADSA100v4') || contains(name.value,'lowPriorityCores')].{Name:localName,Current:currentValue,Limit:limit}" \
   -o table
 ```
 
-`Limit` が 0 の場合は Azure Portal → Subscription → Usage + quotas から「Standard NCADSA100v4 Family」を選び **24** を申請 (通常 1〜24 時間で承認)。
+**Spot (`low_priority`) を使う場合は `LowPriorityCores` (dedicated と別枠) も 24 以上必要**です。`Limit` が 0 の場合は Azure Portal → Subscription → Usage + quotas から「Standard NCADSA100v4 Family」+ 必要に応じて `Low-priority cores` を **24** ずつ申請 (通常 1〜24 時間で承認)。
+
+> [!TIP]
+> **A100 が枯渇していたら NCads H100 v5 (`Standard_NC40ads_H100_v5` 40 vCPU) が代替**として使えます。VRAM 80 GB は同じで、BioEmu では ~1.5x 速い実測があります。この場合 `aml/compute-a100.yml` の `size:` を差し替え、quota は `Standard NCadsH100v5 Family` を確認してください。
 
 参考: <https://learn.microsoft.com/en-us/azure/machine-learning/how-to-manage-quotas>
 

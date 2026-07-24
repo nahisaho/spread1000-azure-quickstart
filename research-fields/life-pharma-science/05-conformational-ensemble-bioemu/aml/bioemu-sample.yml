@@ -10,13 +10,13 @@ code: ../
 
 command: >-
   set -eux;
-  python -c "import bioemu, torch; print('bioemu', bioemu.__version__, 'PyTorch', torch.__version__, 'CUDA', torch.cuda.is_available(), 'GPU', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'none')";
+  python -c "import bioemu, torch, sys; assert torch.cuda.is_available(), 'CUDA GPU is REQUIRED (no CPU fallback for BioEmu)'; print('bioemu', bioemu.__version__, 'PyTorch', torch.__version__, 'CUDA', torch.version.cuda, 'GPU', torch.cuda.get_device_name(0))";
   export XLA_PYTHON_CLIENT_PREALLOCATE=false;
   python -m bioemu.sample
   --sequence ${{inputs.sequence}}
   --num_samples ${{inputs.num_samples}}
   --output_dir ${{outputs.ensemble}}
-  --model_name bioemu-v1.1
+  --ckpt_path ${{inputs.bioemu_ckpt}}/checkpoint.ckpt
   --base_seed ${{inputs.seed}};
   ls -la ${{outputs.ensemble}}
 
@@ -28,6 +28,15 @@ inputs:
     type: uri_file
     path: ../inputs/chignolin.fasta
     mode: download
+  # Pinned bioemu-v1.1 checkpoint staged into workspaceblobstore.
+  # This avoids passing --model_name (which is used as a HuggingFace repo id
+  # and Hydra config key; supplying arbitrary strings is a supply-chain / RCE
+  # risk). Stage the checkpoint once with docs/02 §"Stage bioemu checkpoint"
+  # and verify sha256 before using. Update the path below to your datastore.
+  bioemu_ckpt:
+    type: uri_folder
+    path: azureml://datastores/workspaceblobstore/paths/cache/bioemu/v1.1/
+    mode: ro_mount
   num_samples: 100
   seed: 20260807
 

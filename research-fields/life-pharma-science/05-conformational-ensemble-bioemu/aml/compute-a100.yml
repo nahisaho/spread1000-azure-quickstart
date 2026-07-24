@@ -2,9 +2,13 @@ $schema: https://azuremlschemas.azureedge.net/latest/amlCompute.schema.json
 name: gpu-a100
 type: amlcompute
 location: japaneast
+# Primary: A100 80GB (NC24ads_A100_v4, 24 vCPU). Fallback below if quota denied.
 size: Standard_NC24ads_A100_v4
-# tier: dedicated  (PAYG, ~$5.326/h)
-# tier: low_priority (Spot, ~$0.984/h — 中断される可能性あり)
+# --- Fallback (H100 80GB, 40 vCPU) when A100 quota is 0 or region has no stock:
+# size: Standard_NC40ads_H100_v5
+# Update quota target to "Standard NCadsH100v5 Family" (>=40 vCPU) accordingly.
+# tier: dedicated  (PAYG, ~$5.326/h for A100, ~$7.35/h for H100)
+# tier: low_priority (Spot, ~$0.984/h A100 / ~$1.4/h H100 — 中断される可能性あり)
 tier: low_priority
 min_instances: 0
 max_instances: 1

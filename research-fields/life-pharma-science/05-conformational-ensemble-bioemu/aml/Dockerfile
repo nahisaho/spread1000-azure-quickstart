@@ -22,8 +22,13 @@ RUN if python3 -c "import sys; sys.exit(0 if sys.version_info >= (3,11) else 1)"
       rm -rf /var/lib/apt/lists/*; \
     fi
 
+# NOTE: bioemu 1.4.1 pins torch to 2.6.x for the CUDA 12.4 wheels shipped by
+# PyTorch. Do not upgrade torch here — 2.13.0+cu130 wheels are NOT compatible
+# with this base image's cuDNN/CUDA runtime and will fail with symbol errors
+# at import time. If a future bioemu release relaxes the pin, re-verify.
 RUN python3 -m pip install --upgrade pip setuptools wheel \
  && python3 -m pip install \
+      "torch>=2.6,<2.7" \
       "bioemu[cuda]==1.4.1" \
       "scikit-learn>=1.6,<2" \
       "matplotlib>=3.10,<4"

@@ -160,13 +160,19 @@ inputs:
 command: >-
   set -eux;
   export HOME=$(pwd);
-  mkdir -p "$HOME/.cache/colabfold";
-  cp -r ${{inputs.alphafold_cache}}/* "$HOME/.cache/colabfold/";
+  mkdir -p "$HOME/.cache/colabfold/params";
+  cp -r ${{inputs.alphafold_cache}}/params/* "$HOME/.cache/colabfold/params/";
+  # ColabFold は params ディレクトリ内の marker file を見て「DL 完了」と判定する。
+  # ファイル無し → 再ダウンロードを試みるので、必ず作る。
+  touch "$HOME/.cache/colabfold/params/download_finished.txt";
   export XLA_PYTHON_CLIENT_PREALLOCATE=false;
   python -m bioemu.sample ...
 ```
 
 これで 2 回目以降の Job は 3.5 GB ダウンロードをスキップします。
+
+> [!IMPORTANT]
+> `download_finished.txt` を作り忘れると、offline VNet / 従量課金対策の意味が失われます。ColabFold は「params ディレクトリはあるが完了マーカーが無い」場合、既存ファイルを破棄して GCS から再取得しようとします。managed VNet で GCS 到達不可なら FailedNetworkError で Job が落ちます。
 
 ## MSA サービス (ColabFold) がタイムアウトする
 

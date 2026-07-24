@@ -13,7 +13,7 @@ az ml compute show --name gpu-a100 --query "current_node_count" -o tsv
 # → 0 なら現時点で課金なし。急ぐ必要はない。
 ```
 
-`min_instances: 0` かつ 2 分アイドルで縮小する設定なので、**Job 完了後に何もしなくても実質課金は止まっています**。長期休止するなら compute リソース自体を削除:
+`min_instances: 0` かつ 2 分アイドルで縮小する設定なので、**GPU 時間の課金はほぼ発生しません**。ただし managed workspace の Key Vault / Storage / Log Analytics には少額の維持費 (概ね ¥数十〜数百/月) が発生し続けます。長期休止するなら compute リソース自体を削除:
 
 ```bash
 az ml compute delete --name gpu-a100 --yes
@@ -50,9 +50,11 @@ az group delete \
 
 ```bash
 # Job 出力を全てダウンロード
+# --all で code/logs/output 全部を落とすと Spot 中断 job の途中データも保存できる。
+# 実験ノート運用では code snapshot を欲しがるケースが多いので、意識的に外さない。
 mkdir -p ~/bioemu-results
-for JOB in $(az ml job list --query "[?tags.scenario=='bioemu'].name" -o tsv); do
-  az ml job download --name "$JOB" --download-path ~/bioemu-results/$JOB || true
+for JOB in $(az ml job list --query "[?tags.scenario=='bioemu' && (status=='Completed' || status=='Failed' || status=='Canceled')].name" -o tsv); do
+  az ml job download --name "$JOB" --all --download-path ~/bioemu-results/$JOB
 done
 
 # HuggingFace + AlphaFold キャッシュ (workspaceblobstore に staging した場合)
@@ -82,11 +84,21 @@ az resource list -g "$AZURE_RESOURCE_GROUP" --query "[?type=='Microsoft.Compute/
 
 Key Vault は soft-delete が有効のため、RG を削除しても 7〜90 日間残ります。同名で再デプロイ予定がなければ purge:
 
+> [!WARNING]
+> `contains(name,'kv-bioemu') | head -1` の従来スニペットは、**別のクイックスタート/ユーザーが作った BioEmu 系 KV** を誤って purge する事故を招きます。必ずデプロイ時に出力された **完全一致 の Key Vault 名** を控え、その名前を指定して purge してください。
+
 ```bash
-KV_NAME=$(az keyvault list-deleted --query "[?properties.location=='japaneast' && contains(name,'kv-bioemu')].name" -o tsv | head -1)
-if [ -n "$KV_NAME" ]; then
+# デプロイ時 output に表示された Key Vault 名を厳密指定 (fuzzy match 禁止)
+KV_NAME="<infra/deploy.sh 出力の keyVaultName>"
+
+# 存在確認 (deleted リストに厳密一致で 1 件のみ)
+FOUND=$(az keyvault list-deleted \
+  --query "[?properties.location=='japaneast' && name=='${KV_NAME}'].name" -o tsv)
+if [ "$FOUND" = "$KV_NAME" ]; then
   az keyvault purge --name "$KV_NAME"
   echo "Purged: $KV_NAME"
+else
+  echo "Key Vault '$KV_NAME' not found in deleted list (safe: nothing to purge)."
 fi
 ```
 
