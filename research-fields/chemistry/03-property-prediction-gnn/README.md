@@ -63,7 +63,7 @@ MoleculeNet の **ESOL** データセット（水溶解度 1128 分子、回帰�
 - **RDKit** ([rdkit/rdkit](https://github.com/rdkit/rdkit)): BSD-3-Clause
 - **DeepChem MoleculeNet loader** ([deepchem/deepchem](https://github.com/deepchem/deepchem)): MIT
 - **ESOL データ**: 明示的な独立ライセンス無し。Delaney (2004) の論文 (DOI [10.1021/ci034243x](https://doi.org/10.1021/ci034243x)) を引用してください。
-- **本ドキュメントと `src/`, `infra/`, `scripts/`**: MIT
+- **本ドキュメントと `src/`, `infra/`, `scripts/`**: 親リポジトリ (SPReAD-1000 Azure Quickstart) と同じライセンス。ライセンスファイルが未整備の場合は「All rights reserved (研究利用に限る)」として扱ってください。
 
 ## 学術引用
 

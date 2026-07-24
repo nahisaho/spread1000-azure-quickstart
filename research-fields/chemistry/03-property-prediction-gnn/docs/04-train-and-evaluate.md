@@ -82,7 +82,10 @@ Compound ID,...,my_property,smiles
 mol_001,...,-2.15,CCO
 ```
 
-`data create --name my-molecules --version 1 --type uri_file --path data/my.csv` で登録し、`aml/job-train.yml` の `inputs.esol_csv.path` を `azureml:my-molecules:1` に差し替えれば動きます。
+`az ml data create --name my-molecules --version 1 --type uri_file --path data/my.csv` で登録し、`aml/job-train.yml` の `inputs.esol_csv.path` を `azureml:my-molecules:1` に差し替えれば動きます。
+
+> [!WARNING]
+> **カスタムデータで機密情報や被験者データを含む場合は本テンプレートを使用しないでください。** 現状の Bicep は `publicNetworkAccess: 'Enabled'` かつ HBI (High Business Impact) ワークスペースではありません。実際のジョブでは PyG のキャッシュを job-local scratch に置いて `./outputs` への流出を防いでいますが、Data Asset として登録したファイル自体は Storage account 上に保持され、公開ネットワーク経由でアクセス可能です。規制データを扱う場合は Private Endpoint + `hbiWorkspace: true` に変更した専用テンプレートを用意してください。
 
 **B) train.py を編集する**
 

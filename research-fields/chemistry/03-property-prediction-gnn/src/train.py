@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import tempfile
 from pathlib import Path
 from shutil import copy2
 
@@ -121,8 +122,20 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[train] device={device} torch={torch.__version__}", flush=True)
 
-    dataset = load_esol(out_dir / "work", Path(args.esol_csv))
-    print(f"[train] Loaded ESOL: {len(dataset)} molecules", flush=True)
+    # Use job-local scratch (auto-cleaned) for the PyG cache so raw input CSV
+    # and the pickled processed dataset are NOT persisted into ./outputs.
+    # If a custom / regulated dataset is ever mounted as --esol-csv, copying it
+    # into output-dir would silently leak it into the retained AML job outputs.
+    scratch = tempfile.TemporaryDirectory(prefix="pyg-esol-")
+    try:
+        dataset = load_esol(Path(scratch.name), Path(args.esol_csv))
+        print(f"[train] Loaded ESOL: {len(dataset)} molecules", flush=True)
+        _run_training(args, dataset, device, out_dir)
+    finally:
+        scratch.cleanup()
+
+
+def _run_training(args, dataset, device, out_dir):
 
     idx = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(args.seed))
     n1 = int(0.8 * len(dataset))
@@ -164,7 +177,8 @@ def main() -> None:
 
     for epoch in range(1, args.epochs + 1):
         model.train()
-        last_loss = None
+        loss_sum = 0.0
+        n_samples = 0
         for batch in train_loader:
             batch = batch.to(device)
             opt.zero_grad()
@@ -173,11 +187,14 @@ def main() -> None:
             loss = F.mse_loss(pred, target)
             loss.backward()
             opt.step()
-            last_loss = float(loss.item())
+            bs = batch.num_graphs
+            loss_sum += float(loss.item()) * bs
+            n_samples += bs
+        epoch_loss = loss_sum / max(n_samples, 1)
 
         val_rmse, _, _ = evaluate(model, val_loader, mu, sd, device)
-        mlflow.log_metrics({"train_loss": last_loss, "val_rmse": val_rmse}, step=epoch)
-        print(f"  epoch {epoch:3d}  train_loss={last_loss:.4f}  val_rmse={val_rmse:.4f}", flush=True)
+        mlflow.log_metrics({"train_loss": epoch_loss, "val_rmse": val_rmse}, step=epoch)
+        print(f"  epoch {epoch:3d}  train_loss={epoch_loss:.4f}  val_rmse={val_rmse:.4f}", flush=True)
 
         if val_rmse < best_rmse:
             best_rmse = val_rmse

@@ -2,5 +2,5 @@ $schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
 name: molecule-gnn
 version: 1
 description: PyG GINE for MoleculeNet regression (Torch 2.6 CUDA 12.4 + RDKit)
-image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:latest
+image: mcr.microsoft.com/azureml/openmpi5.0-cuda12.4-ubuntu22.04:20260715.v1
 conda_file: conda.yml
