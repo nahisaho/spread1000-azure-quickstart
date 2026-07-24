@@ -13,7 +13,7 @@
     - Fluent 主色 `#0078D4` (データ・強調)
   - **フォント**: Segoe UI (欧文) / Noto Sans JP (和文) / Cascadia Code (等幅)
   - **スタイル**: インフォグラフィックス優先。各スライドは図・チャート・タイムライン・アイコンセット等で主メッセージを表現
-  - **クローム**: 左上に Microsoft 4色マーク + ワードマーク。**フッター・ページ番号・ウォーターマーク全て無し** (完全にクリーンな下部)
+  - **クローム**: **ヘッダー・フッター・ページ番号・ウォーターマーク全て無し** (完全にクリーンな上下)
   - **アクセント色ローテーション**: スライドごとに Microsoft 4色 + Fluent 主色を巡回 (各スライドの説明に明記)
 
 ---
@@ -28,7 +28,7 @@
 
 - **レイアウト**: 中央フォーカス (アイコン列 + タイトル + サブタイトル)
 - **アクセント色**: #00A4EF (Microsoft Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク (Red/Green/Blue/Yellow の 8×8px 正方形 2×2 配置) + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「令和 8 年度」の Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF テキスト)
+- **ヘッダー**: 右上に「令和 8 年度」の Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF テキスト)
 - **メインビジュアル**:
   - Y=200px から水平アイコンストリップ (幅 1200px 中央寄せ):
     - DNA ヘリックス (Red #F25022 outline, 2px stroke, Fluent System Icons)
@@ -62,7 +62,7 @@
 
 - **レイアウト**: 中央フォーカス (リポジトリカード + QRコード + 免責ボックス)
 - **アクセント色**: #7FBA00 (Microsoft Green)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「MIT License」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
+- **ヘッダー**: 右上に「MIT License」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
 - **メインビジュアル**:
   - Y=140px 中央リポジトリカード (幅 1100px, 高さ 220px, 白背景, #605E5C 1px border, 角丸 8px, 影 0 2px 12px rgba(0,0,0,0.08)):
     - 左上 GitHub Octocat アイコン (36×36px, #323130 塗り) + テキスト「nahisaho / spread1000-azure-quickstart」(22pt Segoe UI Semibold #323130)
@@ -94,7 +94,7 @@
 
 - **レイアウト**: 上部数字バナー + 下部 3 ペインアイコンカード
 - **アクセント色**: #F25022 (Microsoft Red)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「課題」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
+- **ヘッダー**: 右上に「課題」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
 - **メインビジュアル**:
   - Y=130px 上部バナー (幅 1584px, 高さ 160px, #F3F2F1 塗り, #F25022 左端 8px accent stripe):
     - 左ブロック: 「456」(120pt Segoe UI Semibold #0078D4) + 「課題」(36pt #323130) + 「SPReAD-1000 採択」(20pt #605E5C)
@@ -124,7 +124,7 @@
 
 - **レイアウト**: 左右 2 カラム (約束カード + チェックリストカード)
 - **アクセント色**: #FFB900 (Microsoft Yellow)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「✓ Checklist」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
+- **ヘッダー**: 右上に「✓ Checklist」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
 - **メインビジュアル**:
   - 左カラム (X=168px〜792px, Y=140px〜920px, 白背景, #7FBA00 1px border, 角丸 8px):
     - 上部 Green バー (高さ 8px, #7FBA00) + 見出し「✓ お約束すること」(24pt Segoe UI Semibold #323130, Y=176px)
@@ -163,7 +163,7 @@
 
 - **レイアウト**: 水平タイムライン 3ステップ + 上下補助要素
 - **アクセント色**: #0078D4 (Fluent Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「3 ステップ」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
+- **ヘッダー**: 右上に「3 ステップ」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
 - **メインビジュアル**:
   - Y=200px 中央タイムライン (水平矢印, 幅 1584px, 高さ 8px, #F3F2F1 塗り):
     - 矢印ヘッド: #0078D4 塗り 三角 24px
@@ -197,7 +197,7 @@
 
 - **レイアウト**: 中央円形放射マップ (10 分野 時計配置) + 左下注意ボックス
 - **アクセント色**: #00A4EF (Microsoft Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「10 分野 456 課題」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
+- **ヘッダー**: 右上に「10 分野 456 課題」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
 - **メインビジュアル**:
   - 中央 (X=760px, Y=540px): 「35 quickstart」バッジ (直径 200px, #0078D4 塗り 円, 白テキスト 28pt Segoe UI Semibold, 中央寄せ)
   - 中央から放射状に 10 分野ノード (各ノード: #F3F2F1 背景円 直径 110px, アイコン 40px, ラベル 14pt Noto Sans JP #323130, 課題数 16pt Semibold 強調色):
@@ -235,7 +235,7 @@
 
 - **レイアウト**: 上部比較マトリクス + 下部デュアルターミナルカード
 - **アクセント色**: #7FBA00 (Microsoft Green)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「2 トラック」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
+- **ヘッダー**: 右上に「2 トラック」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
 - **メインビジュアル**:
   - Y=140px 比較テーブル (幅 1584px, 高さ 200px, 白背景, 角丸 8px, 影 0 2px 8px rgba(0,0,0,0.08)):
     - ヘッダー行 (高さ 52px, #F3F2F1 塗り): 空白 / 「Track A (Azure リソース系)」(#0078D4 塗り) / 「Track B (ローカル / CPU / API のみ)」(#7FBA00 塗り)
@@ -278,7 +278,7 @@
 
 - **レイアウト**: 上部警告バナー + 下部 3 カラム原則カード
 - **アクセント色**: #F25022 (Microsoft Red)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「⚠️ Cost Safety」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
+- **ヘッダー**: 右上に「⚠️ Cost Safety」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
 - **メインビジュアル**:
   - Y=140px 警告バナー (幅 1584px, 高さ 100px, #FFF4F1 塗り, #F25022 左端 4px accent stripe, 角丸 8px):
     - 左端 ⚠️ アイコン (Fluent warning-outline, 48px, #F25022)、右にテキスト「クラウドは、忘れると請求書が来る」(28pt Segoe UI Semibold #323130)
@@ -307,7 +307,7 @@
 
 - **レイアウト**: 左 6 シナリオリスト + 右ビジュアル (リボン構造図) + 下部代替パス吹き出し
 - **アクセント色**: #FFB900 (Microsoft Yellow)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「生命科学 98 課題」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
+- **ヘッダー**: 右上に「生命科学 98 課題」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
 - **メインビジュアル**:
   - 左カラム (X=168px〜720px, Y=140px):
     - 見出し「6 シナリオ」(26pt Segoe UI Semibold #323130, アンダーライン Yellow #FFB900 4px)
@@ -344,7 +344,7 @@
 
 - **レイアウト**: 左 3 シナリオリスト + 右学習曲線グラフ + 下部強調バナー
 - **アクセント色**: #0078D4 (Fluent Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「電気・情報 68 課題」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
+- **ヘッダー**: 右上に「電気・情報 68 課題」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
 - **メインビジュアル**:
   - 左カラム (X=168px〜720px, Y=140px):
     - 見出し「3 シナリオ」(26pt Segoe UI Semibold #323130, アンダーライン Blue #0078D4 4px)
@@ -381,7 +381,7 @@
 
 - **レイアウト**: 左 4 シナリオリスト + 右ナレッジグラフビジュアル + 下部情報ボックス
 - **アクセント色**: #00A4EF (Microsoft Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「芸術・人文 23 課題」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
+- **ヘッダー**: 右上に「芸術・人文 23 課題」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
 - **メインビジュアル**:
   - 左カラム (X=168px〜720px, Y=140px):
     - 見出し「4 シナリオ」(26pt Segoe UI Semibold #323130, アンダーライン Blue #00A4EF 4px)
@@ -419,7 +419,7 @@
 
 - **レイアウト**: 中央階層アーキテクチャ図 + 右フロー矢印 + 左下 Managed Identity バッジ
 - **アクセント色**: #7FBA00 (Microsoft Green)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「Track A 22 本」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
+- **ヘッダー**: 右上に「Track A 22 本」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
 - **メインビジュアル**:
   - 中央アーキテクチャ積層図 (幅 900px, X=168px, Y=140px):
     - 下段: Azure サブスクリプション ボックス (幅 860px, 高さ 64px, #F3F2F1 塗り, #605E5C 1px border, 角丸 4px, アイコン ☁️ + テキスト「Azure サブスクリプション」20pt #323130)
@@ -457,7 +457,7 @@
 
 - **レイアウト**: コストデータテーブル (上) + 2 行注意ボックス (下)
 - **アクセント色**: #F25022 (Microsoft Red)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「💴 コスト目安」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
+- **ヘッダー**: 右上に「💴 コスト目安」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
 - **メインビジュアル**:
   - Y=140px コストテーブル (幅 1584px, 白背景, #605E5C 1px border, 角丸 8px):
     - ヘッダー行 (高さ 48px, #323130 塗り, 白テキスト 16pt Semibold): 「シナリオ」「SKU」「時間単価」「1 実験セッション」「追加コスト」
@@ -490,7 +490,7 @@
 
 - **レイアウト**: 左 GPU SKU テーブル + 右申請フロー図 + 下部 2 行注意ボックス
 - **アクセント色**: #FFB900 (Microsoft Yellow)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「🖥️ GPU クォータ」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
+- **ヘッダー**: 右上に「🖥️ GPU クォータ」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
 - **メインビジュアル**:
   - 左カラム (X=168px〜720px, Y=140px):
     - 見出し「GPU SKU と既定クォータ」(22pt Segoe UI Semibold #323130, アンダーライン Yellow 4px)
@@ -531,7 +531,7 @@
 
 - **レイアウト**: 上部プロセスフロー図 + 中央大数字統計 + 下部 3 カテゴリカード
 - **アクセント色**: #0078D4 (Fluent Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「🤖 AI Review」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
+- **ヘッダー**: 右上に「🤖 AI Review」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
 - **メインビジュアル**:
   - Y=130px プロセスフロー (幅 1400px, 中央寄せ, 水平 5 ノード):
     - ノード 1 (幅 240px, 高さ 48px, #F3F2F1 塗り, 角丸 24px): 「執筆 (Claude)」(16pt #323130)
@@ -584,7 +584,7 @@
 
 - **レイアウト**: 上部ステップバー + 左 README モックアップ + 右ターミナルカード + 下部困ったとき案内
 - **アクセント色**: #00A4EF (Microsoft Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「🚀 Quick Start」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
+- **ヘッダー**: 右上に「🚀 Quick Start」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
 - **メインビジュアル**:
   - Y=130px 上部ステップバー (幅 1584px, 高さ 60px):
     - 6 ステップノード (各 直径 40px 円, 水平等間隔, ラベル 14pt Noto Sans JP, 間を 2px 線):
@@ -633,7 +633,7 @@
 
 - **レイアウト**: 上部ジャッジフロー (3 分岐) + 下部調達フロー + 右上アイコン + 最下段免責
 - **アクセント色**: #7FBA00 (Microsoft Green)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「📞 サポート先」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
+- **ヘッダー**: 右上に「📞 サポート先」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
 - **メインビジュアル**:
   - Y=130px ジャッジフロー (幅 1584px):
     - 中央ノード (幅 360px, 高さ 52px, #F3F2F1 塗り, 角丸 4px): 「どのような状況？」(20pt #323130)
@@ -673,7 +673,7 @@
 
 - **レイアウト**: 上部 3 カラムライセンスマトリクス + 下部 4 ゲートプリフライトボックス
 - **アクセント色**: #F25022 (Microsoft Red)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「⚖️ License & Ethics」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
+- **ヘッダー**: 右上に「⚖️ License & Ethics」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
 - **メインビジュアル**:
   - Y=130px 3 カラムライセンスマトリクス (幅 1584px, 各カラム 484px, 白背景, #605E5C 1px border, 角丸 8px):
     - カラム 1「コード（本リポジトリ）」(上部 Green バー #7FBA00 8px):
@@ -718,7 +718,7 @@
 
 - **レイアウト**: 左 QR コード + 右 3 アクションカード + 下部ロードマップバー
 - **アクセント色**: #FFB900 (Microsoft Yellow)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「🌱 コミュニティ」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
+- **ヘッダー**: 右上に「🌱 コミュニティ」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
 - **メインビジュアル**:
   - 左カラム (X=168px〜560px, Y=140px):
     - GitHub ロゴ (Octocat, 64×64px, #323130) + テキスト「nahisaho /」+ 「spread1000-azure-quickstart」(18pt Cascadia Code #323130) Y=140px
@@ -755,7 +755,7 @@
 
 - **レイアウト**: 3 段キーメッセージカード + 中央 QR コード + 下部キャッチコピー
 - **アクセント色**: #0078D4 (Fluent Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「✅ まとめ」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
+- **ヘッダー**: 右上に「✅ まとめ」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
 - **メインビジュアル**:
   - Y=130px 3 段キーメッセージカード (各 幅 1400px, 高さ 96px, 中央寄せ, 白背景, 角丸 8px, 影 0 2px 8px rgba(0,0,0,0.08), 行間 12px):
     - Row 1 (左端 #0078D4 accent stripe 8px):
@@ -794,7 +794,7 @@
 
 - **レイアウト**: 中央 3 カラム比較ポイントカード
 - **アクセント色**: #00A4EF (Microsoft Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「A1 / Q&A」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
+- **ヘッダー**: 右上に「A1 / Q&A」Blue 枠バッジ (角丸 4px, #00A4EF border 1px, 白背景, 12pt #00A4EF)
 - **メインビジュアル**:
   - Y=140px タイトル下 3 カラムカード (各 幅 460px, 高さ 500px, 白背景, #605E5C 1px border, 角丸 8px, 影):
     - Card 1 (X=168px, 上部 Blue バー #00A4EF):
@@ -827,7 +827,7 @@
 
 - **レイアウト**: 中央 3 カラム IP 帰属マトリクス
 - **アクセント色**: #7FBA00 (Microsoft Green)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「A2 / Q&A」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
+- **ヘッダー**: 右上に「A2 / Q&A」Green 枠バッジ (角丸 4px, #7FBA00 border 1px, 白背景, 12pt #7FBA00)
 - **メインビジュアル**:
   - Y=140px 3 カラム帰属マトリクス (各 幅 464px, 高さ 500px, 白背景, #605E5C 1px border, 角丸 8px, 影):
     - Card 1「リポジトリコード（MIT）」(上部 Green バー #7FBA00):
@@ -860,7 +860,7 @@
 
 - **レイアウト**: 上部注意バナー + 中央 3 ステップフロー + 下部注意ボックス
 - **アクセント色**: #F25022 (Microsoft Red)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「A3 / セキュリティ」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
+- **ヘッダー**: 右上に「A3 / セキュリティ」Red 枠バッジ (角丸 4px, #F25022 border 1px, 白背景, 12pt #F25022)
 - **メインビジュアル**:
   - Y=130px 上部バナー (幅 1584px, 高さ 80px, #FFF4F1 塗り, #F25022 左端 8px accent stripe, 角丸 8px):
     - 🔒 セキュリティアイコン (40px, #F25022) + テキスト (24pt Segoe UI Semibold #323130): 「本 repo はプロトタイプ用ベースライン。本番環境適用には機関固有のセキュリティ要件追加が必要。」
@@ -892,7 +892,7 @@
 
 - **レイアウト**: 上部注意バナー + 中央 2 カラム (対象モデル + 確認フロー) + 下部情報カード
 - **アクセント色**: #FFB900 (Microsoft Yellow)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「A4 / 輸出管理」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
+- **ヘッダー**: 右上に「A4 / 輸出管理」Yellow 枠バッジ (角丸 4px, #FFB900 border 1px, 白背景, 12pt #FFB900)
 - **メインビジュアル**:
   - Y=130px 上部バナー (幅 1584px, 高さ 80px, #FFFDE7 塗り, #FFB900 左端 8px accent stripe, 角丸 8px):
     - ⚠️ アイコン (40px, #FFB900) + テキスト (22pt Segoe UI Semibold #323130): 「一部のモデル weights は米国 EAR / 日本貿易管理令の対象になりうる」
@@ -927,7 +927,7 @@
 
 - **レイアウト**: 左タグ設計図 + 右コスト管理ダッシュボードモックアップ
 - **アクセント色**: #0078D4 (Fluent Blue)
-- **ヘッダー**: 左上に Microsoft 4色マーク + 「SPReAD-1000 Quickstart」(14pt, #323130)、右上に「A5 / 研究費証跡」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
+- **ヘッダー**: 右上に「A5 / 研究費証跡」Blue 枠バッジ (角丸 4px, #0078D4 border 1px, 白背景, 12pt #0078D4)
 - **メインビジュアル**:
   - 左カラム (X=168px〜760px, Y=140px):
     - 「タグ設計例」見出し (22pt Segoe UI Semibold #323130, アンダーライン Blue #0078D4 4px)
