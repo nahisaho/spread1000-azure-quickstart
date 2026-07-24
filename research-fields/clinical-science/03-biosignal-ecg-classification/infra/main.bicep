@@ -57,7 +57,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   properties: {
     accessTier: 'Hot'
     allowBlobPublicAccess: false
-    allowSharedKeyAccess: true  // AML workspace 一部機能が SAS を利用
+    allowSharedKeyAccess: false // MI ベース (Storage Blob Data Contributor) でアクセスするため
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
     publicNetworkAccess: 'Enabled'
@@ -159,6 +159,26 @@ resource workspace 'Microsoft.MachineLearningServices/workspaces@2024-04-01' = {
     containerRegistry: acr.id
     publicNetworkAccess: 'Enabled'
     hbiWorkspace: false
+    systemDatastores: {
+      // Shared Key を無効化した Storage を使うため、システム datastore を identity ベースに
+      // (allowSharedKeyAccess: false と組み合わせが必要)
+      // 参考: https://learn.microsoft.com/azure/machine-learning/how-to-disable-local-auth-storage
+      authMode: 'identity'
+    }
+  }
+}
+
+// AML system-assigned MI → Storage Blob Data Contributor (identity-mode datastore で必須)
+resource workspaceStorageRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: storage
+  name: guid(storage.id, workspace.id, blobDataContributorRoleId)
+  properties: {
+    principalId: workspace.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      blobDataContributorRoleId
+    )
   }
 }
 

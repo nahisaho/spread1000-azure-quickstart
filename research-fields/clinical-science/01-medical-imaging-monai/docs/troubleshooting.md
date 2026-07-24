@@ -270,13 +270,39 @@ az ml compute show \
 
 **原因**: Spleen Bundle は **NIfTI 前提**。DICOM シリーズはそのまま渡せません。
 
-**対処**: `dcm2niix` で NIfTI に変換:
+**対処**: **匿名化・仮名化を先に完了してから** `dcm2niix` で NIfTI に変換:
+
+> [!CAUTION]
+> **`dcm2niix` は匿名化ツールではありません。** 変換後の NIfTI にも patient/study
+> 識別に転用可能な情報が残ります。施設 DICOM を扱う場合は以下を **変換前に完了**
+> してください (詳細は README §「施設 DICOM を扱う場合」の 4 項目):
+> 1. **DICOM PS3.15 Basic Application Confidentiality Profile** に沿った tag 除去
+>    (PatientName/ID/BirthDate/BirthTime、SOPInstanceUID/StudyInstanceUID/SeriesInstanceUID の
+>    pseudonymize、AccessionNumber、Institution/Physician 名、Private tag 全消去)
+> 2. **JESRA TR-0045** 相当の日本国内向け拡張匿名化
+> 3. **Burned-in text overlay の除去** (画素領域に焼き込まれた PatientID/日付 —
+>    OCR + inpainting、または該当スライス除外)
+> 4. **ファイル名の再命名** (`PatientID_...` を含めない中立名 e.g. `case001.nii.gz`)
+> 5. **NIfTI/JSON sidecar のヘッダ検査** — `dcm2niix -z y -b y -ba y` (`-ba y` で
+>    BIDS sidecar 匿名化を有効) を使い、生成された `.json` の PatientName/Study 系
+>    フィールドが空か確認。`nifti_info` / `AFNI 3dinfo` でヘッダも確認
+> 6. **アップロード時のファイル allowlist** — `.nii.gz` と `.json` (匿名化済み) のみ
+>    アップロードし、生 DICOM や dcm2niix の中間ファイルは絶対にアップロードしない
 
 ```bash
-# ローカル PC で
+# ローカル PC で (施設ネットワーク内の隔離環境を推奨)
 sudo apt install dcm2niix  # または brew install dcm2niix
 
-dcm2niix -z y -f "%p_%s" -o ./nifti ./dicom-series
+# 匿名化済み DICOM ディレクトリを対象に、中立ファイル名 + BIDS sidecar 匿名化で変換
+mkdir -p ./nifti
+dcm2niix -z y -b y -ba y -f "case%3s" -o ./nifti ./anonymized-dicom-series
+
+# 変換後、sidecar 目視確認
+for j in ./nifti/*.json; do
+  python -c "import json; d=json.load(open('$j')); print('$j'); \
+    [print(f'  {k}:', v) for k,v in d.items() if k in ('PatientName','PatientID','StudyID','InstitutionName','SeriesInstanceUID','StudyInstanceUID')]"
+done
+# 何か出力されたらそのフィールドが残っている → 元の DICOM 匿名化を見直す
 ```
 
 Task09_Spleen と同じ構造 (`imagesTr/`, `labelsTr/`, `dataset.json`) に整えてから Blob にアップロードします。

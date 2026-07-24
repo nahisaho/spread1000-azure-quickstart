@@ -4,10 +4,17 @@
 
 **Project MONAI** の Model Zoo Bundle (`spleen_ct_segmentation` v0.6.1) を Azure Machine Learning (AML) の GPU 上で動かし、公開 CT データセット **Medical Segmentation Decathlon Task09_Spleen** に対して事前学習モデルの推論 → fine-tuning → 評価を行うクイックスタート。
 
+> [!IMPORTANT]
+> **本 quickstart で作成されるものは研究・教育用途専用です。** 医療機器プログラム
+> (SaMD, 薬機法) には該当しません。臨床診断・治療方針決定・患者への提示・カルテ記録・
+> 医療従事者への臨床判断支援等の目的で **一切使用してはなりません**。臨床導入には
+> 別途 PMDA との事前相談、QMS 構築、臨床性能試験、SaMD 認証取得等が必要です。
+
 ## このクイックスタートで得られるもの
 
 - **1〜2 時間で最初の予測 mask** (NIfTI `.nii.gz`) を生成
-- Bundle 公称 mean Dice **0.961** (validation) を Azure 上で再現
+- Bundle の事前学習重み (公称 mean Dice **0.961** on Task09 validation split, 9 volumes) を
+  Task09 の validation split で **未改変のまま評価** して再現確認 (§7 参照)
 - 事前学習重みを起点にした fine-tuning ジョブのテンプレート
 - AML の Compute Cluster、Data Asset、Environment、Command Job の実装パターン
 - **NC24ads_A100_v4** (1×A100 80GB) または **NC4as_T4_v3** (1×T4 16GB) の 2 パス選択
@@ -15,7 +22,9 @@
 ## 対象読者
 
 - MONAI/PyTorch は触ったことがあるが Azure は初めての PI・研究員
-- 施設の CT/MRI データを使ってセグメンテーションモデルを試したい
+- 施設の **腹部 CT** データを使ってセグメンテーションモデルを試したい研究者
+  (**MRI は非対応** — 本 Bundle は Hounsfield unit `[-57, 164]` の CT-window を強制するため、
+   MRI に適用しても物理的に無意味な入力/出力になる)
 - GPU クォータ申請・データ資産管理・コスト管理まで含めて 1 通り理解したい
 
 ## 何をやるか
@@ -33,7 +42,26 @@
 > クリーンアップは `docs/05-cleanup.md` を必ず参照してください。
 
 > [!IMPORTANT]
-> 本 Bundle は **研究用途** で、`spleen_ct_segmentation` のライセンスファイルに "not to be used for diagnostic purposes" と明記されています。臨床診断・意思決定には使用しないでください。
+> 本 Bundle 自体のコード/重み配布は **Apache License 2.0** ですが、
+> Bundle の `configs/metadata.json` の `intended_use` フィールドに
+> "not to be used for diagnostic purposes" と明記されています。
+> Apache 2.0 は診断利用を禁じませんが、**MONAI 側の意図表明として診断・臨床判断用途は
+> 想定外**とされている点に注意してください。臨床診断・意思決定には使用しないでください。
+
+> [!CAUTION]
+> **施設の患者由来 DICOM を扱う場合は、アップロード前に必ず以下を完了してください:**
+> 1. **所属機関の倫理審査委員会 (IRB)** 承認 (MHLW/MEXT/METI「人を対象とする生命科学・
+>    医学系研究に関する倫理指針」および個人情報保護法 (APPI) 第 27〜28 条)
+> 2. **情報セキュリティ委員会** による本サービス (Azure ML, Japan East 等) の利用承認、
+>    3 省 2 ガイドライン (医療情報安全管理ガイドライン等) への適合性評価
+> 3. **匿名加工/仮名加工** — DICOM PS3.15 Basic Application Confidentiality Profile +
+>    JESRA TR-0045 相当の処理を実施し、Private Tag、burned-in text overlay、患者 ID を
+>    含むファイル名、NIfTI ヘッダ内の残存 metadata を確認・除去
+> 4. **越境データ移転** に該当する場合は追加同意/DPIA、患者への説明・同意 (opt-out 不可の
+>    場合あり) を確認
+>
+> **技術的な de-identification だけでは倫理・法規制要件は満たされません。**
+> 本 quickstart は「(1)〜(4) が完了した de-identified データ」を前提としています。
 
 ## 前提条件
 

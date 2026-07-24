@@ -1,6 +1,6 @@
 """Small 1D CNN for AAMI 5-class ECG heartbeat classification.
 
-~30k trainable params. Input shape (B, 1, 180) → output (B, 5) logits.
+~9.5k trainable params. Input shape (B, 1, 180) → output (B, 5) logits.
 """
 from __future__ import annotations
 

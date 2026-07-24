@@ -175,5 +175,12 @@ az costmanagement query \
 ## 次のステップ
 
 - Bundle を差し替えて別タスクを試す (whole-body CT, brain tumor など) → docs/troubleshooting.md 参照
-- 施設の DICOM で fine-tuning → `docs/04-fine-tuning.md` の epochs, split, spacing を調整
-- MONAI Deploy App SDK で臨床パイプラインへ組み込む → 別クイックスタート予定
+- **施設の腹部 CT (DICOM)** で fine-tuning → `docs/04-fine-tuning.md` の epochs, split, spacing を調整。
+  施設データを使う場合は README §「施設 DICOM を扱う場合」の倫理審査・匿名化・
+  セキュリティレビューを **必ず** 事前完了すること。
+- **研究発表・論文投稿**時は Bundle の non-diagnostic intended-use を明記し、
+  評価指標 (Dice, HD95) を報告
+- **本 quickstart の成果物を臨床導入することは絶対にできません**。
+  臨床導入には別途 PMDA 事前相談 → QMS 構築 → SaMD 該当性判断 → 臨床性能試験 →
+  薬機法上の医療機器該当性判断/認証取得プロセスが必要です。MONAI Deploy App SDK
+  への「移植」自体はいかなる規制承認も付与しません。

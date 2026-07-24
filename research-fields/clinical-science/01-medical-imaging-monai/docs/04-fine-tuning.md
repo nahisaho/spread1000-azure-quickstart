@@ -175,36 +175,46 @@ tensorboard --logdir ./results/finetune/named-outputs/artifacts/eval --port 6006
 
 ## 7. Evaluation
 
-fine-tuning 済みの `model.pt` で validation split を再評価:
+fine-tuning 済みの `model.pt` で validation split を再評価するか、**Bundle 公称値
+(mean Dice 0.961) の再現確認** として事前学習重みを未改変のまま評価します。
 
-```yaml
-# 別途 aml/monai-eval.yml として作成 (テンプレート)
-# 注意: Bundle の evaluate.json は bundle_root/models/model.pt をロードするため、
-# 事前に fine-tune 済み checkpoint をその位置へコピーする。
-inputs:
-  data:
-    type: uri_folder
-    path: azureml:task09-spleen@latest
-    mode: ro_mount
-  checkpoint:
-    type: uri_file
-    path: <fine-tune 出力の model.pt を Data Asset 化したもの>
-    mode: ro_mount
-outputs:
-  eval:
-    type: uri_folder
-    mode: upload
+**7.1 事前学習重みで再現確認 (推奨: 初回に実施)**
 
-command: >-
-  set -eux;
-  python -m monai.bundle download "spleen_ct_segmentation" --version "0.6.1" --source "huggingface_hub" --repo "MONAI/spleen_ct_segmentation" --bundle_dir bundles;
-  cp "${{inputs.checkpoint}}" bundles/spleen_ct_segmentation/models/model.pt;
-  cd bundles/spleen_ct_segmentation;
-  python -m monai.bundle run
-  --config_file "['configs/train.json','configs/evaluate.json']"
-  --dataset_dir="${{inputs.data}}"
-  --output_dir="${{outputs.eval}}";
+`aml/monai-eval.yml` を **`checkpoint` 入力を省略** して submit すると、bundle 同梱の
+`models/model.pt` (0.961 相当の事前学習重み) を Task09_Spleen validation split で
+評価します:
+
+```bash
+az ml job create -f aml/monai-eval.yml \
+  --set inputs.checkpoint=null \
+  -w "$AML_WORKSPACE" -g "$AML_RG"
+# 完了後、outputs/eval/metrics.json に mean Dice が記録される
 ```
+
+**7.2 fine-tune 済み重みで評価**
+
+fine-tune 出力の `model.pt` を Data Asset 化してから eval を submit:
+
+```bash
+# 1) fine-tune ジョブの named-outputs/artifacts/models/model.pt を Data Asset に登録
+FINETUNE_RUN=$(az ml job list --query "[?display_name=='monai-spleen-finetune'] | [0].name" -o tsv -w "$AML_WORKSPACE" -g "$AML_RG")
+az ml data create \
+  --name monai-spleen-finetune-model \
+  --path "azureml://jobs/$FINETUNE_RUN/outputs/artifacts/paths/models/model.pt" \
+  --type uri_file \
+  -w "$AML_WORKSPACE" -g "$AML_RG"
+
+# 2) eval ジョブ (デフォルトで azureml:monai-spleen-finetune-model@latest をロード)
+az ml job create -f aml/monai-eval.yml -w "$AML_WORKSPACE" -g "$AML_RG"
+
+# 3) eval 出力をダウンロード
+EVAL_RUN=$(az ml job list --query "[?display_name=='monai-spleen-eval'] | [0].name" -o tsv -w "$AML_WORKSPACE" -g "$AML_RG")
+az ml job download --name "$EVAL_RUN" --output-name eval --download-path ./results/eval -w "$AML_WORKSPACE" -g "$AML_RG"
+cat ./results/eval/named-outputs/eval/metrics.json  # mean Dice を確認
+```
+
+`aml/monai-eval.yml` の全定義は同ファイルを参照 (checkpoint 入力を optional にしており、
+省略時は bundle の事前学習重みを使う実装)。
 
 ## 8. 期待される Dice
 

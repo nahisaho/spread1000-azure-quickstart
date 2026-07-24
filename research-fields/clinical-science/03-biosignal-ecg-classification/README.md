@@ -9,7 +9,7 @@
 
 - Azure ML ワークスペースを Bicep でデプロイ
 - MIT-BIH の 48 レコードを ローカル → Blob に登録
-- 小型 1D CNN (~30k params) を **T4 GPU (`Standard_NC4as_T4_v3`)** で 10〜15 epoch 学習
+- 小型 1D CNN (~9.5k params) を **T4 GPU (`Standard_NC4as_T4_v3`)** で 10〜15 epoch 学習
 - MLflow に macro-F1 / confusion matrix / classification report を記録
 - モデルを AML Job output として保存
 
@@ -54,7 +54,10 @@
 | **F** (Fusion) | `F` | 正常/心室融合 |
 | **Q** (Unknown) | `/ f Q` | ペーシング、paced fusion、分類不能 |
 
-非 beat 注釈 (`| ! [ ] + ~ ?` など) は学習・評価から除外します。
+非 beat 注釈および未マップの注釈は学習・評価から除外します。
+このカテゴリには **非 beat の rhythm/quality 注釈** (`| ! [ ] + ~` 等) と、
+**学習中に定まらなかった beat 注釈** (`?` = LEARN、WFDB 上は beat 注釈ですが AAMI 5 クラスに
+写像できないため除外) が含まれます。
 
 ## ドキュメント
 
@@ -103,7 +106,10 @@
 ## 出典・ライセンス
 
 - **データ**: Moody GB, Mark RG. The impact of the MIT-BIH Arrhythmia Database. *IEEE Eng Med Biol* 20(3):45-50, 2001. (ODC-By 1.0)
-- **PhysioNet**: Goldberger et al. *Circulation* 101(23):e215-e220, 2000.
+- **PhysioNet プラットフォーム**: 現行の PhysioNet 引用推奨に従い、
+  データセットページ ([mitdb 1.0.0](https://physionet.org/content/mitdb/1.0.0/)) 記載の最新引用形式を
+  使用してください。歴史的な Goldberger et al. *Circulation* 101(23):e215-e220, 2000. と併せ、
+  必要に応じて Pollard et al. (2026) 等の更新引用を追加します（PhysioNet 側の掲載を確認）。
 - **AAMI クラス定義**: ANSI/AAMI EC57:2012/(R)2020
 - **クラス評価手法**: de Chazal et al. *IEEE Trans Biomed Eng* 51(7):1196-1206, 2004. https://doi.org/10.1109/TBME.2004.827359
 

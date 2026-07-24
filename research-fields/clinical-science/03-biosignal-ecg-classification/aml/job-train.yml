@@ -9,7 +9,7 @@ $schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
 display_name: mitbih-aami5-1dcnn
 experiment_name: ecg-classification
 description: >
-  Train a small 1D CNN (~30k params) on MIT-BIH heartbeats mapped to AAMI 5-class.
+  Train a small 1D CNN (~9.5k params) on MIT-BIH heartbeats mapped to AAMI 5-class.
   Uses the canonical de Chazal DS1/DS2 record-level split (records 201/202 are
   from the same subject — see prepare_data.py header for details).
 code: ../src

@@ -56,7 +56,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   properties: {
     accessTier: 'Hot'
     allowBlobPublicAccess: false
-    allowSharedKeyAccess: true  // AML workspace の一部機能が SAS を利用
+    allowSharedKeyAccess: false  // MI ベース (Storage Blob Data Contributor) でアクセスする
     minimumTlsVersion: 'TLS1_2'
     supportsHttpsTrafficOnly: true
     publicNetworkAccess: 'Enabled'
@@ -157,7 +157,27 @@ resource workspace 'Microsoft.MachineLearningServices/workspaces@2024-04-01' = {
     applicationInsights: appInsights.id
     containerRegistry: acr.id
     publicNetworkAccess: 'Enabled'
-    hbiWorkspace: false
+    // 医用画像 (仮名/匿名加工済みであっても) を扱う想定で HBI モードで作成。
+    // 追加のテレメトリ削減 + compute 一時 storage の追加保護。
+    hbiWorkspace: true
+    systemDatastores: {
+      // Shared Key を使わず managed identity で datastore にアクセス
+      authMode: 'identity'
+    }
+  }
+}
+
+// AML system-assigned MI → Storage Blob Data Contributor (identity-mode datastore で必須)
+resource workspaceStorageRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: storage
+  name: guid(storage.id, workspace.id, blobDataContributorRoleId)
+  properties: {
+    principalId: workspace.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId(
+      'Microsoft.Authorization/roleDefinitions',
+      blobDataContributorRoleId
+    )
   }
 }
 

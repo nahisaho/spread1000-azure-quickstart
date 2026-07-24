@@ -5,6 +5,7 @@
 | 項目 | 内容 |
 |---|---|
 | Azure サブスクリプション | 有効。**必ず `../../../../docs/00-azure-account-setup.md` を先に読み**、Cost 予算アラート設定済み |
+| Azure サブスクリプション権限 | **Owner** / **User Access Administrator** / **Role Based Access Control Administrator** のいずれか (Bicep が `Microsoft.Authorization/roleAssignments/write` を必要とするため、`Contributor` のみでは失敗します)。組織で権限が下りない場合は、docs/02 の RBAC 節を管理者に代行依頼するパスを利用してください |
 | OS | Linux / WSL2 / macOS (bash + wget + jq が動作すること) |
 | Azure CLI | 2.65+ + `az extension add -n ml` (Azure ML CLI v2 extension) |
 | Python | 3.10 以上（ローカルでの事前検証用。AML 実行環境は別途構築） |

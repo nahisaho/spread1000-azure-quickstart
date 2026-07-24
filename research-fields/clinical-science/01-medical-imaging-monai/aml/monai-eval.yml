@@ -1,0 +1,66 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+display_name: monai-spleen-eval
+experiment_name: monai-spleen
+description: >
+  Evaluate a MONAI spleen_ct_segmentation checkpoint (either the pretrained bundle
+  weight for reproduction of the 0.961 claim, or a fine-tune output) on Task09_Spleen
+  validation split using Bundle's configs/evaluate.json.
+
+code: ./
+
+compute: azureml:monai-t4
+environment: azureml:monai-spleen-1-4@latest
+
+inputs:
+  data:
+    type: uri_folder
+    path: azureml:task09-spleen@latest
+    mode: ro_mount
+  # 事前学習重みを評価したい場合はこの checkpoint 入力を省略して
+  # bundle 同梱の models/model.pt をそのまま使う (pretrained 再現用途)。
+  # fine-tune 済み重みを評価する場合は data-checkpoint.yml で Data Asset 化して
+  # `path: azureml:monai-spleen-finetune@latest` のように渡す。
+  checkpoint:
+    type: uri_file
+    path: azureml:monai-spleen-finetune-model@latest
+    mode: ro_mount
+    optional: true
+
+outputs:
+  eval:
+    type: uri_folder
+    mode: upload
+
+command: >-
+  set -eux;
+  python -c "import monai, torch; print('MONAI', monai.__version__, 'PyTorch', torch.__version__, 'CUDA', torch.cuda.is_available())";
+  python -m monai.bundle download
+  "spleen_ct_segmentation"
+  --version "0.6.1"
+  --source "huggingface_hub"
+  --repo "MONAI/spleen_ct_segmentation"
+  --bundle_dir bundles;
+  cd bundles/spleen_ct_segmentation;
+  if [ -n "${{inputs.checkpoint}}" ] && [ -f "${{inputs.checkpoint}}" ]; then
+    echo "Using supplied checkpoint (fine-tune eval)";
+    cp "${{inputs.checkpoint}}" models/model.pt;
+  else
+    echo "Using bundle's pretrained models/model.pt (pretrained reproduction eval)";
+  fi;
+  python -m monai.bundle run
+  --config_file "['configs/train.json','configs/evaluate.json']"
+  --dataset_dir="${{inputs.data}}"
+  --output_dir="${{outputs.eval}}";
+
+resources:
+  instance_count: 1
+
+limits:
+  timeout: 3600
+
+tags:
+  scenario: monai-3d-seg
+  project: spread1000
+  job_type: evaluation
