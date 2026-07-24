@@ -1,0 +1,19 @@
+# requirements for F-3 vibration anomaly detection.
+#
+# torch は先に CPU wheel:
+#   pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
+#
+# このファイルは抽象依存仕様 (requirements.in) です。
+# ロックファイルを生成・インストールする場合:
+#   pip install pip-tools
+#   pip-compile --generate-hashes requirements.in \
+#     -o requirements-lock/linux-cpu-py312.txt
+#   pip install --require-hashes -r requirements-lock/linux-cpu-py312.txt
+#
+# See requirements-lock/README.md for per-platform instructions.
+
+numpy>=1.26,<3
+scipy>=1.13
+scikit-learn>=1.4
+matplotlib>=3.9
+pytest>=8.0

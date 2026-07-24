@@ -7,14 +7,9 @@
 
 ## ROC-AUC がほぼ 0.5 (ランダム)
 
-- **異常データにインパルスが弱すぎる**: `src/generate_data.py` の振幅を `amp = rng.uniform(1.5, 3.0)` に上げる
+- **異常データにインパルスが弱すぎる**: `src/generate_data.py` の振幅を `amp = rng.uniform(3.0, 6.0)` に設定されていることを確認 (デフォルト値)
 - **AE が underfit**: `--epochs 50 --lr 5e-4` に増やす
 - **AE が overfit**: `--latent-dim 16` に落として bottleneck を強くする
-
-## `val MSE p99` が train MSE より小さい
-
-- val セットが train より簡単な部分に偏った (乱数の悪運)
-- `--seed 0` などで再実行
 
 ## `sklearn.metrics.precision_score` の警告 `Precision is ill-defined`
 

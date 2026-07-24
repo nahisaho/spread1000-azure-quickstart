@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 venv/
 data/*.npz
+data/*.png
 outputs/*.pt
 outputs/*.png
 outputs/*.json
