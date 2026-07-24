@@ -2,13 +2,20 @@
 
 ## `ModuleNotFoundError: No module named 'leidenalg'`
 
-`pip install leidenalg igraph` — Leiden クラスタリング必須依存。
+`leidenalg` は本シナリオでは不要です。コードは `flavor="igraph"` (python-igraph バックエンド) を使用しています。
+エラーが出る場合は `pip install igraph` を実行してください。`leidenalg` はインストール不要です。
 
 ## `sc.datasets.pbmc3k()` がタイムアウト
 
-- scanpy が 10x のサーバからダウンロード。ネットワーク不安定なら手動 DL:
-  - https://cf.10xgenomics.com/samples/cell-exp/1.1.0/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz
-  - 展開して `sc.read_10x_mtx("filtered_gene_bc_matrices/hg19/")` で読み込み
+scanpy 1.10+ は `falexwolf.de` から変換済み H5AD をダウンロードします。ネットワーク不安定なら:
+
+```bash
+# 手動でダウンロードして data/ に配置
+SCENARIO_DIR="$(git rev-parse --show-toplevel)/research-fields/agriculture-environment/02-scrnaseq-clustering"
+cd "$SCENARIO_DIR"
+test -f src/analyze.py || { echo "wrong dir — aborting"; exit 1; }
+curl -L -o data/pbmc3k_raw.h5ad https://falexwolf.de/data/pbmc3k_raw.h5ad
+```
 
 ## Leiden クラスタが 1 個しかできない
 
@@ -18,8 +25,12 @@
 
 ## メモリ不足 (数万細胞以上)
 
-- `sc.pp.subsample(adata, n_obs=5000)` で先にダウンサンプル
-- 疎行列を維持: `adata.X = scipy.sparse.csr_matrix(adata.X)` を早期に
+**⚠️ 注意**: 単純なダウンサンプリング (`sc.pp.subsample`) は細胞の多様性を損なうため推奨しません。代わりに以下を検討してください:
+
+- **backed AnnData**: `sc.read_h5ad("file.h5ad", backed="r")` でメモリ外読み込み
+- **sparse-aware 処理の維持**: `sc.pp.scale(zero_center=False)` で疎行列のまま処理 (`--no-zero-center` オプション)
+- **Dask 統合**: 大規模データには `dask-expr` + AnnData バックエンドを検討
+- **`--max-dense-cells`**: デフォルト 5e7 を超える場合は自動でゼロセンタリングをスキップ
 
 ## marker heatmap がうまく描画されない
 
